@@ -64,11 +64,11 @@ const DESCRIPTIONS = [
   `Lorem ipsum porta porttitor nec odio nec nam, eget fusce lorem ultricies risus lorem, lectus vitae integer gravida ligula porttitor sit curabitur.`
 ];
 
-const generateRandomRatingValue = function () {
+const generateRandomRatingValue = () => {
   return (Math.random() * (RatingLimit.MAX - RatingLimit.MIN) + RatingLimit.MIN).toFixed(1);
 };
 
-const getRandomArrayElement = function (array) {
+const getRandomArrayElement = (array) => {
   return array[Math.floor(Math.random() * array.length)];
 };
 
