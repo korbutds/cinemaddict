@@ -228,14 +228,14 @@ const filterElement = document.querySelector(`.main-navigation`);
 const addFilterClickEventListener = () => {
   document.querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`).forEach((element) => {
     element.addEventListener(`click`, () => {
-      filmsMainElement.innerHTML = createTemplate(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountLimit.MAX)));
+      filmsMainElement.innerHTML = Object(_templates_cards_js__WEBPACK_IMPORTED_MODULE_2__["createCardsTemplate"])(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountLimit.MAX)));
     });
   });
 };
 
-filmsMainElement.innerHTML = createTemplate(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(AmountLimit.MAX));
-filmsTopRatedElement.innerHTML = createNoControlsTemplate(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(AmountLimit.MIN));
-filmsMostCommentedElement.innerHTML = createNoControlsTemplate(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(AmountLimit.MIN));
+filmsMainElement.innerHTML = Object(_templates_cards_js__WEBPACK_IMPORTED_MODULE_2__["createCardsTemplate"])(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(AmountLimit.MAX));
+filmsTopRatedElement.innerHTML = Object(_templates_cards_js__WEBPACK_IMPORTED_MODULE_2__["createCardsNoControlsTemplate"])(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(AmountLimit.MIN));
+filmsMostCommentedElement.innerHTML = Object(_templates_cards_js__WEBPACK_IMPORTED_MODULE_2__["createCardsNoControlsTemplate"])(Object(_create_cards_mock_data_js__WEBPACK_IMPORTED_MODULE_1__["createCardsMockData"])(AmountLimit.MIN));
 filterElement.innerHTML = Object(_templates_filter_js__WEBPACK_IMPORTED_MODULE_3__["createFilterTemplate"])();
 
 addFilterClickEventListener();
@@ -247,13 +247,13 @@ addFilterClickEventListener();
 /*!********************************!*\
   !*** ./src/templates/cards.js ***!
   \********************************/
-/*! exports provided: createCardsNoControlsTemplate, creatCardsTemplate */
+/*! exports provided: createCardsNoControlsTemplate, createCardsTemplate */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCardsNoControlsTemplate", function() { return createCardsNoControlsTemplate; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "creatCardsTemplate", function() { return creatCardsTemplate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createCardsTemplate", function() { return createCardsTemplate; });
 const createCardsNoControlsTemplate = (array) => (
   array.map((card) => (
     `<article class="film-card film-card--no-controls">
@@ -270,7 +270,7 @@ const createCardsNoControlsTemplate = (array) => (
   )).join(``)
 );
 
-const creatCardsTemplate = (array) => (
+const createCardsTemplate = (array) => (
   array.map((card) => (
     `<article class="film-card">
       <h3 class="film-card__title">${card.title}</h3>
@@ -316,9 +316,9 @@ const AmountLimit = {
 
 const createFilterTemplate = () => (
   `<a href="#all" class="main-navigation__item main-navigation__item--active">All movies</a>
-  <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountsLimit.MAX)}</span></a>
-  <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountsLimit.MAX)}</span></a>
-  <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountsLimit.MAX)}</span></a>
+  <a href="#watchlist" class="main-navigation__item">Watchlist <span class="main-navigation__item-count">${Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountLimit.MAX)}</span></a>
+  <a href="#history" class="main-navigation__item">History <span class="main-navigation__item-count">${Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountLimit.MAX)}</span></a>
+  <a href="#favorites" class="main-navigation__item">Favorites <span class="main-navigation__item-count">${Object(_utils_js__WEBPACK_IMPORTED_MODULE_0__["generateRandomNumber"])(AmountLimit.MIN, AmountLimit.MAX)}</span></a>
   <a href="#stats" class="main-navigation__item main-navigation__item--additional">Stats</a>`
 );
 
