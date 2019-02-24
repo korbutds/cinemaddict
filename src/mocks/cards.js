@@ -1,4 +1,4 @@
-import {generateRandomNumber} from './utils.js';
+import {generateRandomNumber} from '../utils.js';
 
 const YearsLimit = {
   MIN: 2010,
