@@ -40,12 +40,12 @@ export const createCardsTemplate = (cards, options = defaultTemplateOptions) => 
       <p class="film-card__rating">${card.rating}</p>
       <p class="film-card__info">
         <span class="film-card__year">${card.year}</span>
-        <span class="film-card__duration">${card.duration}</span>
+        <span class="film-card__duration">${card.duration.hours}h ${card.duration.minutes}m</span>
         <span class="film-card__genre">${card.genre}</span>
       </p>
       <img src="${card.image}" alt="" class="film-card__poster">
       ${options.description ? createDescriptionTemplate(card) : ``}
-      <button class="film-card__comments">${card.comments} comments</button>
+      <button class="film-card__comments">${card.comments} ${card.comments === 1 ? `comment` : `comments`}</button>
       ${options.controls ? createFormTemplate() : ``}
     </article>`
   )).join(``)
