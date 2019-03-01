@@ -19,8 +19,14 @@ const addFilterClickEventListener = () => {
   });
 };
 
-const createFeaturedCardsTemplate = () => createCardsTemplate(generateCards(CARDS_LIMIT_MIN),
-    {description: false, controls: false});
+const createFeaturedCardsTemplate = () =>
+  createCardsTemplate(
+      generateCards(CARDS_LIMIT_MIN),
+      {
+        description: false,
+        controls: false
+      }
+  );
 
 filmsMainElement.innerHTML = createCardsTemplate(generateCards(CARDS_LIMIT_MAX));
 filmsTopRatedElement.innerHTML = createFeaturedCardsTemplate();

@@ -1,34 +1,22 @@
 import {generateRandomNumber} from '../utils.js';
 
-const descriptionLimit = {
-  MIN: 1,
-  MAX: 3
-};
+const DESCRIPTION_LIMIT_MIN = 1;
+const DESCRIPTION_LIMIT_MAX = 3;
 
-const YearsLimit = {
-  MIN: 2010,
-  MAX: 2019
-};
+const YEARS_LIMIT_MIN = 2010;
+const YEARS_LIMIT_MAX = 2019;
 
-const RatingLimit = {
-  MIN: 0.1,
-  MAX: 10
-};
+const RATING_LIMIT_MIN = 0.1;
+const RATING_LIMIT_MAX = 10;
 
-const HoursLimit = {
-  MIN: 1,
-  MAX: 5
-};
+const HOURS_LIMIT_MIN = 1;
+const HOURS_LIMIT_MAX = 5;
 
-const MinutesLimit = {
-  MIN: 0,
-  MAX: 59
-};
+const MINUTES_LIMIT_MIN = 0;
+const MINUTES_LIMIT_MAX = 59;
 
-const CommentsLimit = {
-  MIN: 0,
-  MAX: 15
-};
+const COMMENTS_LIMIT_MIN = 0;
+const COMMENTS_LIMIT_MAX = 15;
 
 const IMAGES = [
   `./images/posters/three-friends.jpg`,
@@ -80,8 +68,8 @@ const DESCRIPTIONS = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
-const generateRandomRatingValue = () => (Math.random() * (RatingLimit.MAX - RatingLimit.MIN) + RatingLimit.MIN).toFixed(1);
-const generateDescription = () => DESCRIPTIONS.sort(() => Math.random() - 0.5).slice(0, generateRandomNumber(descriptionLimit.MIN, descriptionLimit.MAX)).join(` `);
+const generateRandomRatingValue = () => (Math.random() * (RATING_LIMIT_MAX - RATING_LIMIT_MIN) + RATING_LIMIT_MIN).toFixed(1);
+const generateDescription = () => DESCRIPTIONS.sort(() => Math.random() - 0.5).slice(0, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)).join(` `);
 
 const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
 
@@ -91,15 +79,15 @@ const generateCard = () => (
   {
     title: getRandomArrayElement(TITLES),
     rating: generateRandomRatingValue(),
-    year: generateRandomNumber(YearsLimit.MIN, YearsLimit.MAX),
+    year: generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
     duration: {
-      hours: generateRandomNumber(HoursLimit.MIN, HoursLimit.MAX),
-      minutes: generateRandomNumber(MinutesLimit.MIN, MinutesLimit.MAX)
+      hours: generateRandomNumber(HOURS_LIMIT_MIN, HOURS_LIMIT_MAX),
+      minutes: generateRandomNumber(MINUTES_LIMIT_MIN, MINUTES_LIMIT_MAX)
     },
     genre: getRandomArrayElement(GENRES),
     image: getRandomArrayElement(IMAGES),
     description: generateDescription(),
-    comments: generateRandomNumber(CommentsLimit.MIN, CommentsLimit.MAX)
+    comments: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX)
   }
 );
 
