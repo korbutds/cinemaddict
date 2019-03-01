@@ -1,45 +1,43 @@
 import {generateRandomNumber} from '../utils.js';
 
-const AmountLimit = {
-  MIN: 0,
-  MAX: 100
-};
+const AMOUNT_LIMIT_MIN = 0;
+const AMOUNT_LIMIT_MAX = 100;
 
 const filters = [
   {
     href: `#all`,
-    activation: true,
+    isActive: true,
     title: `All movies`,
-    amount: false,
-    additional: false
+    isCountable: false,
+    isAdditional: false
   },
   {
     href: `#watchlist`,
-    activation: false,
+    isActive: false,
     title: `Watchlist`,
-    amount: true,
-    additional: false
+    isCountable: true,
+    isAdditional: false
   },
   {
     href: `#history`,
-    activation: false,
+    isActive: false,
     title: `History`,
-    amount: true,
-    additional: false
+    isCountable: true,
+    isAdditional: false
   },
   {
     href: `#favorites`,
-    activation: false,
+    isActive: false,
     title: `Favorites`,
-    amount: true,
-    additional: false
+    isCountable: true,
+    isAdditional: false
   },
   {
     href: `#stats`,
-    activation: false,
+    isActive: false,
     title: `Stats`,
-    amount: false,
-    additional: true
+    isCountable: false,
+    isAdditional: true
   }
 ];
 
@@ -47,10 +45,10 @@ export const createFilterTemplate = () => (
   filters.map((filter) => (
     `<a href="${filter.href}"
       class="main-navigation__item
-      ${filter.activation ? `main-navigation__item--active` : ``}
-      ${filter.additional ? `main-navigation__item--additional` : ``}">
+      ${filter.isActive ? `main-navigation__item--active` : ``}
+      ${filter.isAdditional ? `main-navigation__item--additional` : ``}">
         ${filter.title}
-        ${filter.amount ? `<span class="main-navigation__item-count">${generateRandomNumber(AmountLimit.MIN, AmountLimit.MAX)}</span>` : ``}
+        ${filter.isCountable ? `<span class="main-navigation__item-count">${generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX)}</span>` : ``}
     </a>`
   )).join(``)
 );
