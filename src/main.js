@@ -19,11 +19,12 @@ const addFilterClickEventListener = () => {
   });
 };
 
+const createFeaturedCardsTemplate = () => createCardsTemplate(generateCards(CARDS_LIMIT_MIN),
+    {description: false, controls: false});
+
 filmsMainElement.innerHTML = createCardsTemplate(generateCards(CARDS_LIMIT_MAX));
-filmsTopRatedElement.innerHTML = createCardsTemplate(generateCards(CARDS_LIMIT_MIN),
-    {description: false, controls: false});
-filmsMostCommentedElement.innerHTML = createCardsTemplate(generateCards(CARDS_LIMIT_MIN),
-    {description: false, controls: false});
+filmsTopRatedElement.innerHTML = createFeaturedCardsTemplate();
+filmsMostCommentedElement.innerHTML = createFeaturedCardsTemplate();
 filterElement.innerHTML = createFilterTemplate();
 
 addFilterClickEventListener();

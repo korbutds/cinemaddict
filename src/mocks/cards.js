@@ -103,6 +103,4 @@ const generateCard = () => (
   }
 );
 
-export const generateCards = (limit) => (
-  createNumberRange(limit).map(() => generateCard())
-);
+export const generateCards = (limit) => createNumberRange(limit).map(generateCard);
