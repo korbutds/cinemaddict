@@ -33,20 +33,18 @@ const createDescriptionTemplate = (card) => (
   </p>`
 );
 
-export const createCardsTemplate = (cards, options = defaultTemplateOptions) => (
-  cards.map((card) => (
-    `<article class="film-card ${!options.controls ? `film-card--no-controls` : ``} ">
-      <h3 class="film-card__title">${card.title}</h3>
-      <p class="film-card__rating">${card.rating}</p>
-      <p class="film-card__info">
-        <span class="film-card__year">${card.year}</span>
-        <span class="film-card__duration">${card.duration.hours}h ${card.duration.minutes}m</span>
-        <span class="film-card__genre">${card.genre}</span>
-      </p>
-      <img src="${card.image}" alt="" class="film-card__poster">
-      ${options.description ? createDescriptionTemplate(card) : ``}
-      <button class="film-card__comments">${card.comments} ${card.comments === 1 ? `comment` : `comments`}</button>
-      ${options.controls ? createFormTemplate() : ``}
-    </article>`
-  )).join(``)
+export const createCardTemplate = (data, options = defaultTemplateOptions) => (
+  `<article class="film-card ${!options.controls ? `film-card--no-controls` : ``} ">
+    <h3 class="film-card__title">${data.title}</h3>
+    <p class="film-card__rating">${data.rating}</p>
+    <p class="film-card__info">
+      <span class="film-card__year">${data.year}</span>
+      <span class="film-card__duration">${data.duration.hours}h ${data.duration.minutes}m</span>
+      <span class="film-card__genre">${data.genre}</span>
+    </p>
+    <img src="${data.image}" alt="" class="film-card__poster">
+    ${options.description ? createDescriptionTemplate(data) : ``}
+    <button class="film-card__comments">${data.comments} ${data.comments === 1 ? `comment` : `comments`}</button>
+    ${options.controls ? createFormTemplate() : ``}
+  </article>`
 );

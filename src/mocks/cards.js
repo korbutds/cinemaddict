@@ -18,6 +18,29 @@ const MINUTES_LIMIT_MAX = 59;
 const COMMENTS_LIMIT_MIN = 0;
 const COMMENTS_LIMIT_MAX = 15;
 
+const DAY_LIMIT_MIN = 1;
+const DAY_LIMIT_MAX = 29;
+
+const DURATION_LIMIT_MIN = 60;
+const DURATION_LIMIT_MAX = 180;
+
+const GENRES_LIMIT = 3;
+
+const MONTHS = [
+  `January`,
+  `February`,
+  `March`,
+  `April`,
+  `May`,
+  `June`,
+  `July`,
+  `August`,
+  `September`,
+  `October`,
+  `November`,
+  `December`
+];
+
 const IMAGES = [
   `./images/posters/three-friends.jpg`,
   `./images/posters/moonrise.jpg`,
@@ -68,8 +91,63 @@ const DESCRIPTIONS = [
   `In rutrum ac purus sit amet tempus.`
 ];
 
+const DIRECTORS = [
+  `Muhammad Byrd`,
+  `Miah Olsen`,
+  `Lorelai Wu`,
+  `Lucas Miles`,
+  `Danielle Santana`,
+  `Matias Mccarthy`,
+  `Skyler Crosby`,
+  `Kelton Craig`,
+  `Elias Roberts`,
+  `Tucker Rogers`,
+  `Saige Reilly`,
+  `Cecilia Mcmillan`,
+  `Tabitha Thompson`,
+  `Israel Solis`,
+  `Madalynn Mcknight`
+];
+
+const WRITERS = [
+  `Rosemary Foley`,
+  `Dorian Barajas`,
+  `Destiney Sims`,
+  `Deandre Adams`,
+  `Raven Lawrence`,
+  `Cara Bowen`,
+  `Kennedi Ayers`,
+  `Winston Atkinson`,
+  `Nick Kim`,
+  `Charlize Zuniga`,
+  `Elianna Velasquez`,
+  `Keely Rasmussen`,
+  `Makena Neal`,
+  `Savanah Cisneros`,
+  `Alani Walls`
+];
+
+const ACTORS = [
+  `Aidan Cervantes`,
+  `Kai Rodgers`,
+  `Ariella Lutz`,
+  `Danielle Franco`,
+  `Javon Archer`,
+];
+
+const COUNTRIES = [
+  `RU`,
+  `US`,
+  `GB`,
+  `ES`,
+  `IT`,
+  `PL`,
+  `FR`
+];
+
 const generateRandomRatingValue = () => (Math.random() * (RATING_LIMIT_MAX - RATING_LIMIT_MIN) + RATING_LIMIT_MIN).toFixed(1);
 const generateDescription = () => DESCRIPTIONS.sort(() => Math.random() - 0.5).slice(0, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)).join(` `);
+const generateRandomBoolean = () => Math.random() >= 0.5;
 
 const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
 
@@ -87,7 +165,28 @@ const generateCard = () => (
     genre: getRandomArrayElement(GENRES),
     image: getRandomArrayElement(IMAGES),
     description: generateDescription(),
-    comments: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX)
+    comments: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
+    popup: {
+      director: getRandomArrayElement(DIRECTORS),
+      writers: getRandomArrayElement(WRITERS),
+      actors: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(ACTORS)).join(`, `),
+      releaseDay: generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX) + ` `
+        + getRandomArrayElement(MONTHS) + ` ` + generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX) + ` (`
+        + getRandomArrayElement(COUNTRIES) + `)`,
+      runtime: generateRandomNumber(DURATION_LIMIT_MIN, DURATION_LIMIT_MAX),
+      country: getRandomArrayElement(COUNTRIES),
+      genres: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(GENRES)),
+      ageLimit: generateRandomBoolean() ? `18+` : `0+`,
+      original: `Здесь будет название`,
+      comments: [
+        {
+          text: `So long-long story, boring!`,
+          author: `Tim Macoveev`,
+          date: `3 days ago`,
+          emoji: `😴`
+        }
+      ]
+    }
   }
 );
 

@@ -1,7 +1,11 @@
-import {generateRandomNumber} from './utils.js';
-import {generateCards} from './mocks/cards.js';
-import {createCardsTemplate} from './templates/cards.js';
-import {createFilterTemplate} from './templates/filter.js';
+import {generateRandomNumber} from './utils';
+import {generateCards} from './mocks/cards';
+import FILTER_DATA from './data/filter';
+
+import Card from './components/card';
+import CardFeatured from './components/card-featured';
+import Filter from './components/filter';
+import Popup from './components/popup';
 
 const CARDS_LIMIT_MIN = 2;
 const CARDS_LIMIT_MAX = 7;
@@ -10,27 +14,54 @@ const filmsMainElement = document.querySelector(`.films-list .films-list__contai
 const filmsTopRatedElement = document.querySelector(`.films-list--extra:nth-child(2) .films-list__container`);
 const filmsMostCommentedElement = document.querySelector(`.films-list--extra:nth-child(3) .films-list__container`);
 const filterElement = document.querySelector(`.main-navigation`);
+const bodyElement = document.querySelector(`body`);
 
-const addFilterClickEventListener = () => {
-  document.querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`).forEach((element) => {
-    element.addEventListener(`click`, () => {
-      filmsMainElement.innerHTML = createCardsTemplate(generateCards(generateRandomNumber(CARDS_LIMIT_MIN, CARDS_LIMIT_MAX)));
-    });
+const setEventListeners = (componentCard, componentPopup, elementPopup) => {
+  componentCard.onClick = () => {
+    componentPopup.render();
+    bodyElement.appendChild(elementPopup);
+  };
+  componentPopup.onClose = () => {
+    componentPopup.unrender();
+    bodyElement.removeChild(elementPopup);
+  };
+};
+
+const addFeaturedCards = (limit, container) => {
+  generateCards(limit).forEach((data) => {
+    const componentCardFeatured = new CardFeatured(data);
+    const elementCardFeatured = componentCardFeatured.render();
+    const componentPopup = new Popup(data);
+    const elementPopup = componentPopup.render();
+    setEventListeners(componentCardFeatured, componentPopup, elementPopup);
+    container.appendChild(elementCardFeatured);
   });
 };
 
-const createFeaturedCardsTemplate = () =>
-  createCardsTemplate(
-      generateCards(CARDS_LIMIT_MIN),
-      {
-        description: false,
-        controls: false
-      }
-  );
+const addCards = (limit, container) => {
+  generateCards(limit).forEach((data) => {
+    const componentCard = new Card(data);
+    const elementCard = componentCard.render();
+    const componentPopup = new Popup(data);
+    const elementPopup = componentPopup.render();
+    setEventListeners(componentCard, componentPopup, elementPopup);
+    container.appendChild(elementCard);
+  });
+};
 
-filmsMainElement.innerHTML = createCardsTemplate(generateCards(CARDS_LIMIT_MAX));
-filmsTopRatedElement.innerHTML = createFeaturedCardsTemplate();
-filmsMostCommentedElement.innerHTML = createFeaturedCardsTemplate();
-filterElement.innerHTML = createFilterTemplate();
+const addFilter = (data) => {
+  const componentFilter = new Filter(data);
+  const elementCard = componentFilter.render();
+  elementCard.forEach((element) => {
+    filterElement.appendChild(element);
+  });
+  componentFilter.onClick = () => {
+    filmsMainElement.innerHTML = ``;
+    addCards(generateRandomNumber(CARDS_LIMIT_MIN, CARDS_LIMIT_MAX), filmsMainElement);
+  };
+};
 
-addFilterClickEventListener();
+addCards(CARDS_LIMIT_MAX, filmsMainElement);
+addFeaturedCards(CARDS_LIMIT_MIN, filmsTopRatedElement);
+addFeaturedCards(CARDS_LIMIT_MIN, filmsMostCommentedElement);
+addFilter(FILTER_DATA);
