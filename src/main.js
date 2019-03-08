@@ -51,8 +51,8 @@ const addCards = (limit, container) => {
 
 const addFilter = (data) => {
   const componentFilter = new Filter(data);
-  const elementCard = componentFilter.render();
-  elementCard.forEach((element) => {
+  const elementFilter = componentFilter.render();
+  elementFilter.forEach((element) => {
     filterElement.appendChild(element);
   });
   componentFilter.onClick = () => {

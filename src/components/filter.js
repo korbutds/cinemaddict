@@ -40,13 +40,7 @@ export default class Filter {
   render() {
     const newElement = document.createElement(`div`);
     newElement.innerHTML = this.template;
-    this._element = [
-      newElement.children[0],
-      newElement.children[1],
-      newElement.children[2],
-      newElement.children[3],
-      newElement.children[4]
-    ];
+    this._element = Array.from(newElement.children).map((element) => element);
     this._bind();
     return this._element;
   }
