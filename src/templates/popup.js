@@ -1,6 +1,9 @@
 import {generateRandomNumber} from '../utils.js';
+import {createNumberRange} from '../utils.js';
 
-const RATINGS = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+const RATING_LIMIT_MIN = 1;
+const RATING_LIMIT_MAX = 9;
+const RATINGS = createNumberRange(RATING_LIMIT_MAX);
 
 const CONTROLS = [
   {
@@ -35,31 +38,31 @@ const EMOJIES = [
 const generateDetailsTableData = (dataPopup) => ([
   {
     term: `Director`,
-    cell: dataPopup.director,
+    cell: dataPopup.director
   },
   {
     term: `Writers`,
-    cell: dataPopup.writers,
+    cell: dataPopup.writers
   },
   {
     term: `Actors`,
-    cell: dataPopup.actors,
+    cell: dataPopup.actors
   },
   {
     term: `Release Date`,
-    cell: dataPopup.releaseDay,
+    cell: dataPopup.releaseDay
   },
   {
     term: `Runtime`,
-    cell: dataPopup.runtime,
+    cell: dataPopup.runtime
   },
   {
     term: `Country`,
-    cell: dataPopup.country,
+    cell: dataPopup.country
   },
   {
     term: `Genres`,
-    cell: createGenresList(dataPopup),
+    cell: createGenresList(dataPopup)
   }
 ]);
 
@@ -75,7 +78,7 @@ const createRatingElement = () => (
 const createGenresList = (data) => (
   data.genres.map((genre) => (
     `<span class="film-details__genre">${genre}</span>`
-  ))
+  )).join(``)
 );
 
 const createDetailsTableElement = (data) => (
@@ -141,7 +144,7 @@ export const createPopupTemplate = (data) => (
 
             <div class="film-details__rating">
               <p class="film-details__total-rating">${data.rating}</p>
-              <p class="film-details__user-rating">Your rate ${generateRandomNumber(RATINGS[0], RATINGS[8])}</p>
+              <p class="film-details__user-rating">Your rate ${generateRandomNumber(RATING_LIMIT_MIN, RATING_LIMIT_MAX)}</p>
             </div>
           </div>
           <table class="film-details__table">

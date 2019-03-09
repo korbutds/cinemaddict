@@ -3,6 +3,7 @@ import {generateRandomBoolean} from '../utils.js';
 import {getRandomArrayElement} from '../utils.js';
 import {createNumberRange} from '../utils.js';
 import {generateRandomFixedValue} from '../utils.js';
+import {generateRandomArray} from '../utils.js';
 
 const DESCRIPTION_LIMIT_MIN = 1;
 const DESCRIPTION_LIMIT_MAX = 3;
@@ -149,8 +150,6 @@ const COUNTRIES = [
   `FR`
 ];
 
-const generateDescription = () => DESCRIPTIONS.sort(() => Math.random() - 0.5).slice(0, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)).join(` `);
-
 const generateCard = () => (
   {
     title: getRandomArrayElement(TITLES),
@@ -162,7 +161,7 @@ const generateCard = () => (
     },
     genre: getRandomArrayElement(GENRES),
     image: getRandomArrayElement(IMAGES),
-    description: generateDescription(),
+    description: generateRandomArray(DESCRIPTIONS, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)),
     comments: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
     popup: {
       director: getRandomArrayElement(DIRECTORS),

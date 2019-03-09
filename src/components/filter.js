@@ -30,17 +30,15 @@ export default class Filter {
     if (this._element) {
       this
         ._element
-        .forEach((element, index) => {
-          if (index !== 0 && index !== 4) {
-            element.addEventListener(`click`, this._onFilterClick);
-          }
+        .querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`)
+        .forEach((element) => {
+          element.addEventListener(`click`, this._onFilterClick);
         });
     }
   }
 
   render() {
-    const setCallback = (newElement) => Array.from(newElement.children).map((element) => element);
-    this._element = createElement(this.template, setCallback);
+    this._element = createElement(this.template);
     this._bind();
     return this._element;
   }

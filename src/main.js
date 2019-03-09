@@ -13,8 +13,8 @@ const CARDS_LIMIT_MAX = 7;
 const filmsMainElement = document.querySelector(`.films-list .films-list__container`);
 const filmsTopRatedElement = document.querySelector(`.films-list--extra:nth-child(2) .films-list__container`);
 const filmsMostCommentedElement = document.querySelector(`.films-list--extra:nth-child(3) .films-list__container`);
-const filterNavElement = document.querySelector(`.main-navigation`);
 const bodyElement = document.querySelector(`body`);
+const mainElement = document.querySelector(`main`);
 
 const setEventListeners = (cardComponent, popupComponent, popupElement) => {
   cardComponent.onClick = () => {
@@ -52,9 +52,7 @@ const addCards = (limit, container) => {
 const addFilter = (data) => {
   const filterComponent = new Filter(data);
   const filterElement = filterComponent.render();
-  filterElement.forEach((element) => {
-    filterNavElement.appendChild(element);
-  });
+  mainElement.insertBefore(filterElement, mainElement.firstChild);
   filterComponent.onClick = () => {
     filmsMainElement.innerHTML = ``;
     addCards(generateRandomNumber(CARDS_LIMIT_MIN, CARDS_LIMIT_MAX), filmsMainElement);
