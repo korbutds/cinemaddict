@@ -32,34 +32,34 @@ const EMOJIES = [
   }
 ];
 
-const generateDetailsTableData = (data) => ([
+const generateDetailsTableData = (dataPopup) => ([
   {
     term: `Director`,
-    cell: data.popup.director,
+    cell: dataPopup.director,
   },
   {
     term: `Writers`,
-    cell: data.popup.writers,
+    cell: dataPopup.writers,
   },
   {
     term: `Actors`,
-    cell: data.popup.actors,
+    cell: dataPopup.actors,
   },
   {
     term: `Release Date`,
-    cell: data.popup.releaseDay,
+    cell: dataPopup.releaseDay,
   },
   {
     term: `Runtime`,
-    cell: data.popup.runtime,
+    cell: dataPopup.runtime,
   },
   {
     term: `Country`,
-    cell: data.popup.country,
+    cell: dataPopup.country,
   },
   {
     term: `Genres`,
-    cell: createGenresList(data),
+    cell: createGenresList(dataPopup),
   }
 ]);
 
@@ -73,13 +73,13 @@ const createRatingElement = () => (
 
 
 const createGenresList = (data) => (
-  data.popup.genres.map((genre) => (
+  data.genres.map((genre) => (
     `<span class="film-details__genre">${genre}</span>`
   ))
 );
 
 const createDetailsTableElement = (data) => (
-  generateDetailsTableData(data).map((detail) => (
+  generateDetailsTableData(data.popup).map((detail) => (
     `<tr class="film-details__row">
       <td class="film-details__term">${detail.term}</td>
       <td class="film-details__cell">${detail.cell}</td>
@@ -183,7 +183,7 @@ export const createPopupTemplate = (data) => (
         </div>
         <div class="film-details__user-score">
           <div class="film-details__user-rating-poster">
-            <img src="images/posters/blackmail.jpg" alt="film-poster" class="film-details__user-rating-img">
+            <img src="${data.image}" alt="film-poster" class="film-details__user-rating-img">
           </div>
           <section class="film-details__user-rating-inner">
             <h3 class="film-details__user-rating-title">Incredibles 2</h3>

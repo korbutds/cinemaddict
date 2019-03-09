@@ -13,49 +13,49 @@ const CARDS_LIMIT_MAX = 7;
 const filmsMainElement = document.querySelector(`.films-list .films-list__container`);
 const filmsTopRatedElement = document.querySelector(`.films-list--extra:nth-child(2) .films-list__container`);
 const filmsMostCommentedElement = document.querySelector(`.films-list--extra:nth-child(3) .films-list__container`);
-const filterElement = document.querySelector(`.main-navigation`);
+const filterNavElement = document.querySelector(`.main-navigation`);
 const bodyElement = document.querySelector(`body`);
 
-const setEventListeners = (componentCard, componentPopup, elementPopup) => {
-  componentCard.onClick = () => {
-    componentPopup.render();
-    bodyElement.appendChild(elementPopup);
+const setEventListeners = (cardComponent, popupComponent, popupElement) => {
+  cardComponent.onClick = () => {
+    popupComponent.render();
+    bodyElement.appendChild(popupElement);
   };
-  componentPopup.onClose = () => {
-    componentPopup.unrender();
-    bodyElement.removeChild(elementPopup);
+  popupComponent.onClose = () => {
+    popupComponent.unrender();
+    bodyElement.removeChild(popupElement);
   };
 };
 
 const addFeaturedCards = (limit, container) => {
   generateCards(limit).forEach((data) => {
-    const componentCardFeatured = new CardFeatured(data);
-    const elementCardFeatured = componentCardFeatured.render();
-    const componentPopup = new Popup(data);
-    const elementPopup = componentPopup.render();
-    setEventListeners(componentCardFeatured, componentPopup, elementPopup);
-    container.appendChild(elementCardFeatured);
+    const cardFeaturedComponent = new CardFeatured(data);
+    const cardFeaturedElement = cardFeaturedComponent.render();
+    const popupComponent = new Popup(data);
+    const popupElement = popupComponent.render();
+    setEventListeners(cardFeaturedComponent, popupComponent, popupElement);
+    container.appendChild(cardFeaturedElement);
   });
 };
 
 const addCards = (limit, container) => {
   generateCards(limit).forEach((data) => {
-    const componentCard = new Card(data);
-    const elementCard = componentCard.render();
-    const componentPopup = new Popup(data);
-    const elementPopup = componentPopup.render();
-    setEventListeners(componentCard, componentPopup, elementPopup);
-    container.appendChild(elementCard);
+    const cardComponent = new Card(data);
+    const cardElement = cardComponent.render();
+    const popupComponent = new Popup(data);
+    const popupElement = popupComponent.render();
+    setEventListeners(cardComponent, popupComponent, popupElement);
+    container.appendChild(cardElement);
   });
 };
 
 const addFilter = (data) => {
-  const componentFilter = new Filter(data);
-  const elementFilter = componentFilter.render();
-  elementFilter.forEach((element) => {
-    filterElement.appendChild(element);
+  const filterComponent = new Filter(data);
+  const filterElement = filterComponent.render();
+  filterElement.forEach((element) => {
+    filterNavElement.appendChild(element);
   });
-  componentFilter.onClick = () => {
+  filterComponent.onClick = () => {
     filmsMainElement.innerHTML = ``;
     addCards(generateRandomNumber(CARDS_LIMIT_MIN, CARDS_LIMIT_MAX), filmsMainElement);
   };

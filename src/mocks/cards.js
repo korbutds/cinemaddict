@@ -1,4 +1,8 @@
 import {generateRandomNumber} from '../utils.js';
+import {generateRandomBoolean} from '../utils.js';
+import {getRandomArrayElement} from '../utils.js';
+import {createNumberRange} from '../utils.js';
+import {generateRandomFixedValue} from '../utils.js';
 
 const DESCRIPTION_LIMIT_MIN = 1;
 const DESCRIPTION_LIMIT_MAX = 3;
@@ -145,18 +149,12 @@ const COUNTRIES = [
   `FR`
 ];
 
-const generateRandomRatingValue = () => (Math.random() * (RATING_LIMIT_MAX - RATING_LIMIT_MIN) + RATING_LIMIT_MIN).toFixed(1);
 const generateDescription = () => DESCRIPTIONS.sort(() => Math.random() - 0.5).slice(0, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)).join(` `);
-const generateRandomBoolean = () => Math.random() >= 0.5;
-
-const getRandomArrayElement = (array) => array[Math.floor(Math.random() * array.length)];
-
-const createNumberRange = (limit) => Array.from(new Array(limit), (_, i) => i);
 
 const generateCard = () => (
   {
     title: getRandomArrayElement(TITLES),
-    rating: generateRandomRatingValue(),
+    rating: generateRandomFixedValue(RATING_LIMIT_MIN, RATING_LIMIT_MAX),
     year: generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
     duration: {
       hours: generateRandomNumber(HOURS_LIMIT_MIN, HOURS_LIMIT_MAX),
