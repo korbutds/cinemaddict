@@ -1,17 +1,12 @@
 import {createCardTemplate} from '../templates/cards';
-import {createElement} from '../utils';
+import BaseComponent from './base';
 
-export default class Card {
+export default class CardComponent extends BaseComponent {
   constructor(data) {
-    this._data = data;
-    this._element = null;
+    super(data);
 
     this._onClick = null;
     this._onCommentsClick = this._onCommentsClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -26,7 +21,7 @@ export default class Card {
     return typeof this._onClick === `function` && this._onClick();
   }
 
-  _bind() {
+  createListeners() {
     if (this._element) {
       this
         ._element
@@ -35,9 +30,12 @@ export default class Card {
     }
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this._bind();
-    return this._element;
+  removeListeners() {
+    if (this._element) {
+      this
+        ._element
+        .querySelector(`.film-card__comments`)
+        .removeEventListener(`click`, this._onCommentsClick);
+    }
   }
 }

@@ -1,17 +1,12 @@
 import {createFilterTemplate} from '../templates/filter';
-import {createElement} from '../utils';
+import BaseComponent from './base';
 
-export default class Filter {
+export default class FilterComponent extends BaseComponent {
   constructor(data) {
-    this._data = data;
-    this._element = null;
+    super(data);
 
     this._onClick = null;
     this._onFilterClick = this._onFilterClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -26,7 +21,7 @@ export default class Filter {
     return typeof this._onClick === `function` && this._onClick();
   }
 
-  _bind() {
+  createListeners() {
     if (this._element) {
       this
         ._element
@@ -37,9 +32,14 @@ export default class Filter {
     }
   }
 
-  render() {
-    this._element = createElement(this.template);
-    this._bind();
-    return this._element;
+  removeListeners() {
+    if (this._element) {
+      this
+        ._element
+        .querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`)
+        .forEach((element) => {
+          element.removeEventListener(`click`, this._onFilterClick);
+        });
+    }
   }
 }

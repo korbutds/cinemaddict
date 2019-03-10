@@ -1,7 +1,7 @@
 import {createPopupTemplate} from '../templates/popup';
-import Card from './card';
+import BaseComponent from './base';
 
-export default class Popup extends Card {
+export default class PopupComponent extends BaseComponent {
   constructor(data) {
     super(data);
 
@@ -21,7 +21,7 @@ export default class Popup extends Card {
     return typeof this._onClose === `function` && this._onClose();
   }
 
-  _bind() {
+  createListeners() {
     if (this._element) {
       this
         ._element
@@ -30,15 +30,10 @@ export default class Popup extends Card {
     }
   }
 
-  _unbind() {
+  removeListeners() {
     this
       ._element
       .querySelector(`.film-details__close-btn`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
-  }
-
-  unrender() {
-    this._unbind();
-    this._element = null;
   }
 }
