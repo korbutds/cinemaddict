@@ -1,17 +1,12 @@
 import {createFilterTemplate} from '../templates/filter';
-import {createElement} from '../utils';
+import Initial from './initial';
 
-export default class Filter {
+export default class Filter extends Initial {
   constructor(data) {
-    this._data = data;
-    this._element = null;
+    super(data);
 
     this._onClick = null;
     this._onFilterClick = this._onFilterClick.bind(this);
-  }
-
-  get element() {
-    return this._element;
   }
 
   get template() {
@@ -26,7 +21,7 @@ export default class Filter {
     return typeof this._onClick === `function` && this._onClick();
   }
 
-  _bind() {
+  createListeners() {
     if (this._element) {
       this
         ._element
@@ -35,11 +30,5 @@ export default class Filter {
           element.addEventListener(`click`, this._onFilterClick);
         });
     }
-  }
-
-  render() {
-    this._element = createElement(this.template);
-    this._bind();
-    return this._element;
   }
 }
