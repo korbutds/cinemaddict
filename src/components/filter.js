@@ -1,7 +1,7 @@
 import {createFilterTemplate} from '../templates/filter';
-import Initial from './initial';
+import BaseComponent from './base';
 
-export default class Filter extends Initial {
+export default class FilterComponent extends BaseComponent {
   constructor(data) {
     super(data);
 
@@ -28,6 +28,17 @@ export default class Filter extends Initial {
         .querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`)
         .forEach((element) => {
           element.addEventListener(`click`, this._onFilterClick);
+        });
+    }
+  }
+
+  removeListeners() {
+    if (this._element) {
+      this
+        ._element
+        .querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`)
+        .forEach((element) => {
+          element.removeEventListener(`click`, this._onFilterClick);
         });
     }
   }

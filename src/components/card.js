@@ -1,7 +1,7 @@
 import {createCardTemplate} from '../templates/cards';
-import Initial from './initial';
+import BaseComponent from './base';
 
-export default class Card extends Initial {
+export default class CardComponent extends BaseComponent {
   constructor(data) {
     super(data);
 
@@ -27,6 +27,15 @@ export default class Card extends Initial {
         ._element
         .querySelector(`.film-card__comments`)
         .addEventListener(`click`, this._onCommentsClick);
+    }
+  }
+
+  removeListeners() {
+    if (this._element) {
+      this
+        ._element
+        .querySelector(`.film-card__comments`)
+        .removeEventListener(`click`, this._onCommentsClick);
     }
   }
 }

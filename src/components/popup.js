@@ -1,7 +1,7 @@
 import {createPopupTemplate} from '../templates/popup';
-import Initial from './initial';
+import BaseComponent from './base';
 
-export default class Popup extends Initial {
+export default class PopupComponent extends BaseComponent {
   constructor(data) {
     super(data);
 

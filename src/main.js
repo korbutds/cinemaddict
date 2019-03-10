@@ -2,10 +2,10 @@ import {generateRandomNumber} from './utils';
 import {generateCards} from './mocks/cards';
 import FILTER_DATA from './data/filter';
 
-import Card from './components/card';
-import CardFeatured from './components/card-featured';
-import Filter from './components/filter';
-import Popup from './components/popup';
+import CardComponent from './components/card';
+import CardFeaturedComponent from './components/card-featured';
+import FilterComponent from './components/filter';
+import PopupComponent from './components/popup';
 
 const CARDS_LIMIT_MIN = 2;
 const CARDS_LIMIT_MAX = 7;
@@ -16,33 +16,32 @@ const filmsMostCommentedElement = document.querySelector(`.films-list--extra:nth
 const bodyElement = document.querySelector(`body`);
 const mainElement = document.querySelector(`main`);
 
-const setEventListeners = (cardComponent, popupComponent, popupElement) => {
+const setEventListeners = (cardComponent, popupComponent) => {
   cardComponent.onClick = () => {
     popupComponent.render();
-    bodyElement.appendChild(popupElement);
+    bodyElement.appendChild(popupComponent.element);
   };
   popupComponent.onClose = () => {
+    bodyElement.removeChild(popupComponent.element);
     popupComponent.unrender();
-    bodyElement.removeChild(popupElement);
   };
 };
 
 const addFeaturedCards = (limit, container) => {
   generateCards(limit).forEach((data) => {
-    const cardFeaturedComponent = new CardFeatured(data);
+    const cardFeaturedComponent = new CardFeaturedComponent(data);
     const cardFeaturedElement = cardFeaturedComponent.render();
-    const popupComponent = new Popup(data);
-    const popupElement = popupComponent.render();
-    setEventListeners(cardFeaturedComponent, popupComponent, popupElement);
+    const popupComponent = new PopupComponent(data);
+    setEventListeners(cardFeaturedComponent, popupComponent);
     container.appendChild(cardFeaturedElement);
   });
 };
 
 const addCards = (limit, container) => {
   generateCards(limit).forEach((data) => {
-    const cardComponent = new Card(data);
+    const cardComponent = new CardComponent(data);
     const cardElement = cardComponent.render();
-    const popupComponent = new Popup(data);
+    const popupComponent = new PopupComponent(data);
     const popupElement = popupComponent.render();
     setEventListeners(cardComponent, popupComponent, popupElement);
     container.appendChild(cardElement);
@@ -50,7 +49,7 @@ const addCards = (limit, container) => {
 };
 
 const addFilter = (data) => {
-  const filterComponent = new Filter(data);
+  const filterComponent = new FilterComponent(data);
   const filterElement = filterComponent.render();
   mainElement.insertBefore(filterElement, mainElement.firstChild);
   filterComponent.onClick = () => {
