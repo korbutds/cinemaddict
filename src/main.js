@@ -21,7 +21,12 @@ const setEventListeners = (cardComponent, popupComponent) => {
     popupComponent.render();
     bodyElement.appendChild(popupComponent.element);
   };
-  popupComponent.onClose = () => {
+  popupComponent.onClose = (newData) => {
+    const card = {
+      comments: newData.comments,
+      yourRating: newData.yourRating
+    };
+    cardComponent.update(card);
     bodyElement.removeChild(popupComponent.element);
     popupComponent.unrender();
   };

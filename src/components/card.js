@@ -38,4 +38,11 @@ export default class CardComponent extends BaseComponent {
         .removeEventListener(`click`, this._onCommentsClick);
     }
   }
+
+  update(data) {
+    this._data.comments = data.comments.length;
+    this._data.popup.comments = data.comments;
+    this._data.popup.yourRating = data.yourRating;
+    this._element.querySelector(`.film-card__comments`).textContent = `${data.comments.length} ${data.comments.length === 1 ? `comment` : `comments`}`;
+  }
 }

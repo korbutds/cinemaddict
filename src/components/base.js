@@ -43,4 +43,6 @@ export default class BaseComponent {
       this._state.isRendered = false;
     }
   }
+
+  update() {}
 }

@@ -31,6 +31,9 @@ const DURATION_LIMIT_MAX = 180;
 
 const GENRES_LIMIT = 3;
 
+const YOUR_RATING_LIMIT_MIN = 1;
+const YOUR_RATING_LIMIT_MAX = 9;
+
 const MONTHS = [
   `January`,
   `February`,
@@ -175,12 +178,13 @@ const generateCard = () => (
       genres: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(GENRES)),
       ageLimit: generateRandomBoolean() ? `18+` : `0+`,
       original: `Здесь будет название`,
+      yourRating: generateRandomNumber(YOUR_RATING_LIMIT_MIN, YOUR_RATING_LIMIT_MAX),
       comments: [
         {
           text: `So long-long story, boring!`,
           author: `Tim Macoveev`,
           date: `3 days ago`,
-          emoji: `😴`
+          emoji: `sleeping`
         }
       ]
     }
