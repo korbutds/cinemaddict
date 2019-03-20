@@ -1,6 +1,6 @@
 import {createNumberRange} from '../utils.js';
 import {EMOJIES} from '../constants.js';
-
+import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;
 const RATINGS = createNumberRange(RATING_LIMIT_MAX);
@@ -35,11 +35,11 @@ const generateDetailsTableData = (dataPopup) => ([
   },
   {
     term: `Release Date`,
-    cell: dataPopup.releaseDay
+    cell: moment(`${dataPopup.releaseDay.getFullYear()}-${dataPopup.releaseDay.getMonth()}-${dataPopup.releaseDay.getDate()}`).format(`D MMMM YYYY`) + ` (${dataPopup.country})`
   },
   {
     term: `Runtime`,
-    cell: dataPopup.runtime
+    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes())
   },
   {
     term: `Country`,
@@ -102,7 +102,7 @@ const createCommentsElement = (data) => {
         <p class="film-details__comment-text">${comment.text}</p>
         <p class="film-details__comment-info">
           <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${comment.date}</span>
+          <span class="film-details__comment-day">${moment(comment.date, `YYYYMMDD`).fromNow()}</span>
         </p>
       </div>
     </li>`

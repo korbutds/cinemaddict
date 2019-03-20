@@ -1,6 +1,7 @@
 import {createPopupTemplate} from '../templates/popup';
 import {EMOJIES} from '../constants.js';
 import BaseComponent from './base';
+import moment from 'moment';
 
 export default class PopupComponent extends BaseComponent {
   constructor(data) {
@@ -45,7 +46,7 @@ export default class PopupComponent extends BaseComponent {
          <p class="film-details__comment-text">${comment.text}</p>
          <p class="film-details__comment-info">
            <span class="film-details__comment-author">${comment.author}</span>
-           <span class="film-details__comment-day">${comment.date}</span>
+           <span class="film-details__comment-day">${moment(comment.date, `YYYYMMDD`).fromNow()}</span>
          </p>
        </div>
      </li>`;
@@ -56,7 +57,8 @@ export default class PopupComponent extends BaseComponent {
 
   _onCommentAdd(evt) {
     if (evt.keyCode === 13 && evt.ctrlKey) {
-      if (evt.target.value) {
+      const input = this._element.querySelector(`.film-details__comment-input`);
+      if (input.value) {
         const emojiElement = this._element.querySelector(`.film-details__emoji-list`);
         let emojiValue;
         emojiElement.querySelectorAll(`input`).forEach((item) => {
@@ -65,7 +67,7 @@ export default class PopupComponent extends BaseComponent {
           }
         });
         const newComment = {
-          text: evt.target.value,
+          text: input.value,
           author: `Your comment`,
           date: new Date(),
           emoji: emojiValue
@@ -73,7 +75,7 @@ export default class PopupComponent extends BaseComponent {
         this._data.popup.comments.push(newComment);
         this._element.querySelector(`.film-details__comments-list`)
           .appendChild(this._createComment(newComment));
-        evt.target.value = ``;
+        input.value = ``;
       }
     }
   }
@@ -94,7 +96,7 @@ export default class PopupComponent extends BaseComponent {
 
       this
         ._element
-        .querySelector(`.film-details__comment-input`)
+        .querySelector(`.film-details__comments-wrap`)
         .addEventListener(`keydown`, this._onCommentAdd);
     }
   }
@@ -114,7 +116,7 @@ export default class PopupComponent extends BaseComponent {
 
     this
       ._element
-      .querySelector(`.film-details__comment-input`)
+      .querySelector(`.film-details__comments-wrap`)
       .addEventListener(`keydown`, this._onCommentAdd);
   }
 
