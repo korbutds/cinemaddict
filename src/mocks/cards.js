@@ -157,7 +157,7 @@ const generateCard = () => (
     genre: getRandomArrayElement(GENRES),
     image: getRandomArrayElement(IMAGES),
     description: generateRandomArray(DESCRIPTIONS, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)),
-    comments: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
+    commentsAmount: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
     popup: {
       director: getRandomArrayElement(DIRECTORS),
       writers: getRandomArrayElement(WRITERS),
@@ -170,7 +170,7 @@ const generateCard = () => (
       ageLimit: generateRandomBoolean() ? `18+` : `0+`,
       original: `Здесь будет название`,
       yourRating: generateRandomNumber(YOUR_RATING_LIMIT_MIN, YOUR_RATING_LIMIT_MAX),
-      comments: [
+      commentsList: [
         {
           text: `So long-long story, boring!`,
           author: `Tim Macoveev`,

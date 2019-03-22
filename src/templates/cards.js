@@ -36,9 +36,7 @@ const createDescriptionTemplate = (card) => (
 );
 
 const getDurationFromMins = (min) => {
-  const hours = Math.trunc(min / 60);
-  const minutes = min % 60;
-  return hours + `h ` + minutes + `m`;
+  return Math.trunc(min / 60) + `h ` + (min % 60) + `m`;
 };
 
 export const createCardTemplate = (data, options = defaultTemplateOptions) => (
@@ -52,7 +50,7 @@ export const createCardTemplate = (data, options = defaultTemplateOptions) => (
     </p>
     <img src="${data.image}" alt="" class="film-card__poster">
     ${options.description ? createDescriptionTemplate(data) : ``}
-    <button class="film-card__comments">${data.comments} ${data.comments === 1 ? `comment` : `comments`}</button>
+    <button class="film-card__comments">${data.commentsAmount} ${data.commentsAmount === 1 ? `comment` : `comments`}</button>
     ${options.controls ? createFormTemplate() : ``}
   </article>`
 );

@@ -92,21 +92,24 @@ const createEmojiesElement = () => (
   .join(``)
 );
 
+export const createCommentElement = (comment) => (
+  `<li class="film-details__comment">
+     <span class="film-details__comment-emoji">
+     ${EMOJIES[comment.emoji]}
+     </span>
+     <div>
+       <p class="film-details__comment-text">${comment.text}</p>
+       <p class="film-details__comment-info">
+         <span class="film-details__comment-author">${comment.author}</span>
+         <span class="film-details__comment-day">${moment(comment.date, `YYYYMMDD`).fromNow()}</span>
+       </p>
+     </div>
+   </li>`
+);
+
 const createCommentsElement = (data) => {
-  return data.popup.comments.map((comment) => (
-    `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">
-      ${EMOJIES[comment.emoji]}
-      </span>
-      <div>
-        <p class="film-details__comment-text">${comment.text}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${moment(comment.date, `YYYYMMDD`).fromNow()}</span>
-        </p>
-      </div>
-    </li>`
-  ))
+  return data.popup.commentsList.map((comment) => (
+    createCommentElement(comment)))
   .join(``);
 };
 

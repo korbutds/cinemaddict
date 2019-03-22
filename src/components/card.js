@@ -40,9 +40,11 @@ export default class CardComponent extends BaseComponent {
   }
 
   update(data) {
-    this._data.comments = data.comments.length;
-    this._data.popup.comments = data.comments;
+    const commentsAmount = data.comments.length;
+    this._data.commentsAmount = commentsAmount;
+    this._data.popup.commentsList = data.comments;
     this._data.popup.yourRating = data.yourRating;
-    this._element.querySelector(`.film-card__comments`).textContent = `${data.comments.length} ${data.comments.length === 1 ? `comment` : `comments`}`;
+    this._element.querySelector(`.film-card__comments`).textContent =
+      `${commentsAmount} ${commentsAmount === 1 ? `comment` : `comments`}`;
   }
 }
