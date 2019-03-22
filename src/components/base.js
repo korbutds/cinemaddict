@@ -1,12 +1,12 @@
 import {createElement} from '../utils';
-import _ from 'lodash';
+import cloneDeep from 'lodash.clonedeep';
 
 export default class BaseComponent {
   constructor(data) {
     if (new.target === BaseComponent) {
       throw new Error(`Can't instantiate BaseComponent, only concrete one.`);
     }
-    this._data = _.cloneDeep(data);
+    this._data = cloneDeep(data);
     this._element = null;
     this._state = {
       isRendered: false
