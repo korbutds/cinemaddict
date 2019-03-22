@@ -35,7 +35,7 @@ const generateDetailsTableData = (dataPopup) => ([
   },
   {
     term: `Release Date`,
-    cell: moment(`${dataPopup.releaseDay.getFullYear()}-${dataPopup.releaseDay.getMonth()}-${dataPopup.releaseDay.getDate()}`).format(`D MMMM YYYY`) + ` (${dataPopup.country})`
+    cell: moment(dataPopup.releaseDay).format(`D MMMM YYYY`) + ` (${dataPopup.country})`
   },
   {
     term: `Runtime`,

@@ -23,12 +23,8 @@ export default class PopupComponent extends BaseComponent {
 
   _onCloseButtonClick(evt) {
     evt.preventDefault();
-    const newData = {
-      comments: this._data.popup.comments,
-      yourRating: this._data.popup.yourRating
-    };
     if (typeof this._onClose === `function`) {
-      this._onClose(newData);
+      this._onClose({comments: this._data.popup.comments, yourRating: this._data.popup.yourRating});
     }
   }
 
