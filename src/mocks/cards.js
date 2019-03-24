@@ -14,22 +14,19 @@ const YEARS_LIMIT_MAX = 2019;
 const RATING_LIMIT_MIN = 0.1;
 const RATING_LIMIT_MAX = 10;
 
-const HOURS_LIMIT_MIN = 1;
-const HOURS_LIMIT_MAX = 5;
-
-const MINUTES_LIMIT_MIN = 0;
-const MINUTES_LIMIT_MAX = 59;
-
 const COMMENTS_LIMIT_MIN = 0;
 const COMMENTS_LIMIT_MAX = 15;
 
 const DAY_LIMIT_MIN = 1;
 const DAY_LIMIT_MAX = 29;
 
-const DURATION_LIMIT_MIN = 60;
-const DURATION_LIMIT_MAX = 180;
+const DURATION_LIMIT_MIN = 1000 * 60 * 60;
+const DURATION_LIMIT_MAX = 1000 * 60 * 250;
 
 const GENRES_LIMIT = 3;
+
+const YOUR_RATING_LIMIT_MIN = 1;
+const YOUR_RATING_LIMIT_MAX = 9;
 
 const MONTHS = [
   `January`,
@@ -154,33 +151,32 @@ const generateCard = () => (
   {
     title: getRandomArrayElement(TITLES),
     rating: generateRandomFixedValue(RATING_LIMIT_MIN, RATING_LIMIT_MAX),
-    year: generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
-    duration: {
-      hours: generateRandomNumber(HOURS_LIMIT_MIN, HOURS_LIMIT_MAX),
-      minutes: generateRandomNumber(MINUTES_LIMIT_MIN, MINUTES_LIMIT_MAX)
-    },
+    year: new Date(generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
+        generateRandomNumber(0, MONTHS.length - 1), generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX)),
+    duration: generateRandomNumber(DURATION_LIMIT_MIN, DURATION_LIMIT_MAX),
     genre: getRandomArrayElement(GENRES),
     image: getRandomArrayElement(IMAGES),
     description: generateRandomArray(DESCRIPTIONS, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)),
-    comments: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
+    commentsAmount: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
     popup: {
       director: getRandomArrayElement(DIRECTORS),
       writers: getRandomArrayElement(WRITERS),
       actors: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(ACTORS)).join(`, `),
-      releaseDay: generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX) + ` `
-        + getRandomArrayElement(MONTHS) + ` ` + generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX) + ` (`
-        + getRandomArrayElement(COUNTRIES) + `)`,
+      releaseDay: new Date(generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
+          generateRandomNumber(0, MONTHS.length - 1), generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX)),
       runtime: generateRandomNumber(DURATION_LIMIT_MIN, DURATION_LIMIT_MAX),
       country: getRandomArrayElement(COUNTRIES),
       genres: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(GENRES)),
       ageLimit: generateRandomBoolean() ? `18+` : `0+`,
       original: `Здесь будет название`,
-      comments: [
+      yourRating: generateRandomNumber(YOUR_RATING_LIMIT_MIN, YOUR_RATING_LIMIT_MAX),
+      commentsList: [
         {
           text: `So long-long story, boring!`,
           author: `Tim Macoveev`,
-          date: `3 days ago`,
-          emoji: `😴`
+          date: new Date(generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
+              generateRandomNumber(0, MONTHS.length - 1), generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX)),
+          emoji: `sleeping`
         }
       ]
     }

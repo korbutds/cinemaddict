@@ -1,7 +1,7 @@
-import {generateRandomNumber} from '../utils.js';
 import {createNumberRange} from '../utils.js';
+import {EMOJIES} from '../constants.js';
+import moment from 'moment';
 
-const RATING_LIMIT_MIN = 1;
 const RATING_LIMIT_MAX = 9;
 const RATINGS = createNumberRange(RATING_LIMIT_MAX);
 
@@ -20,21 +20,6 @@ const CONTROLS = [
   }
 ];
 
-const EMOJIES = [
-  {
-    emoji: `😴`,
-    value: `sleeping`
-  },
-  {
-    emoji: `😐`,
-    value: `neutral-face`
-  },
-  {
-    emoji: `😀`,
-    value: `grinning`
-  }
-];
-
 const generateDetailsTableData = (dataPopup) => ([
   {
     term: `Director`,
@@ -50,11 +35,11 @@ const generateDetailsTableData = (dataPopup) => ([
   },
   {
     term: `Release Date`,
-    cell: dataPopup.releaseDay
+    cell: moment(dataPopup.releaseDay).format(`D MMMM YYYY`) + ` (${dataPopup.country})`
   },
   {
     term: `Runtime`,
-    cell: dataPopup.runtime
+    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes())
   },
   {
     term: `Country`,
@@ -66,9 +51,9 @@ const generateDetailsTableData = (dataPopup) => ([
   }
 ]);
 
-const createRatingElement = () => (
+const createRatingElement = (data) => (
   RATINGS.map((rating) => (
-    `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${rating === 5 ? `checked` : ``}>
+    `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${rating === data.popup.yourRating ? `checked` : ``}>
     <label class="film-details__user-rating-label" for="rating-${rating}">${rating}</label>`
   ))
   .join(``)
@@ -100,28 +85,33 @@ const createControlsElement = () => (
 );
 
 const createEmojiesElement = () => (
-  EMOJIES.map((emoji) => (
-    `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${emoji.value}" value="${emoji.value}" ${emoji.value === `neutral-face` ? `checked` : ``}>
-    <label class="film-details__emoji-label" for="emoji-${emoji.value}">${emoji.emoji}</label>`
+  Object.keys(EMOJIES).map((value) => (
+    `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${value}" value="${value}" ${value === `neutral-face` ? `checked` : ``}>
+    <label class="film-details__emoji-label" for="emoji-${value}">${EMOJIES[value]}</label>`
   ))
   .join(``)
 );
 
-const createCommentsElement = (data) => (
-  data.popup.comments.map((comment) => (
-    `<li class="film-details__comment">
-      <span class="film-details__comment-emoji">${comment.emoji}</span>
-      <div>
-        <p class="film-details__comment-text">${comment.text}</p>
-        <p class="film-details__comment-info">
-          <span class="film-details__comment-author">${comment.author}</span>
-          <span class="film-details__comment-day">${comment.date}</span>
-        </p>
-      </div>
-    </li>`
-  ))
-  .join(``)
+export const createCommentElement = (comment) => (
+  `<li class="film-details__comment">
+     <span class="film-details__comment-emoji">
+     ${EMOJIES[comment.emoji]}
+     </span>
+     <div>
+       <p class="film-details__comment-text">${comment.text}</p>
+       <p class="film-details__comment-info">
+         <span class="film-details__comment-author">${comment.author}</span>
+         <span class="film-details__comment-day">${moment(comment.date, `YYYYMMDD`).fromNow()}</span>
+       </p>
+     </div>
+   </li>`
 );
+
+const createCommentsElement = (data) => {
+  return data.popup.commentsList.map((comment) => (
+    createCommentElement(comment)))
+  .join(``);
+};
 
 export const createPopupTemplate = (data) => (
   `<section class="film-details">
@@ -144,7 +134,7 @@ export const createPopupTemplate = (data) => (
 
             <div class="film-details__rating">
               <p class="film-details__total-rating">${data.rating}</p>
-              <p class="film-details__user-rating">Your rate ${generateRandomNumber(RATING_LIMIT_MIN, RATING_LIMIT_MAX)}</p>
+              <p class="film-details__user-rating">Your rate ${data.popup.yourRating}</p>
             </div>
           </div>
           <table class="film-details__table">
@@ -192,7 +182,7 @@ export const createPopupTemplate = (data) => (
             <h3 class="film-details__user-rating-title">Incredibles 2</h3>
             <p class="film-details__user-rating-feelings">How you feel it?</p>
             <div class="film-details__user-rating-score">
-              ${createRatingElement()}
+              ${createRatingElement(data)}
             </div>
           </section>
         </div>
