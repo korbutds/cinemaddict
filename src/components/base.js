@@ -21,12 +21,8 @@ export default class BaseComponent {
     throw new Error(`You have to define template.`);
   }
 
-  createListeners() {
-    throw new Error(`You have to define createListeners.`);
-  }
-  removeListeners() {
-    throw new Error(`You have to define removeListeners.`);
-  }
+  createListeners() {}
+  removeListeners() {}
 
   render() {
     if (!this._state.isRendered) {

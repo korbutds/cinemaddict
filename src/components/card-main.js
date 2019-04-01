@@ -1,7 +1,7 @@
 import {createCardTemplate} from '../templates/cards';
 import BaseComponent from './base';
 
-export default class CardComponent extends BaseComponent {
+export default class CardMainComponent extends BaseComponent {
   constructor(data) {
     super(data);
 

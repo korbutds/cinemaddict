@@ -6,6 +6,7 @@ const AMOUNT_LIMIT_MAX = 100;
 export default [
   {
     href: `#all`,
+    id: `all`,
     isActive: true,
     title: `All movies`,
     isCountable: false,
@@ -13,6 +14,7 @@ export default [
   },
   {
     href: `#watchlist`,
+    id: `watchlist`,
     isActive: false,
     title: `Watchlist`,
     count: generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX),
@@ -21,6 +23,7 @@ export default [
   },
   {
     href: `#history`,
+    id: `history`,
     isActive: false,
     title: `History`,
     count: generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX),
@@ -29,6 +32,7 @@ export default [
   },
   {
     href: `#favorites`,
+    id: `favorites`,
     isActive: false,
     title: `Favorites`,
     count: generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX),
@@ -37,6 +41,7 @@ export default [
   },
   {
     href: `#stats`,
+    id: `stats`,
     isActive: false,
     title: `Stats`,
     isCountable: false,

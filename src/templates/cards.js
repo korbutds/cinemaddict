@@ -54,3 +54,9 @@ export const createCardTemplate = (data, options = defaultTemplateOptions) => (
     ${options.controls ? createFormTemplate() : ``}
   </article>`
 );
+
+export const createCardsTemplate = () => (
+  `<div class="films-list__container">
+
+  </div>`
+);
