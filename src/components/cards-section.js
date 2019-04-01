@@ -1,26 +1,23 @@
 import BaseComponent from './base';
 import PopupComponent from './popup';
-import {createCardsTemplate} from '../templates/cards';
+import {createCardsSectionTemplate} from '../templates/cards';
 
-export default class CardsComponent extends BaseComponent {
+export default class CardsSectionComponent extends BaseComponent {
   constructor(data) {
     super(data);
   }
 
   get template() {
-    return createCardsTemplate();
+    return createCardsSectionTemplate();
   }
 
   set onChange(fn) {
     this._onChange = fn;
   }
 
-  _filterData() {}
-  _setComponent() {}
-
-  _renderCards(containerElement) {
-    this.components = this._filterData().map((card) => {
-      const cardComponent = this._setComponent(card);
+  _renderCards(containerElement, filteredData, callback) {
+    this.components = filteredData.map((card) => {
+      const cardComponent = callback(card);
       const container = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
       cardComponent.onClick = () => {
@@ -45,9 +42,9 @@ export default class CardsComponent extends BaseComponent {
     });
   }
 
-  render() {
+  render(filteredData, callback) {
     const element = super.render();
-    this._renderCards(element);
+    this._renderCards(element, filteredData, callback);
     return element;
   }
 }

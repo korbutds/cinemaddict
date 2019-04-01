@@ -55,8 +55,34 @@ export const createCardTemplate = (data, options = defaultTemplateOptions) => (
   </article>`
 );
 
-export const createCardsTemplate = () => (
+export const createCardsSectionTemplate = () => (
   `<div class="films-list__container">
 
   </div>`
+);
+
+export const createCardsSectionsTemplate = () => (
+  `<section class="films">
+    <section class="films-list" id="films-main-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+
+      <!--MAIN-->
+
+      <button class="films-list__show-more">Show more</button>
+    </section>
+
+    <section class="films-list--extra" id="films-rated-list">
+      <h2 class="films-list__title">Top rated</h2>
+
+      <!--EXTRA-->
+
+    </section>
+
+    <section class="films-list--extra" id="films-commented-list">
+      <h2 class="films-list__title">Most commented</h2>
+
+      <!--EXTRA-->
+
+    </section>
+  </section>`
 );
