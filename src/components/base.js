@@ -21,6 +21,10 @@ export default class BaseComponent {
     throw new Error(`You have to define template.`);
   }
 
+  setState(newState = {}) {
+    this._state = Object.assign({}, this._state, newState);
+  }
+
   createListeners() {}
   removeListeners() {}
 

@@ -17,7 +17,8 @@ export default class FilterComponent extends BaseComponent {
     this._onClick = fn;
   }
 
-  _onFilterClick() {
+  _onFilterClick(evt) {
+    evt.preventDefault();
     return typeof this._onClick === `function` && this._onClick(this._element.id);
   }
 

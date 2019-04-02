@@ -20,19 +20,25 @@ export default class CardsSectionComponent extends BaseComponent {
       const cardComponent = callback(card);
       const container = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
+      const update = (newData) => {
+        cardComponent.update(newData);
+        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
+        this._data[index] = Object.assign({}, newData);
+        if (typeof this._onChange === `function`) {
+          this._onChange(this._data);
+        }
+      };
       cardComponent.onClick = () => {
         popupComponent.render();
         container.appendChild(popupComponent.element);
       };
+      cardComponent.onMarkAsWatched = update;
+      cardComponent.onAddToWatchList = update;
+      cardComponent.onAddToFavorite = update;
       popupComponent.onClose = (newData) => {
-        cardComponent.update(newData);
-        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
         container.removeChild(popupComponent.element);
         popupComponent.unrender();
-        if (typeof this._onChange === `function`) {
-          this._onChange(this._data);
-        }
+        update(newData);
       };
       return cardComponent;
     });

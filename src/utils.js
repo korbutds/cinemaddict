@@ -1,4 +1,3 @@
-
 export const generateRandomNumber = (min, max) => Math.floor(Math.random() * (max + 1 - min) + min);
 export const generateRandomBoolean = () => Math.random() >= 0.5;
 export const generateRandomFixedValue = (min, max) => (Math.random() * (max - min) + min).toFixed(1);
@@ -11,4 +10,16 @@ export const createElement = (template) => {
   const newElement = document.createElement(`div`);
   newElement.innerHTML = template;
   return newElement.firstChild;
+};
+
+export const getFilteredCards = (cardsList) => {
+  return {
+    'all': () => cardsList,
+    'watchlist': () => cardsList
+        .filter((card) => card.isOnWatchlist),
+    'history': () => cardsList
+        .filter((card) => card.isWatched),
+    'favorites': () => cardsList
+          .filter((card) => card.isFavorite)
+  };
 };

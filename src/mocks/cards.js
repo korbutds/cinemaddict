@@ -158,6 +158,9 @@ const generateCard = () => (
     image: getRandomArrayElement(IMAGES),
     description: generateRandomArray(DESCRIPTIONS, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)),
     commentsAmount: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
+    isOnWatchlist: generateRandomBoolean(),
+    isWatched: generateRandomBoolean(),
+    isFavorite: generateRandomBoolean(),
     popup: {
       director: getRandomArrayElement(DIRECTORS),
       writers: getRandomArrayElement(WRITERS),

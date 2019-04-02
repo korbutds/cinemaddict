@@ -67,4 +67,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._featuredByCommentsComponent.onChange = updateData;
     return element;
   }
+
+  update(filteredData) {
+    this._element.querySelector(`#films-main-list`).removeChild(this._mainComponent._element);
+    this._mainComponent.unrender();
+    this._element.querySelector(`#films-main-list`)
+      .insertBefore(this._mainComponent.render(filteredData, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
+  }
 }
