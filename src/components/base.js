@@ -41,5 +41,7 @@ export default class BaseComponent {
     }
   }
 
-  update() {}
+  update(data) {
+    this._data = Object.assign({}, data);
+  }
 }

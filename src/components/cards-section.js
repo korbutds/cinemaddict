@@ -25,9 +25,9 @@ export default class CardsSectionComponent extends BaseComponent {
         container.appendChild(popupComponent.element);
       };
       popupComponent.onClose = (newData) => {
-        cardComponent.update({comments: newData.comments, yourRating: newData.yourRating});
+        cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, cardComponent._data);
+        this._data[index] = Object.assign({}, newData);
         container.removeChild(popupComponent.element);
         popupComponent.unrender();
         if (typeof this._onChange === `function`) {

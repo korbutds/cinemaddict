@@ -22,8 +22,9 @@ export default class PopupComponent extends BaseComponent {
 
   _onCloseButtonClick(evt) {
     evt.preventDefault();
+    this._data.commentsAmount = this._data.popup.commentsList.length;
     if (typeof this._onClose === `function`) {
-      this._onClose({comments: this._data.popup.commentsList, yourRating: this._data.popup.yourRating});
+      this._onClose(this._data);
     }
   }
 
@@ -94,11 +95,5 @@ export default class PopupComponent extends BaseComponent {
       ._element
       .querySelector(`.film-details__comments-wrap`)
       .addEventListener(`keydown`, this._onCommentAdd);
-  }
-
-  update(data) {
-    this._data.commentsAmount = data.comments.length;
-    this._data.popup.commentsList = data.comments;
-    this._data.popup.yourRating = data.yourRating;
   }
 }
