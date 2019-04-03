@@ -3,12 +3,14 @@ import {getFilteredCards} from './utils';
 import FILTER_DATA from './data/filter';
 import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
+import StatisticsComponent from './components/statistics';
 
 const CARDS_LIMIT_MAX = 7;
 const mainElement = document.querySelector(`main`);
 let cardsList = generateCards(CARDS_LIMIT_MAX);
 let filtersComponent;
 let cardsSectionsComponent;
+let statisticsComponent;
 
 const updateCardsList = (updatedCards) => {
   cardsList = updatedCards;
@@ -36,3 +38,10 @@ cardsList.forEach((card, index) => {
 
 addFilters();
 addCards();
+
+document.querySelector(`#stats`).addEventListener(`click`, () => {
+  cardsSectionsComponent.unrender();
+  mainElement.removeChild(mainElement.lastChild);
+  statisticsComponent = new StatisticsComponent(cardsList);
+  mainElement.appendChild(statisticsComponent.render());
+});

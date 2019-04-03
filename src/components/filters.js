@@ -24,11 +24,13 @@ export default class FiltersComponent extends BaseComponent {
   renderFilters(containerElement) {
     this.components = this._data.map((filter) => {
       const component = new FilterComponent(filter);
-      component.onClick = (filterId) => {
-        if (typeof this._onSelect === `function`) {
-          this._onSelect(filterId);
-        }
-      };
+      if (filter.id !== `stats`) {
+        component.onClick = (filterId) => {
+          if (typeof this._onSelect === `function`) {
+            this._onSelect(filterId);
+          }
+        };
+      }
       return component;
     });
     this.components.forEach((component) => {

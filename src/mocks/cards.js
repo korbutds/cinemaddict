@@ -4,6 +4,7 @@ import {getRandomArrayElement} from '../utils.js';
 import {createNumberRange} from '../utils.js';
 import {generateRandomFixedValue} from '../utils.js';
 import {generateRandomArray} from '../utils.js';
+import moment from 'moment';
 
 const DESCRIPTION_LIMIT_MIN = 1;
 const DESCRIPTION_LIMIT_MAX = 3;
@@ -158,6 +159,7 @@ const generateCard = () => (
     image: getRandomArrayElement(IMAGES),
     description: generateRandomArray(DESCRIPTIONS, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)),
     commentsAmount: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
+    userDate: moment().subtract(generateRandomNumber(0, 365), `days`),
     isOnWatchlist: generateRandomBoolean(),
     isWatched: generateRandomBoolean(),
     isFavorite: generateRandomBoolean(),
