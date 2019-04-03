@@ -1,5 +1,5 @@
 import {createPopupTemplate, createCommentElement} from '../templates/popup';
-import {createElement} from '../utils.js';
+import {createElement} from '../lib/element';
 import BaseComponent from './base';
 
 export default class PopupComponent extends BaseComponent {

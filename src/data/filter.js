@@ -1,4 +1,4 @@
-import {generateRandomNumber} from '../utils.js';
+import {generateRandomNumber} from '../lib/random';
 
 const AMOUNT_LIMIT_MIN = 0;
 const AMOUNT_LIMIT_MAX = 100;

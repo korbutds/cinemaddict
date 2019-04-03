@@ -1,7 +1,6 @@
 import {createCardTemplate} from '../templates/cards';
 import CardMainComponent from './card-main';
-import {createElement} from '../utils';
-
+import {createElement} from '../lib/element';
 
 export default class CardFeaturedComponent extends CardMainComponent {
   get template() {

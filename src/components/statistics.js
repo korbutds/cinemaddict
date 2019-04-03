@@ -103,7 +103,8 @@ export default class StatisticsComponent extends BaseComponent {
       .innerHTML = createAmountTemplate(this._filteredData.length);
     element.querySelector(`.statistic__item-text.duration`)
       .innerHTML = createDurationTemplate(this._getTotalDuration());
-    element.querySelector(`.statistic__item-text.genre`).innerHTML = `${this._getTopGenre()}`;
+    element.querySelector(`.statistic__item-text.genre`)
+      .innerHTML = `${this._getTopGenre() !== undefined ? this._getTopGenre() : `No genre`}`;
     return element;
   }
 }

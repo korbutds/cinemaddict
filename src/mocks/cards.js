@@ -1,9 +1,5 @@
-import {generateRandomNumber} from '../utils.js';
-import {generateRandomBoolean} from '../utils.js';
-import {getRandomArrayElement} from '../utils.js';
-import {createNumberRange} from '../utils.js';
-import {generateRandomFixedValue} from '../utils.js';
-import {generateRandomArray} from '../utils.js';
+import {generateRandomNumber, generateRandomBoolean, getRandomArrayElement,
+  createRandomNumberRange, generateRandomFixedValue, generateRandomArray} from '../lib/random';
 import moment from 'moment';
 
 const DESCRIPTION_LIMIT_MIN = 1;
@@ -166,12 +162,12 @@ const generateCard = () => (
     popup: {
       director: getRandomArrayElement(DIRECTORS),
       writers: getRandomArrayElement(WRITERS),
-      actors: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(ACTORS)).join(`, `),
+      actors: createRandomNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(ACTORS)).join(`, `),
       releaseDay: new Date(generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
           generateRandomNumber(0, MONTHS.length - 1), generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX)),
       runtime: generateRandomNumber(DURATION_LIMIT_MIN, DURATION_LIMIT_MAX),
       country: getRandomArrayElement(COUNTRIES),
-      genres: createNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(GENRES)),
+      genres: createRandomNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(GENRES)),
       ageLimit: generateRandomBoolean() ? `18+` : `0+`,
       original: `Здесь будет название`,
       yourRating: generateRandomNumber(YOUR_RATING_LIMIT_MIN, YOUR_RATING_LIMIT_MAX),
@@ -188,4 +184,4 @@ const generateCard = () => (
   }
 );
 
-export const generateCards = (limit) => createNumberRange(limit).map(generateCard);
+export const generateCards = (limit) => createRandomNumberRange(limit).map(generateCard);

@@ -1,9 +1,14 @@
-import {createNumberRange} from '../utils.js';
-import {EMOJIES} from '../constants.js';
+import {createRandomNumberRange} from '../lib/random';
 import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;
-const RATINGS = createNumberRange(RATING_LIMIT_MAX);
+const RATINGS = createRandomNumberRange(RATING_LIMIT_MAX);
+const EMOJIES = {
+  'sleeping': `😴`,
+  'neutral-face': `😐`,
+  'grinning': `😀`
+};
+
 
 const CONTROLS = [
   {
