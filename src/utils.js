@@ -11,15 +11,3 @@ export const createElement = (template) => {
   newElement.innerHTML = template;
   return newElement.firstChild;
 };
-
-export const getFilteredCards = (cardsList) => {
-  return {
-    'all': () => cardsList,
-    'watchlist': () => cardsList
-        .filter((card) => card.isOnWatchlist),
-    'history': () => cardsList
-        .filter((card) => card.isWatched),
-    'favorites': () => cardsList
-          .filter((card) => card.isFavorite)
-  };
-};

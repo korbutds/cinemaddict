@@ -1,5 +1,5 @@
 import {generateCards} from './mocks/cards';
-import {getFilteredCards} from './utils';
+import {getFilteredCards, setFiltersCounts} from './lib/filters';
 import FILTER_DATA from './data/filter';
 import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
@@ -14,16 +14,25 @@ let statisticsComponent;
 
 const updateCardsList = (updatedCards) => {
   cardsList = updatedCards;
+  setFiltersCounts(cardsList);
 };
 
 const onFilterSelect = (id) => {
-  cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+  if (cardsSectionsComponent._element) {
+    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+  } else {
+    statisticsComponent.unrender();
+    mainElement.removeChild(mainElement.lastChild);
+    addCards();
+    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+  }
 };
 
 const addFilters = () => {
   filtersComponent = new FiltersComponent(FILTER_DATA);
   mainElement.insertBefore(filtersComponent.render(), mainElement.firstChild);
   filtersComponent.onSelect = onFilterSelect;
+  setFiltersCounts(cardsList);
 };
 
 const addCards = () => {
