@@ -6,17 +6,17 @@ export default class PopupComponent extends BaseComponent {
   constructor(data) {
     super(data);
 
-    this._onClose = null;
-    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
-    this._onRatingChange = this._onRatingChange.bind(this);
-    this._onCommentAdd = this._onCommentAdd.bind(this);
-
     this.setState({
       isOnWatchlist: data.isOnWatchlist,
       isWatched: data.isWatched,
       isFavorite: data.isFavorite
     });
 
+    this._onClose = null;
+    this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
+    this._onEscClick = this._onEscClick.bind(this);
+    this._onRatingChange = this._onRatingChange.bind(this);
+    this._onCommentAdd = this._onCommentAdd.bind(this);
     this._onMarkAsWatchedButtonClick = this._onMarkAsWatchedButtonClick.bind(this);
     this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
     this._onAddToFavoriteButtonClick = this._onAddToFavoriteButtonClick.bind(this);
@@ -59,6 +59,15 @@ export default class PopupComponent extends BaseComponent {
     this._data.commentsAmount = this._data.popup.commentsList.length;
     if (typeof this._onClose === `function`) {
       this._onClose(this._data);
+    }
+  }
+
+  _onEscClick(evt) {
+    if (evt.keyCode === 27) {
+      this._data.commentsAmount = this._data.popup.commentsList.length;
+      if (typeof this._onClose === `function`) {
+        this._onClose(this._data);
+      }
     }
   }
 
@@ -116,6 +125,7 @@ export default class PopupComponent extends BaseComponent {
       this
         ._element.querySelector(`#favorite`)
         .addEventListener(`change`, this._onAddToFavoriteButtonClick);
+      window.addEventListener(`keydown`, this._onEscClick);
     }
   }
 
@@ -143,5 +153,6 @@ export default class PopupComponent extends BaseComponent {
     this
       ._element.querySelector(`#favorite`)
       .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
+    window.removeEventListener(`keydown`, this._onEscClick);
   }
 }

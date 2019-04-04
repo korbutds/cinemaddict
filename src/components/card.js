@@ -135,7 +135,6 @@ export default class CardComponent extends BaseComponent {
     if (!controls) {
       this._setButtonsOutline(this._element);
     }
-
     this._element.querySelector(`.film-card__comments`).textContent =
       `${data.commentsAmount} ${data.commentsAmount === 1 ? `comment` : `comments`}`;
   }
