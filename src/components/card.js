@@ -1,7 +1,8 @@
 import {createCardTemplate} from '../templates/cards';
+import {createElement} from '../lib/element';
 import BaseComponent from './base';
 
-export default class CardMainComponent extends BaseComponent {
+export default class CardComponent extends BaseComponent {
   constructor(data) {
     super(data);
 
@@ -17,10 +18,6 @@ export default class CardMainComponent extends BaseComponent {
     this._onMarkAsWatchedButtonClick = this._onMarkAsWatchedButtonClick.bind(this);
     this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
     this._onAddToFavoriteButtonClick = this._onAddToFavoriteButtonClick.bind(this);
-  }
-
-  get template() {
-    return createCardTemplate(this._data);
   }
 
   set onClick(fn) {
@@ -94,15 +91,17 @@ export default class CardMainComponent extends BaseComponent {
         ._element
         .querySelector(`.film-card__comments`)
         .addEventListener(`click`, this._onCommentsClick);
-      this
-        ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
-        .addEventListener(`click`, this._onAddToWatchListButtonClick);
-      this
-        ._element.querySelector(`.film-card__controls-item--mark-as-watched`)
-        .addEventListener(`click`, this._onMarkAsWatchedButtonClick);
-      this
-        ._element.querySelector(`.film-card__controls-item--favorite`)
-        .addEventListener(`click`, this._onAddToFavoriteButtonClick);
+      if (this._controls) {
+        this
+          ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+          .addEventListener(`click`, this._onAddToWatchListButtonClick);
+        this
+          ._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+          .addEventListener(`click`, this._onMarkAsWatchedButtonClick);
+        this
+          ._element.querySelector(`.film-card__controls-item--favorite`)
+          .addEventListener(`click`, this._onAddToFavoriteButtonClick);
+      }
     }
   }
 
@@ -112,33 +111,45 @@ export default class CardMainComponent extends BaseComponent {
         ._element
         .querySelector(`.film-card__comments`)
         .removeEventListener(`click`, this._onCommentsClick);
-      this
-        ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
-        .removeEventListener(`click`, this._onAddToWatchListButtonClick);
-      this
-        ._element.querySelector(`.film-card__controls-item--mark-as-watched`)
-        .removeEventListener(`click`, this._onMarkAsWatchedButtonClick);
-      this
-        ._element.querySelector(`.film-card__controls-item--favorite`)
-        .removeEventListener(`click`, this._onAddToFavoriteButtonClick);
+      if (this._controls) {
+        this
+          ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
+          .removeEventListener(`click`, this._onAddToWatchListButtonClick);
+        this
+          ._element.querySelector(`.film-card__controls-item--mark-as-watched`)
+          .removeEventListener(`click`, this._onMarkAsWatchedButtonClick);
+        this
+          ._element.querySelector(`.film-card__controls-item--favorite`)
+          .removeEventListener(`click`, this._onAddToFavoriteButtonClick);
+      }
     }
   }
 
-  update(data) {
+  update(data, controls) {
     super.update(data);
     this.setState({
       isOnWatchlist: this._data.isOnWatchlist,
       isWatched: this._data.isWatched,
       isFavorite: this._data.isFavorite
     });
-    this._setButtonsOutline(this._element);
+    if (!controls) {
+      this._setButtonsOutline(this._element);
+    }
+
     this._element.querySelector(`.film-card__comments`).textContent =
       `${data.commentsAmount} ${data.commentsAmount === 1 ? `comment` : `comments`}`;
   }
 
-  render() {
-    const element = super.render();
-    this._setButtonsOutline(element);
-    return element;
+  render(controls) {
+    if (!this._state.isRendered) {
+      this._controls = !controls;
+      this._element = createElement(createCardTemplate(this._data, controls));
+      this.createListeners();
+      this._state.isRendered = true;
+      if (!controls) {
+        this._setButtonsOutline(this._element);
+      }
+    }
+    return this._element;
   }
 }

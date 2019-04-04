@@ -17,9 +17,7 @@ export default class BaseComponent {
     return this._element;
   }
 
-  get template() {
-    throw new Error(`You have to define template.`);
-  }
+  get template() {}
 
   setState(newState = {}) {
     this._state = Object.assign({}, this._state, newState);

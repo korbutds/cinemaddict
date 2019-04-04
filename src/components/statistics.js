@@ -43,19 +43,19 @@ export default class StatisticsComponent extends BaseComponent {
     };
   }
 
-  _getTotalDuration() {
+  _getTotalDuration(data) {
     let duration = 0;
-    this._filteredData.forEach((item) => {
+    data.forEach((item) => {
       duration += item.duration;
     });
     return duration;
   }
 
-  _getTopGenre() {
-    const counts = this._getGenresCounts(this._filteredData);
+  _getTopGenre(data) {
+    const counts = this._getGenresCounts(data);
     const max = Math.max(...counts);
     const index = counts.indexOf(max);
-    return this._getGenres(this._filteredData)[index];
+    return this._getGenres(data)[index];
   }
 
   _updateChart(filter) {
@@ -64,6 +64,12 @@ export default class StatisticsComponent extends BaseComponent {
     const labels = this._getGenres(data);
     const counts = this._getGenresCounts(data);
     const height = 50;
+    this._element.querySelector(`.statistic__item-text.total`)
+      .innerHTML = createAmountTemplate(data.length);
+    this._element.querySelector(`.statistic__item-text.duration`)
+      .innerHTML = createDurationTemplate(this._getTotalDuration(data));
+    this._element.querySelector(`.statistic__item-text.genre`)
+      .innerHTML = `${this._getTopGenre(data) !== undefined ? this._getTopGenre(data) : `No genre`}`;
     ctx.height = height * labels.length;
     this._chart = new ChartComponent({ctx, labels, counts});
     this._chart.render();
@@ -100,12 +106,6 @@ export default class StatisticsComponent extends BaseComponent {
   render() {
     const element = super.render();
     this._updateChart(`statistic-all-time`);
-    element.querySelector(`.statistic__item-text.total`)
-      .innerHTML = createAmountTemplate(this._filteredData.length);
-    element.querySelector(`.statistic__item-text.duration`)
-      .innerHTML = createDurationTemplate(this._getTotalDuration());
-    element.querySelector(`.statistic__item-text.genre`)
-      .innerHTML = `${this._getTopGenre() !== undefined ? this._getTopGenre() : `No genre`}`;
     element.querySelector(`.statistic__rank-label`).innerHTML = setUserRank(this._filteredData.length);
     return element;
   }

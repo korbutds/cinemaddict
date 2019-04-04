@@ -1,7 +1,5 @@
 import BaseComponent from './base';
-import CardMainComponent from './card-main';
 import CardsSectionComponent from './cards-section';
-import CardFeaturedComponent from './card-featured';
 import {createCardsSectionsTemplate} from '../templates/cards';
 
 export default class CardsSectionsComponent extends BaseComponent {
@@ -22,14 +20,6 @@ export default class CardsSectionsComponent extends BaseComponent {
 
   set onChange(fn) {
     this._onChange = fn;
-  }
-
-  _getNewCardElement(card) {
-    return new CardMainComponent(card);
-  }
-
-  _getNewCardFeaturedElement(card) {
-    return new CardFeaturedComponent(card);
   }
 
   _filterCardsByComments() {
@@ -64,6 +54,13 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._updateMainBlockElement();
   }
 
+  _updateComponent(component, updatedData, id, controls) {
+    const componentIndex = component.components.findIndex((item) => item._data.id === id);
+    if (componentIndex !== -1) {
+      component.components[componentIndex].update(updatedData, controls);
+    }
+  }
+
   createListeners() {
     this._element.querySelector(`.films-list__show-more`)
       .addEventListener(`click`, this._onShowMoreClick);
@@ -77,26 +74,31 @@ export default class CardsSectionsComponent extends BaseComponent {
   render() {
     const element = super.render();
     this._filteredData = this._data;
-    const updateData = (updatedData) => {
-      this._data = updatedData;
+    const noControls = {description: false, controls: false};
+    const updateData = (updatedData, id) => {
+      const index = this._data.findIndex((item) => item.id === id);
+      this._data[index] = Object.assign({}, updatedData);
       if (typeof this._onChange === `function`) {
-        this._onChange(this._data);
+        this._onChange(this._data[index], id);
       }
+      this._updateComponent(this._mainComponent, updatedData, id);
+      this._updateComponent(this._featuredByCommentsComponent, updatedData, id, noControls);
+      this._updateComponent(this._featuredByRatingComponent, updatedData, id, noControls);
     };
     this._mainComponent = new CardsSectionComponent(this._data);
     this._featuredByCommentsComponent = new CardsSectionComponent(this._data);
     this._featuredByRatingComponent = new CardsSectionComponent(this._data);
 
     element.querySelector(`#films-main-list`)
-      .insertBefore(this._mainComponent.render(this._data.slice(0, this._initialCount), this._getNewCardElement), element.querySelector(`.films-list__show-more`));
+      .insertBefore(this._mainComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
     this._mainComponent.onChange = updateData;
 
     element.querySelector(`#films-rated-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsByRating(), this._getNewCardFeaturedElement));
+      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsByRating(), noControls));
     this._featuredByRatingComponent.onChange = updateData;
 
     element.querySelector(`#films-commented-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsByComments(), this._getNewCardFeaturedElement));
+      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsByComments(), noControls));
     this._featuredByCommentsComponent.onChange = updateData;
     return element;
   }

@@ -5,7 +5,8 @@ export const createAmountTemplate = (amount) => (
 );
 
 export const createDurationTemplate = (duration) => (
-  `${moment.duration(duration).hours()} <span class="statistic__item-description">h</span> ${moment.duration(duration).minutes()} <span class="statistic__item-description">m</span>`
+  `${moment.duration(duration).days() ?
+    moment.duration(duration).days() + `<span class="statistic__item-description">d</span>` : ``}${moment.duration(duration).hours()} <span class="statistic__item-description">h</span> ${moment.duration(duration).minutes()} <span class="statistic__item-description">m</span>`
 );
 
 export const createStatisticsTemplate = () => (

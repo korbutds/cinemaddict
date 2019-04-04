@@ -1,5 +1,6 @@
 import BaseComponent from './base';
 import PopupComponent from './popup';
+import CardComponent from './card';
 import {createCardsSectionTemplate} from '../templates/cards';
 
 export default class CardsSectionComponent extends BaseComponent {
@@ -15,21 +16,23 @@ export default class CardsSectionComponent extends BaseComponent {
     this._onChange = fn;
   }
 
-  _renderCards(containerElement, filteredData, callback) {
+  _renderCards(containerElement, filteredData, controls) {
     this.components = filteredData.map((card) => {
-      const cardComponent = callback(card);
+      const cardComponent = new CardComponent(card);
       const container = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
       const update = (newData) => {
-        cardComponent.update(newData);
+        cardComponent.update(newData, controls);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
         this._data[index] = Object.assign({}, newData);
         if (typeof this._onChange === `function`) {
-          this._onChange(this._data);
+          this._onChange(this._data[index], cardComponent._data.id);
         }
       };
       cardComponent.onClick = () => {
-        container.removeChild(container.lastChild);
+        if (document.querySelector(`.film-details`)) {
+          container.removeChild(container.lastChild);
+        }
         popupComponent.unrender();
         popupComponent._data = Object.assign({}, cardComponent._data);
         container.appendChild(popupComponent.render());
@@ -46,13 +49,13 @@ export default class CardsSectionComponent extends BaseComponent {
     });
 
     this.components.forEach((component) => {
-      containerElement.appendChild(component.render());
+      containerElement.appendChild(component.render(controls));
     });
   }
 
-  render(filteredData, callback) {
+  render(filteredData, controls) {
     const element = super.render();
-    this._renderCards(element, filteredData, callback);
+    this._renderCards(element, filteredData, controls);
     return element;
   }
 }

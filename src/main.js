@@ -15,8 +15,9 @@ let filtersComponent;
 let cardsSectionsComponent;
 let statisticsComponent;
 
-const updateCardsList = (updatedCards) => {
-  cardsList = updatedCards;
+const updateCardsList = (updatedData, id) => {
+  const index = cardsList.findIndex((item) => item.id === id);
+  cardsList[index] = Object.assign({}, updatedData);
   setFiltersCounts(cardsList);
   userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
 };
