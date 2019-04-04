@@ -18,7 +18,7 @@ let statisticsComponent;
 const updateCardsList = (updatedCards) => {
   cardsList = updatedCards;
   setFiltersCounts(cardsList);
-  setUserRank(cardsList.filter((card) => card.isWatched).length);
+  userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
 };
 
 const onFilterSelect = (id) => {

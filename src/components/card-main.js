@@ -126,6 +126,12 @@ export default class CardMainComponent extends BaseComponent {
 
   update(data) {
     super.update(data);
+    this.setState({
+      isOnWatchlist: this._data.isOnWatchlist,
+      isWatched: this._data.isWatched,
+      isFavorite: this._data.isFavorite
+    });
+    this._setButtonsOutline(this._element);
     this._element.querySelector(`.film-card__comments`).textContent =
       `${data.commentsAmount} ${data.commentsAmount === 1 ? `comment` : `comments`}`;
   }

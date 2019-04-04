@@ -29,8 +29,10 @@ export default class CardsSectionComponent extends BaseComponent {
         }
       };
       cardComponent.onClick = () => {
-        popupComponent.render();
-        container.appendChild(popupComponent.element);
+        container.removeChild(container.lastChild);
+        popupComponent.unrender();
+        popupComponent._data = Object.assign({}, cardComponent._data);
+        container.appendChild(popupComponent.render());
       };
       cardComponent.onMarkAsWatched = update;
       cardComponent.onAddToWatchList = update;

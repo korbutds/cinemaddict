@@ -9,10 +9,9 @@ const EMOJIES = {
   'grinning': `😀`
 };
 
-
 const CONTROLS = [
   {
-    id: `watchlist`,
+    id: `list`,
     label: `Add to watchlist`
   },
   {
@@ -56,6 +55,14 @@ const generateDetailsTableData = (dataPopup) => ([
   }
 ]);
 
+const getControlStatus = () => {
+  return {
+    'list': (data) => data.isOnWatchlist,
+    'watched': (data) => data.isWatched,
+    'favorite': (data) => data.isFavorite,
+  };
+};
+
 const createRatingElement = (data) => (
   RATINGS.map((rating) => (
     `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${rating === data.popup.yourRating ? `checked` : ``}>
@@ -63,7 +70,6 @@ const createRatingElement = (data) => (
   ))
   .join(``)
 );
-
 
 const createGenresList = (data) => (
   data.genres.map((genre) => (
@@ -81,9 +87,9 @@ const createDetailsTableElement = (data) => (
   .join(``)
 );
 
-const createControlsElement = () => (
+const createControlsElement = (data) => (
   CONTROLS.map((control) => (
-    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${control.id}" name="${control.id}" ${control.id === `watched` ? `checked` : ``}>
+    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${control.id}" name="${control.id}" ${getControlStatus()[control.id](data) ? `checked` : ``}>
     <label for="${control.id}" class="film-details__control-label film-details__control-label--${control.id}">${control.label}</label>`
   ))
   .join(``)
@@ -152,7 +158,7 @@ export const createPopupTemplate = (data) => (
       </div>
 
       <section class="film-details__controls">
-        ${createControlsElement()}
+        ${createControlsElement(data)}
       </section>
 
       <section class="film-details__comments-wrap">

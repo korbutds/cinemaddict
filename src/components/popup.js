@@ -10,6 +10,16 @@ export default class PopupComponent extends BaseComponent {
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
     this._onRatingChange = this._onRatingChange.bind(this);
     this._onCommentAdd = this._onCommentAdd.bind(this);
+
+    this.setState({
+      isOnWatchlist: data.isOnWatchlist,
+      isWatched: data.isWatched,
+      isFavorite: data.isFavorite
+    });
+
+    this._onMarkAsWatchedButtonClick = this._onMarkAsWatchedButtonClick.bind(this);
+    this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
+    this._onAddToFavoriteButtonClick = this._onAddToFavoriteButtonClick.bind(this);
   }
 
   get template() {
@@ -18,6 +28,30 @@ export default class PopupComponent extends BaseComponent {
 
   set onClose(fn) {
     this._onClose = fn;
+  }
+
+  _onMarkAsWatchedButtonClick() {
+    const isWatched = !this._state.isWatched;
+    this.setState({
+      isWatched,
+    });
+    this._data.isWatched = this._state.isWatched;
+  }
+
+  _onAddToWatchListButtonClick() {
+    const isOnWatchlist = !this._state.isOnWatchlist;
+    this.setState({
+      isOnWatchlist,
+    });
+    this._data.isOnWatchlist = this._state.isOnWatchlist;
+  }
+
+  _onAddToFavoriteButtonClick() {
+    const isFavorite = !this._state.isFavorite;
+    this.setState({
+      isFavorite,
+    });
+    this._data.isFavorite = this._state.isFavorite;
   }
 
   _onCloseButtonClick(evt) {
@@ -63,18 +97,25 @@ export default class PopupComponent extends BaseComponent {
         ._element
         .querySelector(`.film-details__close-btn`)
         .addEventListener(`click`, this._onCloseButtonClick);
-
       this
         ._element
         .querySelectorAll(`.film-details__user-rating-input`)
         .forEach((input) => {
           input.addEventListener(`click`, this._onRatingChange);
         });
-
       this
         ._element
         .querySelector(`.film-details__comments-wrap`)
         .addEventListener(`keydown`, this._onCommentAdd);
+      this
+        ._element.querySelector(`#list`)
+        .addEventListener(`change`, this._onAddToWatchListButtonClick);
+      this
+        ._element.querySelector(`#watched`)
+        .addEventListener(`change`, this._onMarkAsWatchedButtonClick);
+      this
+        ._element.querySelector(`#favorite`)
+        .addEventListener(`change`, this._onAddToFavoriteButtonClick);
     }
   }
 
@@ -83,17 +124,24 @@ export default class PopupComponent extends BaseComponent {
       ._element
       .querySelector(`.film-details__close-btn`)
       .removeEventListener(`submit`, this._onSubmitButtonClick);
-
     this
       ._element
       .querySelectorAll(`.film-details__user-rating-input`)
       .forEach((input) => {
         input.removeEventListener(`click`, this._onRatingChange);
       });
-
     this
       ._element
       .querySelector(`.film-details__comments-wrap`)
-      .addEventListener(`keydown`, this._onCommentAdd);
+      .removeEventListener(`keydown`, this._onCommentAdd);
+    this
+      ._element.querySelector(`#list`)
+      .removeEventListener(`change`, this._onAddToWatchListButtonClick);
+    this
+      ._element.querySelector(`#watched`)
+      .removeEventListener(`change`, this._onMarkAsWatchedButtonClick);
+    this
+      ._element.querySelector(`#favorite`)
+      .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
   }
 }

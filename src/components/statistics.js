@@ -1,4 +1,5 @@
 import {createStatisticsTemplate, createDurationTemplate, createAmountTemplate} from '../templates/statistics';
+import {setUserRank} from '../lib/user-rank';
 import BaseComponent from './base';
 import ChartComponent from './chart';
 import moment from 'moment';
@@ -105,6 +106,7 @@ export default class StatisticsComponent extends BaseComponent {
       .innerHTML = createDurationTemplate(this._getTotalDuration());
     element.querySelector(`.statistic__item-text.genre`)
       .innerHTML = `${this._getTopGenre() !== undefined ? this._getTopGenre() : `No genre`}`;
+    element.querySelector(`.statistic__rank-label`).innerHTML = setUserRank(this._filteredData.length);
     return element;
   }
 }
