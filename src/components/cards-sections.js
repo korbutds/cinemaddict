@@ -7,9 +7,13 @@ import {createCardsSectionsTemplate} from '../templates/cards';
 export default class CardsSectionsComponent extends BaseComponent {
   constructor(data) {
     super(data);
+    this._initialCount = 5;
+    this._showMoreStep = 5;
     this._mainComponent = null;
     this._featuredByCommentsComponent = null;
     this._featuredByRatingComponent = null;
+    this._showMoreButtonStatus = true;
+    this._onShowMoreClick = this._onShowMoreClick.bind(this);
   }
 
   get template() {
@@ -42,8 +46,37 @@ export default class CardsSectionsComponent extends BaseComponent {
     }).slice(0, 2);
   }
 
+  _updateMainBlockElement() {
+    this._element.querySelector(`#films-main-list`).removeChild(this._mainComponent._element);
+    this._mainComponent.unrender();
+    this._element.querySelector(`#films-main-list`)
+      .insertBefore(this._mainComponent.render(this._filteredData.slice(0, this._initialCount), this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
+  }
+
+  _onShowMoreClick() {
+    this._initialCount = (this._filteredData.length > (this._initialCount + this._showMoreStep))
+      ? this._initialCount += this._showMoreStep
+      : this._filteredData.length;
+    if (this._initialCount === this._filteredData.length) {
+      this._showMoreButtonStatus = false;
+      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
+    }
+    this._updateMainBlockElement();
+  }
+
+  createListeners() {
+    this._element.querySelector(`.films-list__show-more`)
+      .addEventListener(`click`, this._onShowMoreClick);
+  }
+
+  removeListeners() {
+    this._element.querySelector(`.films-list__show-more`)
+      .addEventListener(`click`, this._onShowMoreClick);
+  }
+
   render() {
     const element = super.render();
+    this._filteredData = this._data;
     const updateData = (updatedData) => {
       this._data = updatedData;
       if (typeof this._onChange === `function`) {
@@ -55,7 +88,7 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._featuredByRatingComponent = new CardsSectionComponent(this._data);
 
     element.querySelector(`#films-main-list`)
-      .insertBefore(this._mainComponent.render(this._data, this._getNewCardElement), element.querySelector(`.films-list__show-more`));
+      .insertBefore(this._mainComponent.render(this._data.slice(0, this._initialCount), this._getNewCardElement), element.querySelector(`.films-list__show-more`));
     this._mainComponent.onChange = updateData;
 
     element.querySelector(`#films-rated-list`)
@@ -69,9 +102,12 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   update(filteredData) {
-    this._element.querySelector(`#films-main-list`).removeChild(this._mainComponent._element);
-    this._mainComponent.unrender();
-    this._element.querySelector(`#films-main-list`)
-      .insertBefore(this._mainComponent.render(filteredData, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
+    this._initialCount = this._showMoreStep;
+    this._filteredData = filteredData;
+    if (!this._showMoreButtonStatus) {
+      this._showMoreButtonStatus = true;
+      this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
+    }
+    this._updateMainBlockElement();
   }
 }

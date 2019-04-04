@@ -6,7 +6,7 @@ import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
 import StatisticsComponent from './components/statistics';
 
-const CARDS_LIMIT_MAX = 7;
+const CARDS_LIMIT_MAX = 21;
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
