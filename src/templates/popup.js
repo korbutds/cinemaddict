@@ -181,8 +181,9 @@ export const createPopupTemplate = (data) => (
       </section>
 
       <section class="film-details__user-rating-wrap">
-        <div class="film-details__user-rating-controls">
-          <span class="film-details__watched-status film-details__watched-status--active">Already watched</span>
+        <div class="film-details__user-rating-controls
+        ${data.popup.commentsList.some((item) => item.author === `Your comment`) ? `` : `visually-hidden`}">
+          <span class="film-details__watched-status film-details__watched-status--active">${data.isWatched ? `Already watched` : `Will watch`}</span>
           <button class="film-details__watched-reset" type="button">undo</button>
         </div>
         <div class="film-details__user-score">

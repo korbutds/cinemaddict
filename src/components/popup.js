@@ -17,6 +17,7 @@ export default class PopupComponent extends BaseComponent {
     this._onEscClick = this._onEscClick.bind(this);
     this._onRatingChange = this._onRatingChange.bind(this);
     this._onCommentAdd = this._onCommentAdd.bind(this);
+    this._onCommentRemove = this._onCommentRemove.bind(this);
     this._onMarkAsWatchedButtonClick = this._onMarkAsWatchedButtonClick.bind(this);
     this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
     this._onAddToFavoriteButtonClick = this._onAddToFavoriteButtonClick.bind(this);
@@ -36,6 +37,8 @@ export default class PopupComponent extends BaseComponent {
       isWatched,
     });
     this._data.isWatched = this._state.isWatched;
+    this._element.querySelector(`.film-details__watched-status`)
+      .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
   }
 
   _onAddToWatchListButtonClick() {
@@ -96,7 +99,27 @@ export default class PopupComponent extends BaseComponent {
       this._element.querySelector(`.film-details__comments-list`)
         .appendChild(this._createComment({text: inputElement.value, author: `Your comment`,
           date: new Date(), emoji: emojiValue}));
+      this._element.querySelector(`.film-details__user-rating-controls`)
+        .classList.remove(`visually-hidden`);
+      this._element.querySelector(`.film-details__watched-status`)
+        .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
       inputElement.value = ``;
+    }
+  }
+
+  _isYourComment() {
+    return this._data.popup.commentsList.some((comment) => comment.author === `Your comment`);
+  }
+
+  _onCommentRemove() {
+    if (this._isYourComment()) {
+      const container = this._element.querySelector(`.film-details__comments-list`);
+      this._data.popup.commentsList.pop();
+      container.removeChild(container.lastChild);
+      if (!this._isYourComment()) {
+        this._element.querySelector(`.film-details__user-rating-controls`)
+          .classList.add(`visually-hidden`);
+      }
     }
   }
 
@@ -126,6 +149,9 @@ export default class PopupComponent extends BaseComponent {
         ._element.querySelector(`#favorite`)
         .addEventListener(`change`, this._onAddToFavoriteButtonClick);
       window.addEventListener(`keydown`, this._onEscClick);
+      this
+        ._element.querySelector(`.film-details__watched-reset`)
+        .addEventListener(`click`, this._onCommentRemove);
     }
   }
 
@@ -154,5 +180,8 @@ export default class PopupComponent extends BaseComponent {
       ._element.querySelector(`#favorite`)
       .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
     window.removeEventListener(`keydown`, this._onEscClick);
+    this
+      ._element.querySelector(`.film-details__watched-reset`)
+      .addEventListener(`click`, this._onCommentRemove);
   }
 }
