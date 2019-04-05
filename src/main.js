@@ -10,6 +10,7 @@ const CARDS_LIMIT_MAX = 21;
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
+const searchElement = document.querySelector(`.search__field`);
 let cardsList = generateCards(CARDS_LIMIT_MAX);
 let filtersComponent;
 let cardsSectionsComponent;
@@ -25,6 +26,7 @@ const updateCardsList = (updatedData, id) => {
 const onFilterSelect = (id) => {
   if (cardsSectionsComponent._element) {
     cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+    searchElement.value = ``;
   } else {
     statisticsComponent.unrender();
     mainElement.removeChild(mainElement.lastChild);
@@ -58,6 +60,15 @@ document.querySelector(`#stats`).addEventListener(`click`, () => {
   mainElement.removeChild(mainElement.lastChild);
   statisticsComponent = new StatisticsComponent(cardsList);
   mainElement.appendChild(statisticsComponent.render());
+  searchElement.value = ``;
+});
+
+searchElement.addEventListener(`input`, (evt) => {
+  if (evt.target.value) {
+    cardsSectionsComponent.onSearch(evt.target.value);
+  } else {
+    cardsSectionsComponent.updateMainBlockElement();
+  }
 });
 
 footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;

@@ -36,11 +36,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     }).slice(0, 2);
   }
 
-  _updateMainBlockElement() {
+  _replaceMainBlockElements(data) {
     this._element.querySelector(`#films-main-list`).removeChild(this._mainComponent._element);
     this._mainComponent.unrender();
     this._element.querySelector(`#films-main-list`)
-      .insertBefore(this._mainComponent.render(this._filteredData.slice(0, this._initialCount), this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
+      .insertBefore(this._mainComponent.render(data, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
   }
 
   _onShowMoreClick() {
@@ -51,7 +51,7 @@ export default class CardsSectionsComponent extends BaseComponent {
       this._showMoreButtonStatus = false;
       this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
     }
-    this._updateMainBlockElement();
+    this.updateMainBlockElement();
   }
 
   _updateComponent(component, updatedData, id) {
@@ -104,6 +104,23 @@ export default class CardsSectionsComponent extends BaseComponent {
     return element;
   }
 
+  onSearch(value) {
+    const initialData = this._data.slice();
+    const resultData = initialData
+      .filter((item) => item.title.toLowerCase().search(value.toLowerCase()) !== -1);
+    this._replaceMainBlockElements(resultData);
+    this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
+  }
+
+  updateMainBlockElement() {
+    if (this._initialCount !== this._filteredData.length
+        || this._initialCount > this._filteredData.length) {
+      this._showMoreButtonStatus = true;
+      this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
+    }
+    this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
+  }
+
   update(filteredData) {
     this._initialCount = this._showMoreStep;
     this._filteredData = filteredData;
@@ -111,6 +128,7 @@ export default class CardsSectionsComponent extends BaseComponent {
       this._showMoreButtonStatus = true;
       this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
     }
-    this._updateMainBlockElement();
+    this.updateMainBlockElement();
+    this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
   }
 }
