@@ -1,65 +1,75 @@
-import {generateRandomNumber} from './utils';
 import {generateCards} from './mocks/cards';
+import {getFilteredCards, setFiltersCounts} from './lib/filters';
+import {setUserRank} from './lib/user-rank';
 import FILTER_DATA from './data/filter';
+import FiltersComponent from './components/filters';
+import CardsSectionsComponent from './components/cards-sections';
+import StatisticsComponent from './components/statistics';
 
-import CardComponent from './components/card';
-import CardFeaturedComponent from './components/card-featured';
-import FilterComponent from './components/filter';
-import PopupComponent from './components/popup';
-
-const CARDS_LIMIT_MIN = 2;
-const CARDS_LIMIT_MAX = 7;
-
-const filmsMainElement = document.querySelector(`.films-list .films-list__container`);
-const filmsTopRatedElement = document.querySelector(`.films-list--extra:nth-child(2) .films-list__container`);
-const filmsMostCommentedElement = document.querySelector(`.films-list--extra:nth-child(3) .films-list__container`);
-const bodyElement = document.querySelector(`body`);
+const CARDS_LIMIT_MAX = 21;
 const mainElement = document.querySelector(`main`);
+const footerStatisticsElement = document.querySelector(`.footer__statistics`);
+const userRankElement = document.querySelector(`.profile__rating`);
+const searchElement = document.querySelector(`.search__field`);
+let cardsList = generateCards(CARDS_LIMIT_MAX);
+let filtersComponent;
+let cardsSectionsComponent;
+let statisticsComponent;
 
-const setEventListeners = (cardComponent, popupComponent) => {
-  cardComponent.onClick = () => {
-    popupComponent.render();
-    bodyElement.appendChild(popupComponent.element);
-  };
-  popupComponent.onClose = (newData) => {
-    cardComponent.update({comments: newData.comments, yourRating: newData.yourRating});
-    bodyElement.removeChild(popupComponent.element);
-    popupComponent.unrender();
-  };
+const updateCardsList = (updatedData, id) => {
+  const index = cardsList.findIndex((item) => item.id === id);
+  cardsList[index] = Object.assign({}, updatedData);
+  setFiltersCounts(cardsList);
+  userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
 };
 
-const addFeaturedCards = (limit, container) => {
-  generateCards(limit).forEach((data) => {
-    const cardFeaturedComponent = new CardFeaturedComponent(data);
-    const cardFeaturedElement = cardFeaturedComponent.render();
-    const popupComponent = new PopupComponent(data);
-    setEventListeners(cardFeaturedComponent, popupComponent);
-    container.appendChild(cardFeaturedElement);
-  });
+const onFilterSelect = (id) => {
+  if (cardsSectionsComponent._element) {
+    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+    searchElement.value = ``;
+  } else {
+    statisticsComponent.unrender();
+    mainElement.removeChild(mainElement.lastChild);
+    addCards();
+    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+  }
 };
 
-const addCards = (limit, container) => {
-  generateCards(limit).forEach((data) => {
-    const cardComponent = new CardComponent(data);
-    const cardElement = cardComponent.render();
-    const popupComponent = new PopupComponent(data);
-    const popupElement = popupComponent.render();
-    setEventListeners(cardComponent, popupComponent, popupElement);
-    container.appendChild(cardElement);
-  });
+const addFilters = () => {
+  filtersComponent = new FiltersComponent(FILTER_DATA);
+  mainElement.insertBefore(filtersComponent.render(), mainElement.firstChild);
+  filtersComponent.onSelect = onFilterSelect;
+  setFiltersCounts(cardsList);
 };
 
-const addFilter = (data) => {
-  const filterComponent = new FilterComponent(data);
-  const filterElement = filterComponent.render();
-  mainElement.insertBefore(filterElement, mainElement.firstChild);
-  filterComponent.onClick = () => {
-    filmsMainElement.innerHTML = ``;
-    addCards(generateRandomNumber(CARDS_LIMIT_MIN, CARDS_LIMIT_MAX), filmsMainElement);
-  };
+const addCards = () => {
+  cardsSectionsComponent = new CardsSectionsComponent(cardsList);
+  mainElement.appendChild(cardsSectionsComponent.render());
+  cardsSectionsComponent.onChange = updateCardsList;
 };
 
-addCards(CARDS_LIMIT_MAX, filmsMainElement);
-addFeaturedCards(CARDS_LIMIT_MIN, filmsTopRatedElement);
-addFeaturedCards(CARDS_LIMIT_MIN, filmsMostCommentedElement);
-addFilter(FILTER_DATA);
+cardsList.forEach((card, index) => {
+  card.id = index;
+});
+
+addFilters();
+addCards();
+
+document.querySelector(`#stats`).addEventListener(`click`, () => {
+  cardsSectionsComponent.unrender();
+  mainElement.removeChild(mainElement.lastChild);
+  statisticsComponent = new StatisticsComponent(cardsList);
+  mainElement.appendChild(statisticsComponent.render());
+  searchElement.value = ``;
+});
+
+searchElement.addEventListener(`input`, (evt) => {
+  if (evt.target.value) {
+    cardsSectionsComponent.onSearch(evt.target.value);
+  } else {
+    cardsSectionsComponent.updateMainBlockElement();
+  }
+});
+
+footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
+userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);

@@ -1,13 +1,17 @@
-import {createNumberRange} from '../utils.js';
-import {EMOJIES} from '../constants.js';
+import {createRandomNumberRange} from '../lib/random';
 import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;
-const RATINGS = createNumberRange(RATING_LIMIT_MAX);
+const RATINGS = createRandomNumberRange(RATING_LIMIT_MAX);
+const EMOJIES = {
+  'sleeping': `😴`,
+  'neutral-face': `😐`,
+  'grinning': `😀`
+};
 
 const CONTROLS = [
   {
-    id: `watchlist`,
+    id: `list`,
     label: `Add to watchlist`
   },
   {
@@ -51,6 +55,14 @@ const generateDetailsTableData = (dataPopup) => ([
   }
 ]);
 
+const getControlStatus = () => {
+  return {
+    'list': (data) => data.isOnWatchlist,
+    'watched': (data) => data.isWatched,
+    'favorite': (data) => data.isFavorite,
+  };
+};
+
 const createRatingElement = (data) => (
   RATINGS.map((rating) => (
     `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${rating === data.popup.yourRating ? `checked` : ``}>
@@ -58,7 +70,6 @@ const createRatingElement = (data) => (
   ))
   .join(``)
 );
-
 
 const createGenresList = (data) => (
   data.genres.map((genre) => (
@@ -76,9 +87,9 @@ const createDetailsTableElement = (data) => (
   .join(``)
 );
 
-const createControlsElement = () => (
+const createControlsElement = (data) => (
   CONTROLS.map((control) => (
-    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${control.id}" name="${control.id}" ${control.id === `watched` ? `checked` : ``}>
+    `<input type="checkbox" class="film-details__control-input visually-hidden" id="${control.id}" name="${control.id}" ${getControlStatus()[control.id](data) ? `checked` : ``}>
     <label for="${control.id}" class="film-details__control-label film-details__control-label--${control.id}">${control.label}</label>`
   ))
   .join(``)
@@ -147,7 +158,7 @@ export const createPopupTemplate = (data) => (
       </div>
 
       <section class="film-details__controls">
-        ${createControlsElement()}
+        ${createControlsElement(data)}
       </section>
 
       <section class="film-details__comments-wrap">
@@ -170,8 +181,9 @@ export const createPopupTemplate = (data) => (
       </section>
 
       <section class="film-details__user-rating-wrap">
-        <div class="film-details__user-rating-controls">
-          <span class="film-details__watched-status film-details__watched-status--active">Already watched</span>
+        <div class="film-details__user-rating-controls
+        ${data.popup.commentsList.some((item) => item.author === `Your comment`) ? `` : `visually-hidden`}">
+          <span class="film-details__watched-status film-details__watched-status--active">${data.isWatched ? `Already watched` : `Will watch`}</span>
           <button class="film-details__watched-reset" type="button">undo</button>
         </div>
         <div class="film-details__user-score">

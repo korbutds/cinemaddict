@@ -1,4 +1,4 @@
-import {createElement} from '../utils';
+import {createElement} from '../lib/element';
 import cloneDeep from 'lodash.clonedeep';
 
 export default class BaseComponent {
@@ -17,16 +17,14 @@ export default class BaseComponent {
     return this._element;
   }
 
-  get template() {
-    throw new Error(`You have to define template.`);
+  get template() {}
+
+  setState(newState = {}) {
+    this._state = Object.assign({}, this._state, newState);
   }
 
-  createListeners() {
-    throw new Error(`You have to define createListeners.`);
-  }
-  removeListeners() {
-    throw new Error(`You have to define removeListeners.`);
-  }
+  createListeners() {}
+  removeListeners() {}
 
   render() {
     if (!this._state.isRendered) {
@@ -45,5 +43,7 @@ export default class BaseComponent {
     }
   }
 
-  update() {}
+  update(data) {
+    this._data = Object.assign({}, data);
+  }
 }

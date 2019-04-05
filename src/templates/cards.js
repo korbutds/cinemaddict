@@ -1,11 +1,5 @@
 import moment from 'moment';
 
-const defaultTemplateOptions = {
-  description: true,
-  controls: true
-};
-
-
 const controls = [
   {
     modifier: `add-to-watchlist`,
@@ -39,7 +33,7 @@ const getDurationFromMins = (min) => {
   return Math.trunc(min / 60) + `h ` + (min % 60) + `m`;
 };
 
-export const createCardTemplate = (data, options = defaultTemplateOptions) => (
+export const createCardTemplate = (data, options) => (
   `<article class="film-card ${!options.controls ? `film-card--no-controls` : ``} ">
     <h3 class="film-card__title">${data.title}</h3>
     <p class="film-card__rating">${data.rating}</p>
@@ -53,4 +47,36 @@ export const createCardTemplate = (data, options = defaultTemplateOptions) => (
     <button class="film-card__comments">${data.commentsAmount} ${data.commentsAmount === 1 ? `comment` : `comments`}</button>
     ${options.controls ? createFormTemplate() : ``}
   </article>`
+);
+
+export const createCardsSectionTemplate = () => (
+  `<div class="films-list__container">
+
+  </div>`
+);
+
+export const createCardsSectionsTemplate = () => (
+  `<section class="films">
+    <section class="films-list" id="films-main-list">
+      <h2 class="films-list__title visually-hidden">All movies. Upcoming</h2>
+
+      <!--MAIN-->
+
+      <button class="films-list__show-more">Show more</button>
+    </section>
+
+    <section class="films-list--extra" id="films-rated-list">
+      <h2 class="films-list__title">Top rated</h2>
+
+      <!--EXTRA-->
+
+    </section>
+
+    <section class="films-list--extra" id="films-commented-list">
+      <h2 class="films-list__title">Most commented</h2>
+
+      <!--EXTRA-->
+
+    </section>
+  </section>`
 );

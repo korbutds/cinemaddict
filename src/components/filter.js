@@ -17,18 +17,16 @@ export default class FilterComponent extends BaseComponent {
     this._onClick = fn;
   }
 
-  _onFilterClick() {
-    return typeof this._onClick === `function` && this._onClick();
+  _onFilterClick(evt) {
+    evt.preventDefault();
+    return typeof this._onClick === `function` && this._onClick(this._element.id);
   }
 
   createListeners() {
     if (this._element) {
       this
         ._element
-        .querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`)
-        .forEach((element) => {
-          element.addEventListener(`click`, this._onFilterClick);
-        });
+        .addEventListener(`click`, this._onFilterClick);
     }
   }
 
@@ -36,10 +34,7 @@ export default class FilterComponent extends BaseComponent {
     if (this._element) {
       this
         ._element
-        .querySelectorAll(`.main-navigation__item:not(.main-navigation__item--additional)`)
-        .forEach((element) => {
-          element.removeEventListener(`click`, this._onFilterClick);
-        });
+        .removeEventListener(`click`, this._onFilterClick);
     }
   }
 }
