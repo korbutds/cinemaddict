@@ -4,8 +4,10 @@ import CardComponent from './card';
 import {createCardsSectionTemplate} from '../templates/cards';
 
 export default class CardsSectionComponent extends BaseComponent {
-  constructor(data) {
+  constructor(data, controls) {
     super(data);
+
+    this._controls = controls;
   }
 
   get template() {
@@ -16,13 +18,13 @@ export default class CardsSectionComponent extends BaseComponent {
     this._onChange = fn;
   }
 
-  _renderCards(containerElement, filteredData, controls) {
+  _renderCards(containerElement, filteredData) {
     this.components = filteredData.map((card) => {
-      const cardComponent = new CardComponent(card);
+      const cardComponent = new CardComponent(card, this._controls);
       const container = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
       const update = (newData) => {
-        cardComponent.update(newData, controls);
+        cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
         this._data[index] = Object.assign({}, newData);
         if (typeof this._onChange === `function`) {
@@ -49,13 +51,13 @@ export default class CardsSectionComponent extends BaseComponent {
     });
 
     this.components.forEach((component) => {
-      containerElement.appendChild(component.render(controls));
+      containerElement.appendChild(component.render());
     });
   }
 
-  render(filteredData, controls) {
+  render(filteredData) {
     const element = super.render();
-    this._renderCards(element, filteredData, controls);
+    this._renderCards(element, filteredData);
     return element;
   }
 }

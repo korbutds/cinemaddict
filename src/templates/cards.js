@@ -1,11 +1,5 @@
 import moment from 'moment';
 
-const defaultTemplateOptions = {
-  description: true,
-  controls: true
-};
-
-
 const controls = [
   {
     modifier: `add-to-watchlist`,
@@ -39,7 +33,7 @@ const getDurationFromMins = (min) => {
   return Math.trunc(min / 60) + `h ` + (min % 60) + `m`;
 };
 
-export const createCardTemplate = (data, options = defaultTemplateOptions) => (
+export const createCardTemplate = (data, options) => (
   `<article class="film-card ${!options.controls ? `film-card--no-controls` : ``} ">
     <h3 class="film-card__title">${data.title}</h3>
     <p class="film-card__rating">${data.rating}</p>
