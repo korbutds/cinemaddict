@@ -38,9 +38,9 @@ export const createCardTemplate = (data, options) => (
     <h3 class="film-card__title">${data.title}</h3>
     <p class="film-card__rating">${data.rating}</p>
     <p class="film-card__info">
-      <span class="film-card__year">${moment(`${data.year.getFullYear()}`).format(`YYYY`)}</span>
+      <span class="film-card__year">${moment(data.year).format(`YYYY`)}</span>
       <span class="film-card__duration">${getDurationFromMins(Math.round(moment.duration(data.duration).asMinutes()))}</span>
-      <span class="film-card__genre">${data.genre}</span>
+      <span class="film-card__genre">${data.genre.join(`, `)}</span>
     </p>
     <img src="${data.image}" alt="" class="film-card__poster">
     ${options.description ? createDescriptionTemplate(data) : ``}

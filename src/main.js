@@ -5,8 +5,12 @@ import FILTER_DATA from './data/filter';
 import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
 import StatisticsComponent from './components/statistics';
+import API from './components/api';
 
 const CARDS_LIMIT_MAX = 21;
+const AUTHORIZATION = `Basic NullaAetasAdDiscendumSera`;
+const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
+const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
@@ -48,12 +52,7 @@ const addCards = () => {
   cardsSectionsComponent.onChange = updateCardsList;
 };
 
-cardsList.forEach((card, index) => {
-  card.id = index;
-});
-
 addFilters();
-addCards();
 
 document.querySelector(`#stats`).addEventListener(`click`, () => {
   cardsSectionsComponent.unrender();
@@ -73,3 +72,8 @@ searchElement.addEventListener(`input`, (evt) => {
 
 footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
 userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+
+api.getData().then((data) => {
+  cardsList = data;
+  addCards();
+});

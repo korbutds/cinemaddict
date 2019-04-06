@@ -151,7 +151,7 @@ const generateCard = () => (
     year: new Date(generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
         generateRandomNumber(0, MONTHS.length - 1), generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX)),
     duration: generateRandomNumber(DURATION_LIMIT_MIN, DURATION_LIMIT_MAX),
-    genre: getRandomArrayElement(GENRES),
+    genre: createRandomNumberRange(GENRES_LIMIT).map(() => getRandomArrayElement(GENRES)),
     image: getRandomArrayElement(IMAGES),
     description: generateRandomArray(DESCRIPTIONS, generateRandomNumber(DESCRIPTION_LIMIT_MIN, DESCRIPTION_LIMIT_MAX)),
     commentsAmount: generateRandomNumber(COMMENTS_LIMIT_MIN, COMMENTS_LIMIT_MAX),
@@ -173,11 +173,11 @@ const generateCard = () => (
       yourRating: generateRandomNumber(YOUR_RATING_LIMIT_MIN, YOUR_RATING_LIMIT_MAX),
       commentsList: [
         {
-          text: `So long-long story, boring!`,
+          comment: `So long-long story, boring!`,
           author: `Tim Macoveev`,
           date: new Date(generateRandomNumber(YEARS_LIMIT_MIN, YEARS_LIMIT_MAX),
               generateRandomNumber(0, MONTHS.length - 1), generateRandomNumber(DAY_LIMIT_MIN, DAY_LIMIT_MAX)),
-          emoji: `sleeping`
+          emotion: `sleeping`
         }
       ]
     }

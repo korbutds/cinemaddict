@@ -106,13 +106,13 @@ const createEmojiesElement = () => (
 export const createCommentElement = (comment) => (
   `<li class="film-details__comment">
      <span class="film-details__comment-emoji">
-     ${EMOJIES[comment.emoji]}
+     ${EMOJIES[comment.emotion]}
      </span>
      <div>
-       <p class="film-details__comment-text">${comment.text}</p>
+       <p class="film-details__comment-text">${comment.comment}</p>
        <p class="film-details__comment-info">
          <span class="film-details__comment-author">${comment.author}</span>
-         <span class="film-details__comment-day">${moment(comment.date, `YYYYMMDD`).fromNow()}</span>
+         <span class="film-details__comment-day">${moment(comment.date).fromNow()}</span>
        </p>
      </div>
    </li>`

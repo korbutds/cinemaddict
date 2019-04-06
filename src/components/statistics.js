@@ -14,7 +14,9 @@ export default class StatisticsComponent extends BaseComponent {
   _getGenres(data) {
     const genres = new Set();
     data.forEach((item) => {
-      genres.add(item.genre);
+      item.genre.forEach((genre) => {
+        genres.add(genre);
+      });
     });
     return Array.from(genres);
   }
@@ -23,7 +25,7 @@ export default class StatisticsComponent extends BaseComponent {
     const counts = [];
     this._getGenres(data).forEach((genre, index) => {
       counts[index] = data.filter((item) => {
-        return item.genre === genre;
+        return item.genre.some((it) => it === genre);
       }).length;
     });
     return counts;
