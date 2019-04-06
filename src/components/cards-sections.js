@@ -113,10 +113,12 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   updateMainBlockElement() {
-    if (this._initialCount !== this._filteredData.length
-        || this._initialCount > this._filteredData.length) {
+    if (this._initialCount < this._filteredData.length) {
       this._showMoreButtonStatus = true;
       this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
+    } else {
+      this._showMoreButtonStatus = false;
+      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
     }
     this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
   }
@@ -124,11 +126,6 @@ export default class CardsSectionsComponent extends BaseComponent {
   update(filteredData) {
     this._initialCount = this._showMoreStep;
     this._filteredData = filteredData;
-    if (!this._showMoreButtonStatus) {
-      this._showMoreButtonStatus = true;
-      this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
-    }
     this.updateMainBlockElement();
-    this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
   }
 }
