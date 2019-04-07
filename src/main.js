@@ -5,6 +5,7 @@ import FILTER_DATA from './data/filter';
 import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
 import StatisticsComponent from './components/statistics';
+import SearchComponent from './components/search';
 import API from './components/api';
 
 const CARDS_LIMIT_MAX = 21;
@@ -19,6 +20,7 @@ let cardsList = generateCards(CARDS_LIMIT_MAX);
 let filtersComponent;
 let cardsSectionsComponent;
 let statisticsComponent;
+let searchComponent;
 
 const updateCardsList = (updatedData, id) => {
   const index = cardsList.findIndex((item) => item.id === id);
@@ -52,6 +54,21 @@ const addCards = () => {
   cardsSectionsComponent.onChange = updateCardsList;
 };
 
+const addSearch = () => {
+  const container = document.querySelector(`.header`);
+  const referenceElement = container.querySelector(`.profile`);
+  searchComponent = new SearchComponent();
+  container.insertBefore(searchComponent.render(), referenceElement);
+  searchComponent.onSearch = (value) => {
+    if (value) {
+      cardsSectionsComponent.onSearch(value);
+    } else {
+      cardsSectionsComponent.updateMainBlockElement();
+    }
+  };
+};
+
+addSearch();
 addFilters();
 
 document.querySelector(`#stats`).addEventListener(`click`, () => {
@@ -60,14 +77,6 @@ document.querySelector(`#stats`).addEventListener(`click`, () => {
   statisticsComponent = new StatisticsComponent(cardsList);
   mainElement.appendChild(statisticsComponent.render());
   searchElement.value = ``;
-});
-
-searchElement.addEventListener(`input`, (evt) => {
-  if (evt.target.value) {
-    cardsSectionsComponent.onSearch(evt.target.value);
-  } else {
-    cardsSectionsComponent.updateMainBlockElement();
-  }
 });
 
 footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
