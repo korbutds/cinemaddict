@@ -1,4 +1,3 @@
-import {generateCards} from './mocks/cards';
 import {getFilteredCards, setFiltersCounts} from './lib/filters';
 import {setUserRank} from './lib/user-rank';
 import FILTER_DATA from './data/filter';
@@ -6,33 +5,34 @@ import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
 import StatisticsComponent from './components/statistics';
 import SearchComponent from './components/search';
-import API from './components/api';
+import API from './api';
+import CardModel from './models/card-model';
 
-const CARDS_LIMIT_MAX = 21;
 const AUTHORIZATION = `Basic NullaAetasAdDiscendumSera`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
 const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
-const searchElement = document.querySelector(`.search__field`);
-let cardsList = generateCards(CARDS_LIMIT_MAX);
+let cardsList;
 let filtersComponent;
 let cardsSectionsComponent;
 let statisticsComponent;
 let searchComponent;
 
 const updateCardsList = (updatedData, id) => {
-  const index = cardsList.findIndex((item) => item.id === id);
-  cardsList[index] = Object.assign({}, updatedData);
-  setFiltersCounts(cardsList);
-  userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+  api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)}).then((cardModel) => {
+    const index = cardsList.findIndex((item) => item.id === id);
+    cardsList[index] = Object.assign({}, cardModel);
+    setFiltersCounts(cardsList);
+    userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+  });
 };
 
 const onFilterSelect = (id) => {
   if (cardsSectionsComponent._element) {
     cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-    searchElement.value = ``;
+    document.querySelector(`.search__field`).value = ``;
   } else {
     statisticsComponent.unrender();
     mainElement.removeChild(mainElement.lastChild);
@@ -46,6 +46,7 @@ const addFilters = () => {
   mainElement.insertBefore(filtersComponent.render(), mainElement.firstChild);
   filtersComponent.onSelect = onFilterSelect;
   setFiltersCounts(cardsList);
+  document.querySelector(`#stats`).addEventListener(`click`, onStatsClick);
 };
 
 const addCards = () => {
@@ -54,35 +55,37 @@ const addCards = () => {
   cardsSectionsComponent.onChange = updateCardsList;
 };
 
+const onSearch = (value) => {
+  if (value) {
+    cardsSectionsComponent.onSearch(value);
+  } else {
+    cardsSectionsComponent.updateMainBlockElement();
+  }
+};
+
 const addSearch = () => {
   const container = document.querySelector(`.header`);
   const referenceElement = container.querySelector(`.profile`);
   searchComponent = new SearchComponent();
   container.insertBefore(searchComponent.render(), referenceElement);
-  searchComponent.onSearch = (value) => {
-    if (value) {
-      cardsSectionsComponent.onSearch(value);
-    } else {
-      cardsSectionsComponent.updateMainBlockElement();
-    }
-  };
+  searchComponent.onSearch = onSearch;
 };
 
-addSearch();
-addFilters();
-
-document.querySelector(`#stats`).addEventListener(`click`, () => {
+const onStatsClick = () => {
   cardsSectionsComponent.unrender();
   mainElement.removeChild(mainElement.lastChild);
   statisticsComponent = new StatisticsComponent(cardsList);
   mainElement.appendChild(statisticsComponent.render());
-  searchElement.value = ``;
-});
+  document.querySelector(`.search__field`).value = ``;
+};
 
-footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
-userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+api.getData()
+  .then((data) => {
+    cardsList = data;
+    addCards();
+    addFilters();
+    footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
+    userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+  });
 
-api.getData().then((data) => {
-  cardsList = data;
-  addCards();
-});
+addSearch();

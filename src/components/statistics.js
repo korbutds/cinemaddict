@@ -35,13 +35,13 @@ export default class StatisticsComponent extends BaseComponent {
     return {
       'statistic-all-time': () => this._filteredData,
       'statistic-today': () => this._filteredData
-        .filter((item) => item.userDate === moment()),
+        .filter((item) => moment(item.userDate) === moment()),
       'statistic-week': () => this._filteredData
-        .filter((item) => item.userDate.isAfter(moment().subtract(7, `days`))),
+        .filter((item) => moment(item.userDate).isAfter(moment().subtract(7, `days`))),
       'statistic-month': () => this._filteredData
-        .filter((item) => item.userDate.isAfter(moment().subtract(1, `month`))),
+        .filter((item) => moment(item.userDate).isAfter(moment().subtract(1, `month`))),
       'statistic-year': () => this._filteredData
-        .filter((item) => item.userDate.isAfter(moment().subtract(1, `year`)))
+        .filter((item) => moment(item.userDate).isAfter(moment().subtract(1, `year`)))
     };
   }
 

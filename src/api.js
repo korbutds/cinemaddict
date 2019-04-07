@@ -1,6 +1,18 @@
-import CardModel from './card-model';
+import CardModel from './models/card-model';
 
-export default class API {
+const toJSON = (response) => {
+  return response.json();
+};
+
+const checkStatus = (response) => {
+  if (response.status >= 200 && response.status < 300) {
+    return response;
+  } else {
+    throw new Error(`${response.status}: ${response.statusText}`);
+  }
+};
+
+export default class {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -10,23 +22,11 @@ export default class API {
     };
   }
 
-  _toJSON(response) {
-    return response.json();
-  }
-
-  _checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
-      return response;
-    } else {
-      throw new Error(`${response.status}: ${response.statusText}`);
-    }
-  }
-
   _load({url, method = this._methods.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(this._checkStatus)
+      .then(checkStatus)
       .catch((err) => {
         throw err;
       });
@@ -34,18 +34,18 @@ export default class API {
 
   getData() {
     return this._load({url: `movies`})
-      .then(this._toJSON)
-      .then((data) => CardModel.parseData(data));
+      .then(toJSON)
+      .then(CardModel.parseData);
   }
 
   updateData({id, newData}) {
     return this._load({
       url: `movies/${id}`,
-      method: this._methods.PUT,
+      method: `PUT`,
       body: JSON.stringify(newData),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then(this._toJSON)
-      .then((data) => CardModel.parseData(data));
+      .then(toJSON)
+      .then(CardModel.parseDatum);
   }
 }

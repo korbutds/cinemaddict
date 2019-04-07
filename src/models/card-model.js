@@ -28,33 +28,33 @@ export default class CardModel {
     };
   }
 
-  toRAW() {
+  static toRAW(data) {
     return {
-      'id': this.id,
-      'comments': this.popup.commentsList,
+      'id': data.id,
+      'comments': data.popup.commentsList,
       'film_info': {
-        'actors': this.popup.actors,
-        'age_rating': this.popup.ageLimit,
-        'alternative_title': this.popup.original,
-        'description': this.description,
-        'director': this.popup.director,
-        'genre': this.genre,
-        'poster': this.image,
+        'actors': data.popup.actors,
+        'age_rating': data.popup.ageLimit,
+        'alternative_title': data.popup.original,
+        'description': data.description,
+        'director': data.popup.director,
+        'genre': data.genre,
+        'poster': data.image,
         'release': {
-          'date': this.popup.releaseDay,
-          'release_country': this.popup.country
+          'date': data.popup.releaseDay,
+          'release_country': data.popup.country
         },
-        'runtime': this.duretion / 1000 / 60,
-        'title': this.title,
-        'total_rating': this.rating,
-        'writers': this.popup.writers
+        'runtime': data.duretion / 1000 / 60,
+        'title': data.title,
+        'total_rating': data.rating,
+        'writers': data.popup.writers
       },
       'user_details': {
-        'already_watched': this.isWatched,
-        'favorite': this.isFavorite,
-        'personal_rating': this.popup.yourRating,
-        'watching_date': this.userDate,
-        'watchlist': this.isOnWatchlist
+        'already_watched': data.isWatched,
+        'favorite': data.isFavorite,
+        'personal_rating': data.popup.yourRating,
+        'watching_date': data.userDate,
+        'watchlist': data.isOnWatchlist
       }
     };
   }
