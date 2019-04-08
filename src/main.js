@@ -5,6 +5,7 @@ import FiltersComponent from './components/filters';
 import CardsSectionsComponent from './components/cards-sections';
 import StatisticsComponent from './components/statistics';
 import SearchComponent from './components/search';
+import LoadInProcessComponent from './components/load-in-process';
 import API from './api';
 import CardModel from './models/card-model';
 
@@ -14,6 +15,7 @@ const api = new API({endPoint: END_POINT, authorization: AUTHORIZATION});
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
+const loadInProcessComponent = new LoadInProcessComponent();
 let cardsList;
 let filtersComponent;
 let cardsSectionsComponent;
@@ -79,9 +81,12 @@ const onStatsClick = () => {
   document.querySelector(`.search__field`).value = ``;
 };
 
+mainElement.appendChild(loadInProcessComponent.render());
 api.getData()
   .then((data) => {
     cardsList = data;
+    mainElement.removeChild(loadInProcessComponent.element);
+    loadInProcessComponent.unrender();
     addCards();
     addFilters();
     footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
