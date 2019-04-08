@@ -1,16 +1,6 @@
 import CardModel from './models/card-model';
 
-const toJSON = (response) => {
-  return response.json();
-};
-
-const checkStatus = (response) => {
-  if (response.status >= 200 && response.status < 300) {
-    return response;
-  } else {
-    throw new Error(`${response.status}: ${response.statusText}`);
-  }
-};
+const toJSON = (response) => response.json();
 
 export default class {
   constructor({endPoint, authorization}) {
@@ -22,11 +12,19 @@ export default class {
     };
   }
 
+  _checkStatus(response) {
+    if (response.status >= 200 && response.status < 300) {
+      return response;
+    } else {
+      throw new Error(`${response.status}: ${response.statusText}`);
+    }
+  }
+
   _load({url, method = this._methods.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(checkStatus)
+      .then(this._checkStatus)
       .catch((err) => {
         throw err;
       });

@@ -103,6 +103,7 @@ export default class PopupComponent extends BaseComponent {
         .classList.remove(`visually-hidden`);
       this._element.querySelector(`.film-details__watched-status`)
         .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
+      this._element.querySelector(`.film-details__comments-count`).innerHTML = this._data.popup.commentsList.length;
       inputElement.value = ``;
     }
   }
@@ -115,7 +116,8 @@ export default class PopupComponent extends BaseComponent {
     if (this._isYourComment()) {
       const container = this._element.querySelector(`.film-details__comments-list`);
       this._data.popup.commentsList.pop();
-      container.removeChild(container.lastChild);
+      container.removeChild(container.querySelector(`.film-details__comment:last-child`));
+      this._element.querySelector(`.film-details__comments-count`).innerHTML = this._data.popup.commentsList.length;
       if (!this._isYourComment()) {
         this._element.querySelector(`.film-details__user-rating-controls`)
           .classList.add(`visually-hidden`);
