@@ -924,7 +924,7 @@ a:hover {
  opa 5.25s ease-in-out infinite alternate;
 }
 
-#loading__text {
+.loading__text {
   display: block;
   text-align: center;
   padding-top: 50px;

@@ -24,12 +24,15 @@ let cardsSectionsComponent;
 let statisticsComponent;
 let searchComponent;
 
-const updateCardsList = (updatedData, id) => {
+const updateCardsList = (updatedData, id, successCallback) => {
   api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)}).then((cardModel) => {
     const index = cardsList.findIndex((item) => item.id === id);
     cardsList[index] = Object.assign({}, cardModel);
     setFiltersCounts(cardsList);
     userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+    if (typeof successCallback === `function`) {
+      successCallback();
+    }
   });
 };
 
@@ -95,6 +98,7 @@ api.getData()
     userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
   })
   .catch(() => {
+    mainElement.innerHTML = ``;
     mainElement.appendChild(loadErrorComponent.render());
   });
 

@@ -31,6 +31,10 @@ export default class PopupComponent extends BaseComponent {
     this._onClose = fn;
   }
 
+  set onCommentSubmit(fn) {
+    this._onCommentSubmit = fn;
+  }
+
   _onMarkAsWatchedButtonClick() {
     const isWatched = !this._state.isWatched;
     this.setState({
@@ -84,27 +88,44 @@ export default class PopupComponent extends BaseComponent {
     return createElement(template);
   }
 
-  _onCommentAdd(evt) {
-    const inputElement = this._element.querySelector(`.film-details__comment-input`);
+  _getEmojiValue() {
     const emojiElement = this._element.querySelector(`.film-details__emoji-list`);
     let emojiValue;
+    emojiElement.querySelectorAll(`input`).forEach((item) => {
+      if (item.checked) {
+        emojiValue = item.value;
+      }
+    });
+    return emojiValue;
+  }
+
+  _unblockComment() {
+    const inputElement = this._element.querySelector(`.film-details__comment-input`);
+    const emojiValue = this._getEmojiValue();
+    inputElement.disabled = false;
+    inputElement.style.border = `1px solid #979797`;
+    this._element.querySelector(`.film-details__comments-list`)
+      .appendChild(this._createComment({comment: inputElement.value, author: `Your comment`,
+        date: new Date(), emotion: emojiValue}));
+    this._element.querySelector(`.film-details__user-rating-controls`)
+      .classList.remove(`visually-hidden`);
+    this._element.querySelector(`.film-details__watched-status`)
+      .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
+    this._element.querySelector(`.film-details__comments-count`).innerHTML = this._data.popup.commentsList.length;
+    inputElement.value = ``;
+  }
+
+  _onCommentAdd(evt) {
+    const inputElement = this._element.querySelector(`.film-details__comment-input`);
     if ((evt.keyCode === 13 && evt.ctrlKey) && inputElement.value) {
-      emojiElement.querySelectorAll(`input`).forEach((item) => {
-        if (item.checked) {
-          emojiValue = item.value;
-        }
-      });
+      const emojiValue = this._getEmojiValue();
       this._data.popup.commentsList.push({comment: inputElement.value, author: `Your comment`,
         date: new Date(), emotion: emojiValue});
-      this._element.querySelector(`.film-details__comments-list`)
-        .appendChild(this._createComment({comment: inputElement.value, author: `Your comment`,
-          date: new Date(), emotion: emojiValue}));
-      this._element.querySelector(`.film-details__user-rating-controls`)
-        .classList.remove(`visually-hidden`);
-      this._element.querySelector(`.film-details__watched-status`)
-        .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
-      this._element.querySelector(`.film-details__comments-count`).innerHTML = this._data.popup.commentsList.length;
-      inputElement.value = ``;
+      inputElement.disabled = true;
+      inputElement.style.border = `3px solid #8B0000`;
+      if (typeof this._onCommentSubmit === `function`) {
+        this._onCommentSubmit(this._data, this._unblockComment);
+      }
     }
   }
 

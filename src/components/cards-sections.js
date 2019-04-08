@@ -73,11 +73,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._filteredData = this._data;
     const noControls = {value: false, description: false, controls: false};
     const controls = {value: true, description: true, controls: true};
-    const updateData = (updatedData, id) => {
+    const updateData = (updatedData, id, successCallback) => {
       const index = this._data.findIndex((item) => item.id === id);
       this._data[index] = Object.assign({}, updatedData);
       if (typeof this._onChange === `function`) {
-        this._onChange(this._data[index], id);
+        this._onChange(this._data[index], id, successCallback);
       }
       this._updateComponent(this._mainComponent, updatedData, id);
       this._updateComponent(this._featuredByCommentsComponent, updatedData, id);
