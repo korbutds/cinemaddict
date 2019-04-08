@@ -6,6 +6,7 @@ import CardsSectionsComponent from './components/cards-sections';
 import StatisticsComponent from './components/statistics';
 import SearchComponent from './components/search';
 import LoadInProcessComponent from './components/load-in-process';
+import LoadErrorComponent from './components/load-error';
 import API from './api';
 import CardModel from './models/card-model';
 
@@ -16,6 +17,7 @@ const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
 const loadInProcessComponent = new LoadInProcessComponent();
+const loadErrorComponent = new LoadErrorComponent();
 let cardsList;
 let filtersComponent;
 let cardsSectionsComponent;
@@ -91,6 +93,9 @@ api.getData()
     addFilters();
     footerStatisticsElement.innerHTML = `${cardsList.length} movies inside`;
     userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+  })
+  .catch(() => {
+    mainElement.appendChild(loadErrorComponent.render());
   });
 
 addSearch();
