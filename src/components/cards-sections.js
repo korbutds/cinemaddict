@@ -24,16 +24,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._onChange = fn;
   }
 
-  _filterCardsByComments() {
-    return this._data.slice()
-      .sort((a, b) => b.commentsAmount - a.commentsAmount)
-        .slice(0, 2);
-  }
-
-  _filterCardsByRating() {
-    return this._data.slice()
-      .sort((a, b) => b.rating - a.rating)
-        .slice(0, 2);
+  _filterCardsBy(attribute) {
+    return this._data
+      .slice()
+        .sort((a, b) => b[attribute] - a[attribute])
+          .slice(0, 2);
   }
 
   _replaceMainBlockElements(data) {
@@ -97,11 +92,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._mainComponent.onChange = updateData;
 
     element.querySelector(`#films-rated-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsByRating(), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControls));
     this._featuredByRatingComponent.onChange = updateData;
 
     element.querySelector(`#films-commented-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsByComments(), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControls));
     this._featuredByCommentsComponent.onChange = updateData;
     return element;
   }
