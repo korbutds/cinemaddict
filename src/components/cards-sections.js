@@ -2,11 +2,13 @@ import BaseComponent from './base';
 import CardsSectionComponent from './cards-section';
 import {createCardsSectionsTemplate} from '../templates/cards';
 
+const SHOW_MORE_STEP = 5;
+
 export default class CardsSectionsComponent extends BaseComponent {
   constructor(data) {
     super(data);
-    this._initialCount = 5;
-    this._showMoreStep = 5;
+    this._initialCount = SHOW_MORE_STEP;
+    this._showMoreStep = SHOW_MORE_STEP;
     this._mainComponent = null;
     this._featuredByCommentsComponent = null;
     this._featuredByRatingComponent = null;
@@ -22,18 +24,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._onChange = fn;
   }
 
-  _filterCardsByComments() {
-    const filteredData = this._data.slice();
-    return filteredData.sort(function (a, b) {
-      return b.commentsAmount - a.commentsAmount;
-    }).slice(0, 2);
-  }
-
-  _filterCardsByRating() {
-    const filteredData = this._data.slice();
-    return filteredData.sort(function (a, b) {
-      return b.rating - a.rating;
-    }).slice(0, 2);
+  _filterCardsBy(attribute) {
+    return this._data
+      .slice()
+        .sort((a, b) => b[attribute] - a[attribute])
+          .slice(0, 2);
   }
 
   _replaceMainBlockElements(data) {
@@ -44,9 +39,11 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   _onShowMoreClick() {
-    this._initialCount = (this._filteredData.length > (this._initialCount + this._showMoreStep))
-      ? this._initialCount += this._showMoreStep
-      : this._filteredData.length;
+    if (this._filteredData.length > (this._initialCount + this._showMoreStep)) {
+      this._initialCount += this._showMoreStep;
+    } else {
+      this._initialCount = this._filteredData.length;
+    }
     if (this._initialCount === this._filteredData.length) {
       this._showMoreButtonStatus = false;
       this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
@@ -95,11 +92,11 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._mainComponent.onChange = updateData;
 
     element.querySelector(`#films-rated-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsByRating(), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControls));
     this._featuredByRatingComponent.onChange = updateData;
 
     element.querySelector(`#films-commented-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsByComments(), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControls));
     this._featuredByCommentsComponent.onChange = updateData;
     return element;
   }
@@ -113,10 +110,12 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   updateMainBlockElement() {
-    if (this._initialCount !== this._filteredData.length
-        || this._initialCount > this._filteredData.length) {
+    if (this._initialCount < this._filteredData.length) {
       this._showMoreButtonStatus = true;
       this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
+    } else {
+      this._showMoreButtonStatus = false;
+      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
     }
     this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
   }
@@ -124,11 +123,6 @@ export default class CardsSectionsComponent extends BaseComponent {
   update(filteredData) {
     this._initialCount = this._showMoreStep;
     this._filteredData = filteredData;
-    if (!this._showMoreButtonStatus) {
-      this._showMoreButtonStatus = true;
-      this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
-    }
     this.updateMainBlockElement();
-    this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
   }
 }
