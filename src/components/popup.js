@@ -36,6 +36,10 @@ export default class PopupComponent extends BaseComponent {
     this._onAddToWatchListButtonClick = this._onAddToWatchListButtonClick.bind(this);
     this._onAddToFavoriteButtonClick = this._onAddToFavoriteButtonClick.bind(this);
     this._onCommentFormInput = this._onCommentFormInput.bind(this);
+    this.enableCommentForm = this.enableCommentForm.bind(this);
+    this.showCommentSubmitError = this.showCommentSubmitError.bind(this);
+    this.showNewRating = this.showNewRating.bind(this);
+    this.showRatingSubmitError = this.showRatingSubmitError.bind(this);
   }
 
   get template() {

@@ -61,10 +61,10 @@ const addFilters = () => {
   document.querySelector(`#stats`).addEventListener(`click`, onStatsClick);
 };
 
-const updateCardData = (methodName, popup, id) => (cardModel) => {
+const updateCardData = (callback, id) => (cardModel) => {
   const index = cardsList.findIndex((item) => item.id === id);
   cardsList[index] = Object.assign({}, cardModel);
-  popup[methodName]();
+  callback();
 };
 
 const addCards = () => {
@@ -74,18 +74,14 @@ const addCards = () => {
 
   cardsSectionsComponent.onCommentSubmit = (updatedData, id, popup) => {
     api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
-      .then(updateCardData(`enableCommentForm`, popup, id))
-      .catch(() => {
-        popup.showCommentSubmitError();
-      });
+      .then(updateCardData(popup.enableCommentForm, id))
+      .catch(popup.showCommentSubmitError);
   };
 
   cardsSectionsComponent.onRatingSubmit = (updatedData, id, popup) => {
     api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
-      .then(updateCardData(`showNewRating`, popup, id))
-      .catch(() => {
-        popup.showRatingSubmitError();
-      });
+      .then(updateCardData(popup.showNewRating, id))
+      .catch(popup.showRatingSubmitError);
   };
 };
 
