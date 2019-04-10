@@ -63,9 +63,9 @@ const getControlStatus = () => {
   };
 };
 
-const createRatingElement = (data) => (
+const createRatingTemplate = (data) => (
   RATINGS.map((rating) => (
-    `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${rating === data.popup.yourRating ? `checked` : ``}>
+    `<input type="radio" name="score" class="film-details__user-rating-input visually-hidden" value="${rating}" id="rating-${rating}" ${rating.toString() === data.popup.yourRating ? `checked` : ``}>
     <label class="film-details__user-rating-label" for="rating-${rating}">${rating}</label>`
   ))
   .join(``)
@@ -77,7 +77,7 @@ const createGenresList = (data) => (
   )).join(``)
 );
 
-const createDetailsTableElement = (data) => (
+const createDetailsTableTemplate = (data) => (
   generateDetailsTableData(data.popup).map((detail) => (
     `<tr class="film-details__row">
       <td class="film-details__term">${detail.term}</td>
@@ -87,7 +87,7 @@ const createDetailsTableElement = (data) => (
   .join(``)
 );
 
-const createControlsElement = (data) => (
+const createControlsTemplate = (data) => (
   CONTROLS.map((control) => (
     `<input type="checkbox" class="film-details__control-input visually-hidden" id="${control.id}" name="${control.id}" ${getControlStatus()[control.id](data) ? `checked` : ``}>
     <label for="${control.id}" class="film-details__control-label film-details__control-label--${control.id}">${control.label}</label>`
@@ -95,7 +95,7 @@ const createControlsElement = (data) => (
   .join(``)
 );
 
-const createEmojiesElement = () => (
+const createEmojiesTemplate = () => (
   Object.keys(EMOJIES).map((value) => (
     `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${value}" value="${value}" ${value === `neutral-face` ? `checked` : ``}>
     <label class="film-details__emoji-label" for="emoji-${value}">${EMOJIES[value]}</label>`
@@ -103,7 +103,7 @@ const createEmojiesElement = () => (
   .join(``)
 );
 
-export const createCommentElement = (comment) => (
+export const createCommentTemplate = (comment) => (
   `<li class="film-details__comment">
      <span class="film-details__comment-emoji">
      ${EMOJIES[comment.emotion]}
@@ -118,9 +118,9 @@ export const createCommentElement = (comment) => (
    </li>`
 );
 
-const createCommentsElement = (data) => {
+const createCommentsTemplate = (data) => {
   return data.popup.commentsList.map((comment) => (
-    createCommentElement(comment)))
+    createCommentTemplate(comment)))
   .join(``);
 };
 
@@ -149,7 +149,7 @@ export const createPopupTemplate = (data) => (
             </div>
           </div>
           <table class="film-details__table">
-            ${createDetailsTableElement(data)}
+            ${createDetailsTableTemplate(data)}
           </table>
           <p class="film-details__film-description">
             ${data.description}
@@ -158,20 +158,20 @@ export const createPopupTemplate = (data) => (
       </div>
 
       <section class="film-details__controls">
-        ${createControlsElement(data)}
+        ${createControlsTemplate(data)}
       </section>
 
       <section class="film-details__comments-wrap">
         <h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${data.popup.commentsList.length}</span></h3>
         <ul class="film-details__comments-list">
-          ${createCommentsElement(data)}
+          ${createCommentsTemplate(data)}
         </ul>
         <div class="film-details__new-comment">
           <div>
             <label for="add-emoji" class="film-details__add-emoji-label">😐</label>
             <input type="checkbox" class="film-details__add-emoji visually-hidden" id="add-emoji">
             <div class="film-details__emoji-list">
-              ${createEmojiesElement()}
+              ${createEmojiesTemplate()}
             </div>
           </div>
           <label class="film-details__comment-label">
@@ -194,7 +194,7 @@ export const createPopupTemplate = (data) => (
             <h3 class="film-details__user-rating-title">Incredibles 2</h3>
             <p class="film-details__user-rating-feelings">How you feel it?</p>
             <div class="film-details__user-rating-score">
-              ${createRatingElement(data)}
+              ${createRatingTemplate(data)}
             </div>
           </section>
         </div>

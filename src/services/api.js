@@ -1,4 +1,4 @@
-import CardModel from './models/card-model';
+import CardModel from '../models/card-model';
 
 const toJSON = (response) => response.json();
 

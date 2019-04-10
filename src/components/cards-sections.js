@@ -9,7 +9,7 @@ export default class CardsSectionsComponent extends BaseComponent {
     super(data);
     this._initialCount = SHOW_MORE_STEP;
     this._showMoreStep = SHOW_MORE_STEP;
-    this._mainComponent = null;
+    this._allCardsSectionComponent = null;
     this._featuredByCommentsComponent = null;
     this._featuredByRatingComponent = null;
     this._showMoreButtonStatus = true;
@@ -20,22 +20,31 @@ export default class CardsSectionsComponent extends BaseComponent {
     return createCardsSectionsTemplate();
   }
 
-  set onChange(fn) {
-    this._onChange = fn;
+  set onCardsChange(fn) {
+    this._onCardsChange = fn;
+  }
+
+  set onCommentSubmit(fn) {
+    this._onCommentSubmit = fn;
+  }
+
+  set onRatingSubmit(fn) {
+    this._onRatingSubmit = fn;
   }
 
   _filterCardsBy(attribute) {
-    return this._data
+    return this
+      ._data
       .slice()
-        .sort((a, b) => b[attribute] - a[attribute])
-          .slice(0, 2);
+      .sort((a, b) => b[attribute] - a[attribute])
+      .slice(0, 2);
   }
 
   _replaceMainBlockElements(data) {
-    this._element.querySelector(`#films-main-list`).removeChild(this._mainComponent._element);
-    this._mainComponent.unrender();
+    this._element.querySelector(`#films-main-list`).removeChild(this._allCardsSectionComponent._element);
+    this._allCardsSectionComponent.unrender();
     this._element.querySelector(`#films-main-list`)
-      .insertBefore(this._mainComponent.render(data, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
+      .insertBefore(this._allCardsSectionComponent.render(data, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
   }
 
   _onShowMoreClick() {
@@ -71,33 +80,61 @@ export default class CardsSectionsComponent extends BaseComponent {
   render() {
     const element = super.render();
     this._filteredData = this._data;
+
     const noControls = {value: false, description: false, controls: false};
     const controls = {value: true, description: true, controls: true};
+
     const updateData = (updatedData, id) => {
       const index = this._data.findIndex((item) => item.id === id);
       this._data[index] = Object.assign({}, updatedData);
-      if (typeof this._onChange === `function`) {
-        this._onChange(this._data[index], id);
+      if (typeof this._onCardsChange === `function`) {
+        this._onCardsChange(this._data[index], id);
       }
-      this._updateComponent(this._mainComponent, updatedData, id);
+      this._updateComponent(this._allCardsSectionComponent, updatedData, id);
       this._updateComponent(this._featuredByCommentsComponent, updatedData, id);
       this._updateComponent(this._featuredByRatingComponent, updatedData, id);
     };
-    this._mainComponent = new CardsSectionComponent(this._data, controls);
+
+    const submitComment = (newData, id, popup) => {
+      const index = this._data.findIndex((item) => item.id === id);
+      this._data[index] = Object.assign({}, newData);
+      if (typeof this._onCommentSubmit === `function`) {
+        this._onCommentSubmit(this._data[index], id, popup);
+      }
+    };
+
+    const submitRating = (newData, id, popup) => {
+      const index = this._data.findIndex((item) => item.id === id);
+      this._data[index] = Object.assign({}, newData);
+      if (typeof this._onRatingSubmit === `function`) {
+        this._onRatingSubmit(this._data[index], id, popup);
+      }
+    };
+
+    this._allCardsSectionComponent = new CardsSectionComponent(this._data, controls);
     this._featuredByCommentsComponent = new CardsSectionComponent(this._data, noControls);
     this._featuredByRatingComponent = new CardsSectionComponent(this._data, noControls);
 
     element.querySelector(`#films-main-list`)
-      .insertBefore(this._mainComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
-    this._mainComponent.onChange = updateData;
-
+      .insertBefore(this._allCardsSectionComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
     element.querySelector(`#films-rated-list`)
       .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControls));
-    this._featuredByRatingComponent.onChange = updateData;
 
     element.querySelector(`#films-commented-list`)
       .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControls));
-    this._featuredByCommentsComponent.onChange = updateData;
+
+    this._allCardsSectionComponent.onCardChange = updateData;
+    this._allCardsSectionComponent.onCommentSubmit = submitComment;
+    this._allCardsSectionComponent.onRatingSubmit = submitRating;
+
+    this._featuredByRatingComponent.onCardChange = updateData;
+    this._featuredByRatingComponent.onCommentSubmit = submitComment;
+    this._featuredByRatingComponent.onRatingSubmit = submitRating;
+
+    this._featuredByCommentsComponent.onCardChange = updateData;
+    this._featuredByCommentsComponent.onCommentSubmit = submitComment;
+    this._featuredByCommentsComponent.onRatingSubmit = submitRating;
+
     return element;
   }
 
