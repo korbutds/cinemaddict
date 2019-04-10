@@ -61,6 +61,12 @@ const addFilters = () => {
   document.querySelector(`#stats`).addEventListener(`click`, onStatsClick);
 };
 
+const updateCardData = (methodName, popup, id) => (cardModel) => {
+  const index = cardsList.findIndex((item) => item.id === id);
+  cardsList[index] = Object.assign({}, cardModel);
+  popup[methodName]();
+};
+
 const addCards = () => {
   cardsSectionsComponent = new CardsSectionsComponent(cardsList);
   mainElement.appendChild(cardsSectionsComponent.render());
@@ -68,11 +74,7 @@ const addCards = () => {
 
   cardsSectionsComponent.onCommentSubmit = (updatedData, id, popup) => {
     api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
-      .then((cardModel) => {
-        const index = cardsList.findIndex((item) => item.id === id);
-        cardsList[index] = Object.assign({}, cardModel);
-        popup.enableCommentForm();
-      })
+      .then(updateCardData(`enableCommentForm`, popup, id))
       .catch(() => {
         popup.showCommentSubmitError();
       });
@@ -80,11 +82,7 @@ const addCards = () => {
 
   cardsSectionsComponent.onRatingSubmit = (updatedData, id, popup) => {
     api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
-      .then((cardModel) => {
-        const index = cardsList.findIndex((item) => item.id === id);
-        cardsList[index] = Object.assign({}, cardModel);
-        popup.showNewRating();
-      })
+      .then(updateCardData(`showNewRating`, popup, id))
       .catch(() => {
         popup.showRatingSubmitError();
       });

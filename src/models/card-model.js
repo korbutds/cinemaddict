@@ -23,7 +23,7 @@ export default class CardModel {
       genres: data[`film_info`][`genre`],
       ageLimit: data[`film_info`][`age_rating`],
       original: data[`film_info`][`alternative_title`],
-      yourRating: data[`user_details`][`personal_rating`],
+      yourRating: data[`user_details`][`personal_rating`].toString(),
       commentsList: data[`comments`]
     };
   }
@@ -52,7 +52,7 @@ export default class CardModel {
       'user_details': {
         'already_watched': data.isWatched,
         'favorite': data.isFavorite,
-        'personal_rating': data.popup.yourRating,
+        'personal_rating': parseInt(data.popup.yourRating, 10),
         'watching_date': data.userDate,
         'watchlist': data.isOnWatchlist
       }
