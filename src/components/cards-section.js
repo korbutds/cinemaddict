@@ -32,37 +32,36 @@ export default class CardsSectionComponent extends BaseComponent {
       const container = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
 
-      const updateData = (newData) => {
+      const updateCardData = (newData) => {
         cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
         this._data[index] = Object.assign({}, newData);
-        this._dataIndex = index;
-      };
-
-      const update = (newData) => {
-        updateData(newData);
         if (typeof this._onCardChange === `function`) {
-          this._onCardChange(this._data[this._dataIndex], cardComponent._data.id);
+          this._onCardChange(this._data[index], cardComponent._data.id);
         }
       };
 
       const submitComment = (newData, popup) => {
-        updateData(newData);
+        cardComponent.update(newData);
+        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
+        this._data[index] = Object.assign({}, newData);
         if (typeof this._onCommentSubmit === `function`) {
-          this._onCommentSubmit(this._data[this._dataIndex], cardComponent._data.id, popup);
+          this._onCommentSubmit(this._data[index], cardComponent._data.id, popup);
         }
       };
 
       const submitRating = (newData, popup) => {
-        updateData(newData);
+        cardComponent.update(newData);
+        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
+        this._data[index] = Object.assign({}, newData);
         if (typeof this._onRatingSubmit === `function`) {
-          this._onRatingSubmit(this._data[this._dataIndex], cardComponent._data.id, popup);
+          this._onRatingSubmit(this._data[index], cardComponent._data.id, popup);
         }
       };
 
-      cardComponent.onMarkAsWatched = update;
-      cardComponent.onAddToWatchList = update;
-      cardComponent.onAddToFavorite = update;
+      cardComponent.onMarkAsWatched = updateCardData;
+      cardComponent.onAddToWatchList = updateCardData;
+      cardComponent.onAddToFavorite = updateCardData;
 
       cardComponent.onClick = () => {
         if (document.querySelector(`.film-details`)) {
@@ -79,7 +78,7 @@ export default class CardsSectionComponent extends BaseComponent {
       popupComponent.onClose = (newData) => {
         container.removeChild(popupComponent.element);
         popupComponent.unrender();
-        update(newData);
+        updateCardData(newData);
       };
       return cardComponent;
     });
