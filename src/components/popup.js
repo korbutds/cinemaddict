@@ -2,6 +2,10 @@ import {createPopupTemplate, createCommentTemplate} from '../templates/popup';
 import {createElement} from '../lib/element';
 import BaseComponent from './base';
 
+
+const RATING_FIELD_TEXT = `Your rate`;
+const AUTHOR_FIELD_TEXT = `Your comment`;
+
 const KeyCode = {
   ESC: 27,
   ENTER: 13
@@ -14,6 +18,10 @@ const RatingElementColor = {
   DEFAULT: `#d8d8d8`,
   ERROR: `#8B0000`,
   CHECKED: `#ffe800`
+};
+const IsWatchedButtonText = {
+  YES: `Already watched`,
+  NO: `Will watch`
 };
 
 export default class PopupComponent extends BaseComponent {
@@ -67,7 +75,7 @@ export default class PopupComponent extends BaseComponent {
   _onMarkAsWatchedButtonClick() {
     this._toggleCardProperty(`isWatched`);
     this._element.querySelector(`.film-details__watched-status`)
-      .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
+      .innerHTML = this._data.isWatched ? IsWatchedButtonText.YES : IsWatchedButtonText.NO;
   }
 
   _onAddToWatchListButtonClick() {
@@ -103,7 +111,7 @@ export default class PopupComponent extends BaseComponent {
   }
 
   showNewRating() {
-    this._element.querySelector(`.film-details__user-rating`).textContent = `Your rate ${this._data.popup.yourRating}`;
+    this._element.querySelector(`.film-details__user-rating`).textContent = `${RATING_FIELD_TEXT} ${this._data.popup.yourRating}`;
     this._setRatingElementsDisbility(false);
     this._element.querySelector(`[for="${this._ratingElement.id}"]`)
       .style.backgroundColor = RatingElementColor.CHECKED;
@@ -146,7 +154,7 @@ export default class PopupComponent extends BaseComponent {
   }
 
   _isYourComment() {
-    return this._data.popup.commentsList.some((comment) => comment.author === `Your comment`);
+    return this._data.popup.commentsList.some((comment) => comment.author === AUTHOR_FIELD_TEXT);
   }
 
   _onCommentFormInput() {
@@ -157,7 +165,7 @@ export default class PopupComponent extends BaseComponent {
   _addComment(comment) {
     this._data.popup.commentsList.push({
       comment,
-      author: `Your comment`,
+      author: AUTHOR_FIELD_TEXT,
       date: new Date(),
       emotion: this._getEmojiValue()
     });
@@ -178,12 +186,21 @@ export default class PopupComponent extends BaseComponent {
 
   _onCommentRemove() {
     if (this._isYourComment()) {
-      this._data.popup.commentsList.pop();
+      let index;
+
+      this._data.popup.commentsList.forEach((item, id) => {
+        if (item.author === AUTHOR_FIELD_TEXT) {
+          index = id;
+        }
+      });
+
+      this._data.popup.commentsList.splice(index, 1);
       const containerElement = this._element.querySelector(`.film-details__comments-list`);
       containerElement
-        .removeChild(containerElement.querySelector(`.film-details__comment:last-child`));
+        .removeChild(containerElement.querySelector(`.film-details__comment:nth-child(${index + 1})`));
       this._element.querySelector(`.film-details__comments-count`)
         .innerHTML = this._data.popup.commentsList.length;
+
       if (!this._isYourComment()) {
         this._element
           .querySelector(`.film-details__user-rating-controls`)
@@ -196,12 +213,12 @@ export default class PopupComponent extends BaseComponent {
     const inputElement = this._element.querySelector(`.film-details__comment-input`);
     inputElement.disabled = false;
     this._element.querySelector(`.film-details__comments-list`)
-      .appendChild(this._createComment({comment: inputElement.value, author: `Your comment`,
+      .appendChild(this._createComment({comment: inputElement.value, author: AUTHOR_FIELD_TEXT,
         date: new Date(), emotion: this._getEmojiValue()}));
     this._element.querySelector(`.film-details__user-rating-controls`)
       .classList.remove(`visually-hidden`);
     this._element.querySelector(`.film-details__watched-status`)
-      .innerHTML = this._data.isWatched ? `Already watched` : `Will watch`;
+      .innerHTML = this._data.isWatched ? IsWatchedButtonText.YES : IsWatchedButtonText.NO;
     this._element.querySelector(`.film-details__comments-count`)
       .innerHTML = this._data.popup.commentsList.length;
     inputElement.value = ``;

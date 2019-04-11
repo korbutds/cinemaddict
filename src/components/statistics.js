@@ -4,6 +4,8 @@ import BaseComponent from './base';
 import ChartComponent from './chart';
 import moment from 'moment';
 
+const GENRE_FIELD_TEXT = `No genre`;
+
 export default class StatisticsComponent extends BaseComponent {
   constructor(data) {
     super(data);
@@ -71,7 +73,7 @@ export default class StatisticsComponent extends BaseComponent {
     this._element.querySelector(`.statistic__item-text.duration`)
       .innerHTML = createDurationTemplate(this._getTotalDuration(data));
     this._element.querySelector(`.statistic__item-text.genre`)
-      .innerHTML = `${this._getTopGenre(data) !== undefined ? this._getTopGenre(data) : `No genre`}`;
+      .innerHTML = `${this._getTopGenre(data) !== undefined ? this._getTopGenre(data) : GENRE_FIELD_TEXT}`;
     ctx.height = height * labels.length;
     this._chart = new ChartComponent({ctx, labels, counts});
     this._chart.render();

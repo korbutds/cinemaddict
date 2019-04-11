@@ -1,8 +1,3 @@
-import {generateRandomNumber} from '../lib/random';
-
-const AMOUNT_LIMIT_MIN = 0;
-const AMOUNT_LIMIT_MAX = 100;
-
 export default [
   {
     href: `#all`,
@@ -17,7 +12,6 @@ export default [
     id: `watchlist`,
     isActive: false,
     title: `Watchlist`,
-    count: generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX),
     isCountable: true,
     isAdditional: false
   },
@@ -26,7 +20,6 @@ export default [
     id: `history`,
     isActive: false,
     title: `History`,
-    count: generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX),
     isCountable: true,
     isAdditional: false
   },
@@ -35,7 +28,6 @@ export default [
     id: `favorites`,
     isActive: false,
     title: `Favorites`,
-    count: generateRandomNumber(AMOUNT_LIMIT_MIN, AMOUNT_LIMIT_MAX),
     isCountable: true,
     isAdditional: false
   },

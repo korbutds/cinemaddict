@@ -1,8 +1,7 @@
-import {createRandomNumberRange} from '../lib/random';
 import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;
-const RATINGS = createRandomNumberRange(RATING_LIMIT_MAX);
+const RATINGS = Array.from(new Array(RATING_LIMIT_MAX), (_, i) => i + 1);
 const EMOJIES = {
   'sleeping': `😴`,
   'neutral-face': `😐`,

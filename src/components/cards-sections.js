@@ -3,6 +3,7 @@ import CardsSectionComponent from './cards-section';
 import {createCardsSectionsTemplate} from '../templates/cards';
 
 const SHOW_MORE_STEP = 5;
+const FEATURED_CARDS_AMOUNT = 2;
 
 export default class CardsSectionsComponent extends BaseComponent {
   constructor(data) {
@@ -37,7 +38,7 @@ export default class CardsSectionsComponent extends BaseComponent {
       ._data
       .slice()
       .sort((a, b) => b[attribute] - a[attribute])
-      .slice(0, 2);
+      .slice(0, FEATURED_CARDS_AMOUNT);
   }
 
   _replaceMainBlockElements(data) {
