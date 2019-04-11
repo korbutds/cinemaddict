@@ -1,6 +1,13 @@
 import {createCardTemplate} from '../templates/cards';
 import BaseComponent from './base';
 
+const BUTTONS_CHECKED_BORDER = `1px solid white`;
+
+const CommentsAmountText = {
+  SINGULAR: `comment`,
+  PLURAL: `comments`
+};
+
 export default class CardComponent extends BaseComponent {
   constructor(data, controls) {
     super(data);
@@ -11,7 +18,7 @@ export default class CardComponent extends BaseComponent {
       isFavorite: data.isFavorite
     });
 
-    this._addControls = controls.value;
+    this._withControls = controls.value;
     this._controls = controls;
     this._onClick = null;
     this._onCommentsClick = this._onCommentsClick.bind(this);
@@ -51,7 +58,7 @@ export default class CardComponent extends BaseComponent {
     this.setState({
       isWatched,
     });
-    this._data.isWatched = this._state.isWatched;
+    this._data.isWatched = isWatched;
     this._setButtonsOutline(this._element);
     if (typeof this._onMarkAsWatched === `function`) {
       this._onMarkAsWatched(this._data);
@@ -64,7 +71,7 @@ export default class CardComponent extends BaseComponent {
     this.setState({
       isOnWatchlist,
     });
-    this._data.isOnWatchlist = this._state.isOnWatchlist;
+    this._data.isOnWatchlist = isOnWatchlist;
     this._setButtonsOutline(this._element);
     if (typeof this._onAddToWatchList === `function`) {
       this._onAddToWatchList(this._data);
@@ -77,7 +84,7 @@ export default class CardComponent extends BaseComponent {
     this.setState({
       isFavorite,
     });
-    this._data.isFavorite = this._state.isFavorite;
+    this._data.isFavorite = isFavorite;
     this._setButtonsOutline(this._element);
     if (typeof this._onAddToFavorite === `function`) {
       this._onAddToFavorite(this._data);
@@ -85,9 +92,9 @@ export default class CardComponent extends BaseComponent {
   }
 
   _setButtonsOutline(element) {
-    element.querySelector(`.film-card__controls-item--mark-as-watched`).style.outline = this._state.isWatched ? `1px solid white` : ``;
-    element.querySelector(`.film-card__controls-item--favorite`).style.outline = this._state.isFavorite ? `1px solid white` : ``;
-    element.querySelector(`.film-card__controls-item--add-to-watchlist`).style.outline = this._state.isOnWatchlist ? `1px solid white` : ``;
+    element.querySelector(`.film-card__controls-item--mark-as-watched`).style.outline = this._state.isWatched ? BUTTONS_CHECKED_BORDER : ``;
+    element.querySelector(`.film-card__controls-item--favorite`).style.outline = this._state.isFavorite ? BUTTONS_CHECKED_BORDER : ``;
+    element.querySelector(`.film-card__controls-item--add-to-watchlist`).style.outline = this._state.isOnWatchlist ? BUTTONS_CHECKED_BORDER : ``;
   }
 
   createListeners() {
@@ -96,7 +103,7 @@ export default class CardComponent extends BaseComponent {
         ._element
         .querySelector(`.film-card__comments`)
         .addEventListener(`click`, this._onCommentsClick);
-      if (this._addControls) {
+      if (this._withControls) {
         this
           ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
           .addEventListener(`click`, this._onAddToWatchListButtonClick);
@@ -116,7 +123,7 @@ export default class CardComponent extends BaseComponent {
         ._element
         .querySelector(`.film-card__comments`)
         .removeEventListener(`click`, this._onCommentsClick);
-      if (this._addControls) {
+      if (this._withControls) {
         this
           ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
           .removeEventListener(`click`, this._onAddToWatchListButtonClick);
@@ -137,16 +144,16 @@ export default class CardComponent extends BaseComponent {
       isWatched: this._data.isWatched,
       isFavorite: this._data.isFavorite
     });
-    if (this._addControls) {
+    if (this._withControls) {
       this._setButtonsOutline(this._element);
     }
     this._element.querySelector(`.film-card__comments`).textContent =
-      `${data.commentsAmount} ${data.commentsAmount === 1 ? `comment` : `comments`}`;
+      `${data.commentsAmount} ${data.commentsAmount === 1 ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
   }
 
   render() {
     const element = super.render();
-    if (this._addControls) {
+    if (this._withControls) {
       this._setButtonsOutline(element);
     }
     return element;

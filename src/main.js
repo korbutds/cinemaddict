@@ -21,6 +21,8 @@ const api = new API({
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
 const userRankElement = document.querySelector(`.profile__rating`);
+const headerElement = document.querySelector(`.header`);
+const searchReferenceElement = headerElement.querySelector(`.profile`);
 
 const loadInProcessComponent = new LoadInProcessComponent();
 const loadErrorComponent = new LoadErrorComponent();
@@ -50,6 +52,7 @@ const onFilterSelect = (id) => {
     mainElement.removeChild(mainElement.lastChild);
     addCards();
     cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+    document.querySelector(`.search__field`).value = ``;
   }
 };
 
@@ -86,18 +89,16 @@ const addCards = () => {
 };
 
 const onSearch = (value) => {
-  if (value) {
+  if (value && cardsSectionsComponent._element) {
     cardsSectionsComponent.onSearch(value);
-  } else {
+  } else if (cardsSectionsComponent._element) {
     cardsSectionsComponent.updateMainBlockElement();
   }
 };
 
 const addSearch = () => {
-  const container = document.querySelector(`.header`);
-  const referenceElement = container.querySelector(`.profile`);
   searchComponent = new SearchComponent();
-  container.insertBefore(searchComponent.render(), referenceElement);
+  headerElement.insertBefore(searchComponent.render(), searchReferenceElement);
   searchComponent.onSearch = onSearch;
 };
 
