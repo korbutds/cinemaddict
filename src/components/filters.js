@@ -15,12 +15,6 @@ export default class FiltersComponent extends BaseComponent {
     this._onSelect = fn;
   }
 
-  render() {
-    const element = super.render();
-    this.renderFilters(element);
-    return element;
-  }
-
   renderFilters(containerElement) {
     this.components = this._data.map((filter) => {
       const component = new FilterComponent(filter);
@@ -36,5 +30,11 @@ export default class FiltersComponent extends BaseComponent {
     this.components.forEach((component) => {
       containerElement.appendChild(component.render());
     });
+  }
+
+  render() {
+    const element = super.render();
+    this.renderFilters(element);
+    return element;
   }
 }

@@ -42,7 +42,7 @@ const generateDetailsTableData = (dataPopup) => ([
   },
   {
     term: `Runtime`,
-    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes())
+    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes()) + ` min`
   },
   {
     term: `Country`,

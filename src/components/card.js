@@ -48,53 +48,32 @@ export default class CardComponent extends BaseComponent {
     this._onAddToFavorite = fn;
   }
 
-  _onCommentsClick() {
-    return typeof this._onClick === `function` && this._onClick();
-  }
-
-  _onMarkAsWatchedButtonClick(evt) {
-    evt.preventDefault();
-    const isWatched = !this._state.isWatched;
-    this.setState({
-      isWatched,
-    });
-    this._data.isWatched = isWatched;
-    this._setButtonsOutline(this._element);
-    if (typeof this._onMarkAsWatched === `function`) {
-      this._onMarkAsWatched(this._data);
-    }
-  }
-
-  _onAddToWatchListButtonClick(evt) {
-    evt.preventDefault();
-    const isOnWatchlist = !this._state.isOnWatchlist;
-    this.setState({
-      isOnWatchlist,
-    });
-    this._data.isOnWatchlist = isOnWatchlist;
-    this._setButtonsOutline(this._element);
-    if (typeof this._onAddToWatchList === `function`) {
-      this._onAddToWatchList(this._data);
-    }
-  }
-
-  _onAddToFavoriteButtonClick(evt) {
-    evt.preventDefault();
-    const isFavorite = !this._state.isFavorite;
-    this.setState({
-      isFavorite,
-    });
-    this._data.isFavorite = isFavorite;
-    this._setButtonsOutline(this._element);
-    if (typeof this._onAddToFavorite === `function`) {
-      this._onAddToFavorite(this._data);
-    }
-  }
-
   _setButtonsOutline(element) {
     element.querySelector(`.film-card__controls-item--mark-as-watched`).style.outline = this._state.isWatched ? BUTTONS_CHECKED_BORDER : ``;
     element.querySelector(`.film-card__controls-item--favorite`).style.outline = this._state.isFavorite ? BUTTONS_CHECKED_BORDER : ``;
     element.querySelector(`.film-card__controls-item--add-to-watchlist`).style.outline = this._state.isOnWatchlist ? BUTTONS_CHECKED_BORDER : ``;
+  }
+
+  update(data) {
+    super.update(data);
+    this.setState({
+      isOnWatchlist: this._data.isOnWatchlist,
+      isWatched: this._data.isWatched,
+      isFavorite: this._data.isFavorite
+    });
+    if (this._withControls) {
+      this._setButtonsOutline(this._element);
+    }
+    this._element.querySelector(`.film-card__comments`).textContent =
+      `${data.commentsAmount} ${data.commentsAmount === 1 ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
+  }
+
+  render() {
+    const element = super.render();
+    if (this._withControls) {
+      this._setButtonsOutline(element);
+    }
+    return element;
   }
 
   createListeners() {
@@ -137,25 +116,46 @@ export default class CardComponent extends BaseComponent {
     }
   }
 
-  update(data) {
-    super.update(data);
-    this.setState({
-      isOnWatchlist: this._data.isOnWatchlist,
-      isWatched: this._data.isWatched,
-      isFavorite: this._data.isFavorite
-    });
-    if (this._withControls) {
-      this._setButtonsOutline(this._element);
-    }
-    this._element.querySelector(`.film-card__comments`).textContent =
-      `${data.commentsAmount} ${data.commentsAmount === 1 ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
+  _onCommentsClick() {
+    return typeof this._onClick === `function` && this._onClick();
   }
 
-  render() {
-    const element = super.render();
-    if (this._withControls) {
-      this._setButtonsOutline(element);
+  _onMarkAsWatchedButtonClick(evt) {
+    evt.preventDefault();
+    const isWatched = !this._state.isWatched;
+    this.setState({
+      isWatched,
+    });
+    this._data.isWatched = isWatched;
+    this._setButtonsOutline(this._element);
+    if (typeof this._onMarkAsWatched === `function`) {
+      this._onMarkAsWatched(this._data);
     }
-    return element;
+  }
+
+  _onAddToWatchListButtonClick(evt) {
+    evt.preventDefault();
+    const isOnWatchlist = !this._state.isOnWatchlist;
+    this.setState({
+      isOnWatchlist,
+    });
+    this._data.isOnWatchlist = isOnWatchlist;
+    this._setButtonsOutline(this._element);
+    if (typeof this._onAddToWatchList === `function`) {
+      this._onAddToWatchList(this._data);
+    }
+  }
+
+  _onAddToFavoriteButtonClick(evt) {
+    evt.preventDefault();
+    const isFavorite = !this._state.isFavorite;
+    this.setState({
+      isFavorite,
+    });
+    this._data.isFavorite = isFavorite;
+    this._setButtonsOutline(this._element);
+    if (typeof this._onAddToFavorite === `function`) {
+      this._onAddToFavorite(this._data);
+    }
   }
 }

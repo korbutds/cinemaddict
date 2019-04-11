@@ -34,6 +34,7 @@ export default class CardsSectionComponent extends BaseComponent {
 
       const updateCardData = (newData) => {
         cardComponent.update(newData);
+        popupComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
         this._data[index] = Object.assign({}, newData);
         if (typeof this._onCardChange === `function`) {
@@ -66,8 +67,8 @@ export default class CardsSectionComponent extends BaseComponent {
       cardComponent.onClick = () => {
         if (document.querySelector(`.film-details`)) {
           container.removeChild(container.lastChild);
+          popupComponent.unrender();
         }
-        popupComponent.unrender();
         popupComponent._data = Object.assign({}, cardComponent._data);
         container.appendChild(popupComponent.render());
       };

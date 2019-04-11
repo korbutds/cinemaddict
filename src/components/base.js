@@ -23,9 +23,6 @@ export default class BaseComponent {
     this._state = Object.assign({}, this._state, newState);
   }
 
-  createListeners() {}
-  removeListeners() {}
-
   render() {
     if (!this._state.isRendered) {
       this._element = createElement(this.template);
@@ -46,4 +43,7 @@ export default class BaseComponent {
   update(data) {
     this._data = Object.assign({}, data);
   }
+
+  createListeners() {}
+  removeListeners() {}
 }

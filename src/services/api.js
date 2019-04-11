@@ -1,8 +1,8 @@
 import CardModel from '../models/card-model';
 
-const toJSON = (response) => response.json();
+const convertToJson = (response) => response.json();
 
-export default class {
+export default class API {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -12,7 +12,7 @@ export default class {
     };
   }
 
-  _checkStatus(response) {
+  static checkStatus(response) {
     if (response.status >= 200 && response.status < 300) {
       return response;
     } else {
@@ -24,7 +24,7 @@ export default class {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(this._checkStatus)
+      .then(API.checkStatus)
       .catch((err) => {
         throw err;
       });
@@ -32,7 +32,7 @@ export default class {
 
   getData() {
     return this._load({url: `movies`})
-      .then(toJSON)
+      .then(convertToJson)
       .then(CardModel.parseData);
   }
 
@@ -43,7 +43,7 @@ export default class {
       body: JSON.stringify(newData),
       headers: new Headers({'Content-Type': `application/json`})
     })
-      .then(toJSON)
+      .then(convertToJson)
       .then(CardModel.parseDatum);
   }
 }

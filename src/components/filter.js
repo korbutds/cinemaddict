@@ -17,11 +17,6 @@ export default class FilterComponent extends BaseComponent {
     this._onClick = fn;
   }
 
-  _onFilterClick(evt) {
-    evt.preventDefault();
-    return typeof this._onClick === `function` && this._onClick(this._element.id);
-  }
-
   createListeners() {
     if (this._element) {
       this
@@ -36,5 +31,10 @@ export default class FilterComponent extends BaseComponent {
         ._element
         .removeEventListener(`click`, this._onFilterClick);
     }
+  }
+
+  _onFilterClick(evt) {
+    evt.preventDefault();
+    return typeof this._onClick === `function` && this._onClick(this._element.id);
   }
 }

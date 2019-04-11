@@ -13,24 +13,8 @@ export default class StatisticsComponent extends BaseComponent {
     this._onPeriodChange = this._onPeriodChange.bind(this);
   }
 
-  _getGenres(data) {
-    const genres = new Set();
-    data.forEach((item) => {
-      item.genre.forEach((genre) => {
-        genres.add(genre);
-      });
-    });
-    return Array.from(genres);
-  }
-
-  _getGenresCounts(data) {
-    const counts = [];
-    this._getGenres(data).forEach((genre, index) => {
-      counts[index] = data.filter((item) => {
-        return item.genre.some((it) => it === genre);
-      }).length;
-    });
-    return counts;
+  get template() {
+    return createStatisticsTemplate();
   }
 
   _getDataByPeriod() {
@@ -47,46 +31,28 @@ export default class StatisticsComponent extends BaseComponent {
     };
   }
 
-  _getTotalDuration(data) {
-    let duration = 0;
-    data.forEach((item) => {
-      duration += item.duration;
-    });
-    return duration;
-  }
-
-  _getTopGenre(data) {
-    const counts = this._getGenresCounts(data);
-    const max = Math.max(...counts);
-    const index = counts.indexOf(max);
-    return this._getGenres(data)[index];
-  }
-
   _updateChart(filter) {
     const ctx = this._element.querySelector(`canvas`);
     const data = this._getDataByPeriod()[filter]();
-    const labels = this._getGenres(data);
-    const counts = this._getGenresCounts(data);
+    const labels = StatisticsComponent.getGenres(data);
+    const counts = StatisticsComponent.getGenresCounts(data);
     const height = 50;
     this._element.querySelector(`.statistic__item-text.total`)
       .innerHTML = createAmountTemplate(data.length);
     this._element.querySelector(`.statistic__item-text.duration`)
-      .innerHTML = createDurationTemplate(this._getTotalDuration(data));
+      .innerHTML = createDurationTemplate(StatisticsComponent.getTotalDuration(data));
     this._element.querySelector(`.statistic__item-text.genre`)
-      .innerHTML = `${this._getTopGenre(data) !== undefined ? this._getTopGenre(data) : GENRE_FIELD_TEXT}`;
+      .innerHTML = `${StatisticsComponent.getTopGenre(data) !== undefined ? StatisticsComponent.getTopGenre(data) : GENRE_FIELD_TEXT}`;
     ctx.height = height * labels.length;
     this._chart = new ChartComponent({ctx, labels, counts});
     this._chart.render();
   }
 
-  _onPeriodChange(evt) {
-    evt.preventDefault();
-    this._chart.unrender();
-    this._updateChart(evt.target.id);
-  }
-
-  get template() {
-    return createStatisticsTemplate();
+  render() {
+    const element = super.render();
+    this._updateChart(`statistic-all-time`);
+    element.querySelector(`.statistic__rank-label`).innerHTML = setUserRank(this._filteredData.length);
+    return element;
   }
 
   createListeners() {
@@ -107,10 +73,44 @@ export default class StatisticsComponent extends BaseComponent {
     }
   }
 
-  render() {
-    const element = super.render();
-    this._updateChart(`statistic-all-time`);
-    element.querySelector(`.statistic__rank-label`).innerHTML = setUserRank(this._filteredData.length);
-    return element;
+  _onPeriodChange(evt) {
+    evt.preventDefault();
+    this._chart.unrender();
+    this._updateChart(evt.target.id);
+  }
+
+  static getGenres(data) {
+    const genres = new Set();
+    data.forEach((item) => {
+      item.genre.forEach((genre) => {
+        genres.add(genre);
+      });
+    });
+    return Array.from(genres);
+  }
+
+  static getGenresCounts(data) {
+    const counts = [];
+    StatisticsComponent.getGenres(data).forEach((genre, index) => {
+      counts[index] = data.filter((item) => {
+        return item.genre.some((it) => it === genre);
+      }).length;
+    });
+    return counts;
+  }
+
+  static getTotalDuration(data) {
+    let duration = 0;
+    data.forEach((item) => {
+      duration += item.duration;
+    });
+    return duration;
+  }
+
+  static getTopGenre(data) {
+    const counts = StatisticsComponent.getGenresCounts(data);
+    const max = Math.max(...counts);
+    const index = counts.indexOf(max);
+    return StatisticsComponent.getGenres(data)[index];
   }
 }
