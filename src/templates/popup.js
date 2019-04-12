@@ -2,11 +2,6 @@ import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;
 const RATINGS = Array.from(new Array(RATING_LIMIT_MAX), (_, i) => i + 1);
-const EMOJIES = {
-  'sleeping': `😴`,
-  'neutral-face': `😐`,
-  'grinning': `😀`
-};
 
 const CONTROLS = [
   {
@@ -22,6 +17,12 @@ const CONTROLS = [
     label: `Add to favorites`
   }
 ];
+
+const Emojie = {
+  'sleeping': `😴`,
+  'neutral-face': `😐`,
+  'grinning': `😀`
+};
 
 const generateDetailsTableData = (dataPopup) => ([
   {
@@ -42,7 +43,7 @@ const generateDetailsTableData = (dataPopup) => ([
   },
   {
     term: `Runtime`,
-    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes())
+    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes()) + ` min`
   },
   {
     term: `Country`,
@@ -95,9 +96,9 @@ const createControlsTemplate = (data) => (
 );
 
 const createEmojiesTemplate = () => (
-  Object.keys(EMOJIES).map((value) => (
+  Object.keys(Emojie).map((value) => (
     `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${value}" value="${value}" ${value === `neutral-face` ? `checked` : ``}>
-    <label class="film-details__emoji-label" for="emoji-${value}">${EMOJIES[value]}</label>`
+    <label class="film-details__emoji-label" for="emoji-${value}">${Emojie[value]}</label>`
   ))
   .join(``)
 );
@@ -105,7 +106,7 @@ const createEmojiesTemplate = () => (
 export const createCommentTemplate = (comment) => (
   `<li class="film-details__comment">
      <span class="film-details__comment-emoji">
-     ${EMOJIES[comment.emotion]}
+     ${Emojie[comment.emotion]}
      </span>
      <div>
        <p class="film-details__comment-text">${comment.comment}</p>

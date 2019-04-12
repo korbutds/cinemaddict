@@ -1,8 +1,16 @@
 import CardModel from '../models/card-model';
 
-const toJSON = (response) => response.json();
+const URL = `movies`;
+const CONTENT_TYPE = `application/json`;
 
-export default class {
+const ResponseStatus = {
+  MIN: 200,
+  MAX: 300
+};
+
+const convertToJson = (response) => response.json();
+
+export default class API {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
@@ -12,8 +20,8 @@ export default class {
     };
   }
 
-  _checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
+  static checkStatus(response) {
+    if (response.status >= ResponseStatus.MIN && response.status < ResponseStatus.MAX) {
       return response;
     } else {
       throw new Error(`${response.status}: ${response.statusText}`);
@@ -24,26 +32,26 @@ export default class {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
-      .then(this._checkStatus)
+      .then(API.checkStatus)
       .catch((err) => {
         throw err;
       });
   }
 
   getData() {
-    return this._load({url: `movies`})
-      .then(toJSON)
+    return this._load({url: URL})
+      .then(convertToJson)
       .then(CardModel.parseData);
   }
 
   updateData({id, newData}) {
     return this._load({
-      url: `movies/${id}`,
-      method: `PUT`,
+      url: `${URL}/${id}`,
+      method: this._methods.PUT,
       body: JSON.stringify(newData),
-      headers: new Headers({'Content-Type': `application/json`})
+      headers: new Headers({'Content-Type': CONTENT_TYPE})
     })
-      .then(toJSON)
+      .then(convertToJson)
       .then(CardModel.parseDatum);
   }
 }

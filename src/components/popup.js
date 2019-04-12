@@ -72,6 +72,148 @@ export default class PopupComponent extends BaseComponent {
     this._data[propertyName] = value;
 
   }
+
+  _setRatingElementsDisbility(value) {
+    this._element.querySelectorAll(`.film-details__user-rating-input`)
+      .forEach((item) => {
+        item.disabled = value;
+      });
+  }
+
+  _getEmojiValue() {
+    const emojiElement = this._element.querySelector(`.film-details__emoji-list`);
+    const inputElements = emojiElement.querySelectorAll(`input`);
+    const checkedElement = Array.from(inputElements).find((element) => element.checked);
+    return checkedElement.value;
+  }
+
+  _isYourComment() {
+    return this._data.popup.commentsList.some((comment) => comment.author === AUTHOR_FIELD_TEXT);
+  }
+
+  _addComment(comment) {
+    this._data.popup.commentsList.push({
+      comment,
+      author: AUTHOR_FIELD_TEXT,
+      date: new Date(),
+      emotion: this._getEmojiValue()
+    });
+  }
+
+  showNewRating() {
+    this._element.querySelector(`.film-details__user-rating`).textContent = `${RATING_FIELD_TEXT} ${this._data.popup.yourRating}`;
+    this._setRatingElementsDisbility(false);
+    this._element.querySelector(`[for="${this._ratingElement.id}"]`)
+      .style.backgroundColor = RatingElementColor.CHECKED;
+  }
+
+  showRatingSubmitError() {
+    const labelElement = this._element.querySelector(`[for="${this._ratingElement.id}"]`);
+    this._element
+      .querySelector(`[value="${this._previousRatingValue}"]`).checked = true;
+    this._data.popup.yourRating = this._previousRatingValue;
+    labelElement.classList.add(`shake`);
+    this._setRatingElementsDisbility(false);
+    labelElement.style.backgroundColor = RatingElementColor.ERROR;
+  }
+
+  enableCommentForm() {
+    const inputElement = this._element.querySelector(`.film-details__comment-input`);
+    inputElement.disabled = false;
+    this._element.querySelector(`.film-details__comments-list`)
+      .appendChild(PopupComponent.createComment({comment: inputElement.value, author: AUTHOR_FIELD_TEXT,
+        date: new Date(), emotion: this._getEmojiValue()}));
+    this._element.querySelector(`.film-details__user-rating-controls`)
+      .classList.remove(`visually-hidden`);
+    this._element.querySelector(`.film-details__watched-status`)
+      .innerHTML = this._data.isWatched ? IsWatchedButtonText.YES : IsWatchedButtonText.NO;
+    this._element.querySelector(`.film-details__comments-count`)
+      .innerHTML = this._data.popup.commentsList.length;
+    inputElement.value = ``;
+  }
+
+  showCommentSubmitError() {
+    const inputElement = this._element.querySelector(`.film-details__comment-input`);
+    this._data.popup.commentsList.pop();
+    inputElement.style.border = CommentBorderSetting.ERROR;
+    this._element.querySelector(`.film-details__add-emoji-label`).classList.add(`shake`);
+    inputElement.disabled = false;
+    inputElement.addEventListener(`input`, this._onCommentFormInput);
+  }
+
+  update(data) {
+    super.update(data);
+    this.setState({
+      isOnWatchlist: this._data.isOnWatchlist,
+      isWatched: this._data.isWatched,
+      isFavorite: this._data.isFavorite
+    });
+  }
+
+  createListeners() {
+    if (this._element) {
+      this
+        ._element
+        .querySelector(`.film-details__close-btn`)
+        .addEventListener(`click`, this._onCloseButtonClick);
+      this
+        ._element
+        .querySelectorAll(`.film-details__user-rating-input`)
+        .forEach((input) => {
+          input.addEventListener(`click`, this._onRatingChange);
+        });
+      this
+        ._element
+        .querySelector(`.film-details__comments-wrap`)
+        .addEventListener(`keydown`, this._onCommentsKeydown);
+      this
+        ._element.querySelector(`#list`)
+        .addEventListener(`change`, this._onAddToWatchListButtonClick);
+      this
+        ._element.querySelector(`#watched`)
+        .addEventListener(`change`, this._onMarkAsWatchedButtonClick);
+      this
+        ._element.querySelector(`#favorite`)
+        .addEventListener(`change`, this._onAddToFavoriteButtonClick);
+      this
+        ._element.querySelector(`.film-details__watched-reset`)
+        .addEventListener(`click`, this._onCommentRemove);
+      window.addEventListener(`keydown`, this._onEscClick);
+    }
+  }
+
+  removeListeners() {
+    if (this._element) {
+      this
+        ._element
+        .querySelector(`.film-details__close-btn`)
+        .removeEventListener(`submit`, this._onSubmitButtonClick);
+      this
+        ._element
+        .querySelectorAll(`.film-details__user-rating-input`)
+        .forEach((input) => {
+          input.removeEventListener(`click`, this._onRatingChange);
+        });
+      this
+        ._element
+        .querySelector(`.film-details__comments-wrap`)
+        .removeEventListener(`keydown`, this._onCommentsKeydown);
+      this
+        ._element.querySelector(`#list`)
+        .removeEventListener(`change`, this._onAddToWatchListButtonClick);
+      this
+        ._element.querySelector(`#watched`)
+        .removeEventListener(`change`, this._onMarkAsWatchedButtonClick);
+      this
+        ._element.querySelector(`#favorite`)
+        .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
+      this
+        ._element.querySelector(`.film-details__watched-reset`)
+        .addEventListener(`click`, this._onCommentRemove);
+      window.removeEventListener(`keydown`, this._onEscClick);
+    }
+  }
+
   _onMarkAsWatchedButtonClick() {
     this._toggleCardProperty(`isWatched`);
     this._element.querySelector(`.film-details__watched-status`)
@@ -96,79 +238,13 @@ export default class PopupComponent extends BaseComponent {
 
   _onEscClick(evt) {
     if (evt.keyCode === KeyCode.ESC) {
-      this._data.commentsAmount = this._data.popup.commentsList.length;
-      if (typeof this._onClose === `function`) {
-        this._onClose(this._data);
-      }
+      this._onCloseButtonClick(evt);
     }
-  }
-
-  _setRatingElementsDisbility(value) {
-    this._element.querySelectorAll(`.film-details__user-rating-input`)
-      .forEach((item) => {
-        item.disabled = value;
-      });
-  }
-
-  showNewRating() {
-    this._element.querySelector(`.film-details__user-rating`).textContent = `${RATING_FIELD_TEXT} ${this._data.popup.yourRating}`;
-    this._setRatingElementsDisbility(false);
-    this._element.querySelector(`[for="${this._ratingElement.id}"]`)
-      .style.backgroundColor = RatingElementColor.CHECKED;
-  }
-
-  showRatingSubmitError() {
-    const labelElement = this._element.querySelector(`[for="${this._ratingElement.id}"]`);
-    this._element
-      .querySelector(`[value="${this._previousRatingValue}"]`).checked = true;
-    this._data.popup.yourRating = this._previousRatingValue;
-    labelElement.classList.add(`shake`);
-    this._setRatingElementsDisbility(false);
-    labelElement.style.backgroundColor = RatingElementColor.ERROR;
-  }
-
-  _onRatingChange(evt) {
-    this._previousRatingValue = this._data.popup.yourRating;
-    this._data.popup.yourRating = evt.target.value;
-    this._ratingElement = evt.target;
-    this._setRatingElementsDisbility(true);
-    this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((element) => {
-      element.style.backgroundColor = RatingElementColor.DEFAULT;
-    });
-    if (typeof this._onRatingSubmit === `function`) {
-      this._onRatingSubmit(this._data, this);
-    }
-  }
-
-  _createComment(comment) {
-    return createElement(
-        createCommentTemplate(comment)
-    );
-  }
-
-  _getEmojiValue() {
-    const emojiElement = this._element.querySelector(`.film-details__emoji-list`);
-    const inputElements = emojiElement.querySelectorAll(`input`);
-    const checkedElement = Array.from(inputElements).find((element) => element.checked);
-    return checkedElement.value;
-  }
-
-  _isYourComment() {
-    return this._data.popup.commentsList.some((comment) => comment.author === AUTHOR_FIELD_TEXT);
   }
 
   _onCommentFormInput() {
     this._element.querySelector(`.film-details__comment-input`)
       .style.border = CommentBorderSetting.DEFAULT;
-  }
-
-  _addComment(comment) {
-    this._data.popup.commentsList.push({
-      comment,
-      author: AUTHOR_FIELD_TEXT,
-      date: new Date(),
-      emotion: this._getEmojiValue()
-    });
   }
 
   _onCommentsKeydown(evt) {
@@ -209,89 +285,22 @@ export default class PopupComponent extends BaseComponent {
     }
   }
 
-  enableCommentForm() {
-    const inputElement = this._element.querySelector(`.film-details__comment-input`);
-    inputElement.disabled = false;
-    this._element.querySelector(`.film-details__comments-list`)
-      .appendChild(this._createComment({comment: inputElement.value, author: AUTHOR_FIELD_TEXT,
-        date: new Date(), emotion: this._getEmojiValue()}));
-    this._element.querySelector(`.film-details__user-rating-controls`)
-      .classList.remove(`visually-hidden`);
-    this._element.querySelector(`.film-details__watched-status`)
-      .innerHTML = this._data.isWatched ? IsWatchedButtonText.YES : IsWatchedButtonText.NO;
-    this._element.querySelector(`.film-details__comments-count`)
-      .innerHTML = this._data.popup.commentsList.length;
-    inputElement.value = ``;
-  }
-
-  showCommentSubmitError() {
-    const inputElement = this._element.querySelector(`.film-details__comment-input`);
-    this._data.popup.commentsList.pop();
-    inputElement.style.border = CommentBorderSetting.ERROR;
-    this._element.querySelector(`.film-details__add-emoji-label`).classList.add(`shake`);
-    inputElement.disabled = false;
-    inputElement.addEventListener(`input`, this._onCommentFormInput);
-  }
-
-  createListeners() {
-    if (this._element) {
-      this
-        ._element
-        .querySelector(`.film-details__close-btn`)
-        .addEventListener(`click`, this._onCloseButtonClick);
-      this
-        ._element
-        .querySelectorAll(`.film-details__user-rating-input`)
-        .forEach((input) => {
-          input.addEventListener(`click`, this._onRatingChange);
-        });
-      this
-        ._element
-        .querySelector(`.film-details__comments-wrap`)
-        .addEventListener(`keydown`, this._onCommentsKeydown);
-      this
-        ._element.querySelector(`#list`)
-        .addEventListener(`change`, this._onAddToWatchListButtonClick);
-      this
-        ._element.querySelector(`#watched`)
-        .addEventListener(`change`, this._onMarkAsWatchedButtonClick);
-      this
-        ._element.querySelector(`#favorite`)
-        .addEventListener(`change`, this._onAddToFavoriteButtonClick);
-      this
-        ._element.querySelector(`.film-details__watched-reset`)
-        .addEventListener(`click`, this._onCommentRemove);
-      window.addEventListener(`keydown`, this._onEscClick);
+  _onRatingChange(evt) {
+    this._previousRatingValue = this._data.popup.yourRating;
+    this._data.popup.yourRating = evt.target.value;
+    this._ratingElement = evt.target;
+    this._setRatingElementsDisbility(true);
+    this._element.querySelectorAll(`.film-details__user-rating-label`).forEach((element) => {
+      element.style.backgroundColor = RatingElementColor.DEFAULT;
+    });
+    if (typeof this._onRatingSubmit === `function`) {
+      this._onRatingSubmit(this._data, this);
     }
   }
 
-  removeListeners() {
-    this
-      ._element
-      .querySelector(`.film-details__close-btn`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick);
-    this
-      ._element
-      .querySelectorAll(`.film-details__user-rating-input`)
-      .forEach((input) => {
-        input.removeEventListener(`click`, this._onRatingChange);
-      });
-    this
-      ._element
-      .querySelector(`.film-details__comments-wrap`)
-      .removeEventListener(`keydown`, this._onCommentsKeydown);
-    this
-      ._element.querySelector(`#list`)
-      .removeEventListener(`change`, this._onAddToWatchListButtonClick);
-    this
-      ._element.querySelector(`#watched`)
-      .removeEventListener(`change`, this._onMarkAsWatchedButtonClick);
-    this
-      ._element.querySelector(`#favorite`)
-      .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
-    this
-      ._element.querySelector(`.film-details__watched-reset`)
-      .addEventListener(`click`, this._onCommentRemove);
-    window.removeEventListener(`keydown`, this._onEscClick);
+  static createComment(comment) {
+    return createElement(
+        createCommentTemplate(comment)
+    );
   }
 }

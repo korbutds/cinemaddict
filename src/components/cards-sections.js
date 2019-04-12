@@ -48,42 +48,12 @@ export default class CardsSectionsComponent extends BaseComponent {
       .insertBefore(this._allCardsSectionComponent.render(data, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
   }
 
-  _onShowMoreClick() {
-    if (this._filteredData.length > (this._initialCount + this._showMoreStep)) {
-      this._initialCount += this._showMoreStep;
-    } else {
-      this._initialCount = this._filteredData.length;
-    }
-    if (this._initialCount === this._filteredData.length) {
-      this._showMoreButtonStatus = false;
-      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
-    }
-    this.updateMainBlockElement();
-  }
-
-  _updateComponent(component, updatedData, id) {
-    const componentIndex = component.components.findIndex((item) => item._data.id === id);
-    if (componentIndex !== -1) {
-      component.components[componentIndex].update(updatedData);
-    }
-  }
-
-  createListeners() {
-    this._element.querySelector(`.films-list__show-more`)
-      .addEventListener(`click`, this._onShowMoreClick);
-  }
-
-  removeListeners() {
-    this._element.querySelector(`.films-list__show-more`)
-      .addEventListener(`click`, this._onShowMoreClick);
-  }
-
   render() {
     const element = super.render();
     this._filteredData = this._data;
 
-    const noControls = {value: false, description: false, controls: false};
-    const controls = {value: true, description: true, controls: true};
+    const noControlsSetting = {value: false, controls: false};
+    const controlsSetting = {value: true, controls: true};
 
     const updateData = (updatedData, id) => {
       const index = this._data.findIndex((item) => item.id === id);
@@ -91,9 +61,9 @@ export default class CardsSectionsComponent extends BaseComponent {
       if (typeof this._onCardsChange === `function`) {
         this._onCardsChange(this._data[index], id);
       }
-      this._updateComponent(this._allCardsSectionComponent, updatedData, id);
-      this._updateComponent(this._featuredByCommentsComponent, updatedData, id);
-      this._updateComponent(this._featuredByRatingComponent, updatedData, id);
+      CardsSectionsComponent.updateComponent(this._allCardsSectionComponent, updatedData, id);
+      CardsSectionsComponent.updateComponent(this._featuredByCommentsComponent, updatedData, id);
+      CardsSectionsComponent.updateComponent(this._featuredByRatingComponent, updatedData, id);
     };
 
     const submitComment = (newData, id, popup) => {
@@ -112,17 +82,17 @@ export default class CardsSectionsComponent extends BaseComponent {
       }
     };
 
-    this._allCardsSectionComponent = new CardsSectionComponent(this._data, controls);
-    this._featuredByCommentsComponent = new CardsSectionComponent(this._data, noControls);
-    this._featuredByRatingComponent = new CardsSectionComponent(this._data, noControls);
+    this._allCardsSectionComponent = new CardsSectionComponent(this._data, controlsSetting);
+    this._featuredByCommentsComponent = new CardsSectionComponent(this._data, noControlsSetting);
+    this._featuredByRatingComponent = new CardsSectionComponent(this._data, noControlsSetting);
 
     element.querySelector(`#films-main-list`)
       .insertBefore(this._allCardsSectionComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
     element.querySelector(`#films-rated-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControlsSetting));
 
     element.querySelector(`#films-commented-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControlsSetting));
 
     this._allCardsSectionComponent.onCardChange = updateData;
     this._allCardsSectionComponent.onCommentSubmit = submitComment;
@@ -162,5 +132,35 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._initialCount = this._showMoreStep;
     this._filteredData = filteredData;
     this.updateMainBlockElement();
+  }
+
+  createListeners() {
+    this._element.querySelector(`.films-list__show-more`)
+      .addEventListener(`click`, this._onShowMoreClick);
+  }
+
+  removeListeners() {
+    this._element.querySelector(`.films-list__show-more`)
+      .addEventListener(`click`, this._onShowMoreClick);
+  }
+
+  _onShowMoreClick() {
+    if (this._filteredData.length > (this._initialCount + this._showMoreStep)) {
+      this._initialCount += this._showMoreStep;
+    } else {
+      this._initialCount = this._filteredData.length;
+    }
+    if (this._initialCount === this._filteredData.length) {
+      this._showMoreButtonStatus = false;
+      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
+    }
+    this.updateMainBlockElement();
+  }
+
+  static updateComponent(component, updatedData, id) {
+    const componentIndex = component.components.findIndex((item) => item._data.id === id);
+    if (componentIndex !== -1) {
+      component.components[componentIndex].update(updatedData);
+    }
   }
 }

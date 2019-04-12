@@ -15,11 +15,6 @@ export default class SearchComponent extends BaseComponent {
     this._onSearch = fn;
   }
 
-  _onSearchStart(evt) {
-    evt.preventDefault();
-    return typeof this._onSearch === `function` && this._onSearch(evt.target.value);
-  }
-
   createListeners() {
     if (this._element) {
       this
@@ -36,5 +31,10 @@ export default class SearchComponent extends BaseComponent {
         .querySelector(`input`)
         .removeEventListener(`input`, this._onSearchStart);
     }
+  }
+
+  _onSearchStart(evt) {
+    evt.preventDefault();
+    return typeof this._onSearch === `function` && this._onSearch(evt.target.value);
   }
 }

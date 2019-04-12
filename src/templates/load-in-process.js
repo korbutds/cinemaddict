@@ -1,4 +1,4 @@
-export const loadInProgressTemplate = () => (
+export const createLoadInProgressTemplate = () => (
   `<div class="loading">
     <span class="loading__text">Loading movies...</span>
     <ul class="loading__spinner">
