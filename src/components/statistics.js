@@ -109,8 +109,8 @@ export default class StatisticsComponent extends BaseComponent {
 
   static getTopGenre(data) {
     const counts = StatisticsComponent.getGenresCounts(data);
-    const max = Math.max(...counts);
-    const index = counts.indexOf(max);
+    const maxCount = Math.max(...counts);
+    const index = counts.indexOf(maxCount);
     return StatisticsComponent.getGenres(data)[index];
   }
 }

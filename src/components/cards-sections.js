@@ -52,8 +52,8 @@ export default class CardsSectionsComponent extends BaseComponent {
     const element = super.render();
     this._filteredData = this._data;
 
-    const noControls = {value: false, controls: false};
-    const controls = {value: true, controls: true};
+    const noControlsSetting = {value: false, controls: false};
+    const controlsSetting = {value: true, controls: true};
 
     const updateData = (updatedData, id) => {
       const index = this._data.findIndex((item) => item.id === id);
@@ -82,17 +82,17 @@ export default class CardsSectionsComponent extends BaseComponent {
       }
     };
 
-    this._allCardsSectionComponent = new CardsSectionComponent(this._data, controls);
-    this._featuredByCommentsComponent = new CardsSectionComponent(this._data, noControls);
-    this._featuredByRatingComponent = new CardsSectionComponent(this._data, noControls);
+    this._allCardsSectionComponent = new CardsSectionComponent(this._data, controlsSetting);
+    this._featuredByCommentsComponent = new CardsSectionComponent(this._data, noControlsSetting);
+    this._featuredByRatingComponent = new CardsSectionComponent(this._data, noControlsSetting);
 
     element.querySelector(`#films-main-list`)
       .insertBefore(this._allCardsSectionComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
     element.querySelector(`#films-rated-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControlsSetting));
 
     element.querySelector(`#films-commented-list`)
-      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControls));
+      .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControlsSetting));
 
     this._allCardsSectionComponent.onCardChange = updateData;
     this._allCardsSectionComponent.onCommentSubmit = submitComment;

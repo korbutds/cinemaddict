@@ -1,5 +1,13 @@
 import CardModel from '../models/card-model';
 
+const URL = `movies`;
+const CONTENT_TYPE = `application/json`;
+
+const ResponseStatus = {
+  MIN: 200,
+  MAX: 300
+};
+
 const convertToJson = (response) => response.json();
 
 export default class API {
@@ -13,7 +21,7 @@ export default class API {
   }
 
   static checkStatus(response) {
-    if (response.status >= 200 && response.status < 300) {
+    if (response.status >= ResponseStatus.MIN && response.status < ResponseStatus.MAX) {
       return response;
     } else {
       throw new Error(`${response.status}: ${response.statusText}`);
@@ -31,17 +39,17 @@ export default class API {
   }
 
   getData() {
-    return this._load({url: `movies`})
+    return this._load({url: URL})
       .then(convertToJson)
       .then(CardModel.parseData);
   }
 
   updateData({id, newData}) {
     return this._load({
-      url: `movies/${id}`,
-      method: `PUT`,
+      url: `${URL}/${id}`,
+      method: this._methods.PUT,
       body: JSON.stringify(newData),
-      headers: new Headers({'Content-Type': `application/json`})
+      headers: new Headers({'Content-Type': CONTENT_TYPE})
     })
       .then(convertToJson)
       .then(CardModel.parseDatum);

@@ -29,7 +29,7 @@ export default class CardsSectionComponent extends BaseComponent {
   _renderCards(containerElement, filteredData) {
     this.components = filteredData.map((card) => {
       const cardComponent = new CardComponent(card, this._controls);
-      const container = document.querySelector(`body`);
+      const sectionContainerElement = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
 
       const updateCardData = (newData) => {
@@ -66,18 +66,18 @@ export default class CardsSectionComponent extends BaseComponent {
 
       cardComponent.onClick = () => {
         if (document.querySelector(`.film-details`)) {
-          container.removeChild(container.lastChild);
+          sectionContainerElement.removeChild(sectionContainerElement.lastChild);
           popupComponent.unrender();
         }
         popupComponent._data = Object.assign({}, cardComponent._data);
-        container.appendChild(popupComponent.render());
+        sectionContainerElement.appendChild(popupComponent.render());
       };
 
       popupComponent.onCommentSubmit = submitComment;
       popupComponent.onRatingSubmit = submitRating;
 
       popupComponent.onClose = (newData) => {
-        container.removeChild(popupComponent.element);
+        sectionContainerElement.removeChild(sectionContainerElement.lastChild);
         popupComponent.unrender();
         updateCardData(newData);
       };

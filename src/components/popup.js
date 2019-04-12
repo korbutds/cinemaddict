@@ -183,33 +183,35 @@ export default class PopupComponent extends BaseComponent {
   }
 
   removeListeners() {
-    this
-      ._element
-      .querySelector(`.film-details__close-btn`)
-      .removeEventListener(`submit`, this._onSubmitButtonClick);
-    this
-      ._element
-      .querySelectorAll(`.film-details__user-rating-input`)
-      .forEach((input) => {
-        input.removeEventListener(`click`, this._onRatingChange);
-      });
-    this
-      ._element
-      .querySelector(`.film-details__comments-wrap`)
-      .removeEventListener(`keydown`, this._onCommentsKeydown);
-    this
-      ._element.querySelector(`#list`)
-      .removeEventListener(`change`, this._onAddToWatchListButtonClick);
-    this
-      ._element.querySelector(`#watched`)
-      .removeEventListener(`change`, this._onMarkAsWatchedButtonClick);
-    this
-      ._element.querySelector(`#favorite`)
-      .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
-    this
-      ._element.querySelector(`.film-details__watched-reset`)
-      .addEventListener(`click`, this._onCommentRemove);
-    window.removeEventListener(`keydown`, this._onEscClick);
+    if (this._element) {
+      this
+        ._element
+        .querySelector(`.film-details__close-btn`)
+        .removeEventListener(`submit`, this._onSubmitButtonClick);
+      this
+        ._element
+        .querySelectorAll(`.film-details__user-rating-input`)
+        .forEach((input) => {
+          input.removeEventListener(`click`, this._onRatingChange);
+        });
+      this
+        ._element
+        .querySelector(`.film-details__comments-wrap`)
+        .removeEventListener(`keydown`, this._onCommentsKeydown);
+      this
+        ._element.querySelector(`#list`)
+        .removeEventListener(`change`, this._onAddToWatchListButtonClick);
+      this
+        ._element.querySelector(`#watched`)
+        .removeEventListener(`change`, this._onMarkAsWatchedButtonClick);
+      this
+        ._element.querySelector(`#favorite`)
+        .removeEventListener(`change`, this._onAddToFavoriteButtonClick);
+      this
+        ._element.querySelector(`.film-details__watched-reset`)
+        .addEventListener(`click`, this._onCommentRemove);
+      window.removeEventListener(`keydown`, this._onEscClick);
+    }
   }
 
   _onMarkAsWatchedButtonClick() {
@@ -236,10 +238,7 @@ export default class PopupComponent extends BaseComponent {
 
   _onEscClick(evt) {
     if (evt.keyCode === KeyCode.ESC) {
-      this._data.commentsAmount = this._data.popup.commentsList.length;
-      if (typeof this._onClose === `function`) {
-        this._onClose(this._data);
-      }
+      this._onCloseButtonClick(evt);
     }
   }
 
