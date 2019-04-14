@@ -46,7 +46,7 @@ const updateCardsList = (updatedData, id) => {
 };
 
 const onFilterSelect = (id) => {
-  if (statisticsComponent._element) {
+  if (statisticsComponent) {
     statisticsComponent.unrender();
     mainElement.removeChild(mainElement.lastChild);
     addCards();
