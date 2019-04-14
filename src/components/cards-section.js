@@ -29,6 +29,7 @@ export default class CardsSectionComponent extends BaseComponent {
   }
 
   _renderCards(containerElement, filteredData) {
+    const documentFragment = document.createDocumentFragment();
     this.components = filteredData.map((card) => {
       const cardComponent = new CardComponent(card, this._controls);
       const popupComponent = new PopupComponent(card);
@@ -91,15 +92,11 @@ export default class CardsSectionComponent extends BaseComponent {
       return cardComponent;
     });
 
-    const getCardsSectionDocumentFragment = () => {
-      const documentFragment = document.createDocumentFragment();
-      this.components.forEach((component) => {
-        documentFragment.appendChild(component.render());
-      });
-      return documentFragment;
-    };
+    this.components.forEach((component) => {
+      documentFragment.appendChild(component.render());
+    });
 
-    containerElement.appendChild(getCardsSectionDocumentFragment());
+    containerElement.appendChild(documentFragment);
   }
 
   render(filteredData) {

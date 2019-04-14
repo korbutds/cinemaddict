@@ -16,6 +16,7 @@ export default class FiltersComponent extends BaseComponent {
   }
 
   renderFilters(containerElement) {
+    const documentFragment = document.createDocumentFragment();
     this.components = this._data.map((filter) => {
       const component = new FilterComponent(filter);
       if (filter.id !== `stats`) {
@@ -28,15 +29,11 @@ export default class FiltersComponent extends BaseComponent {
       return component;
     });
 
-    const getFiltersDocumentFragment = () => {
-      const documentFragment = document.createDocumentFragment();
-      this.components.forEach((component) => {
-        documentFragment.appendChild(component.render());
-      });
-      return documentFragment;
-    };
+    this.components.forEach((component) => {
+      documentFragment.appendChild(component.render());
+    });
 
-    containerElement.appendChild(getFiltersDocumentFragment());
+    containerElement.appendChild(documentFragment);
   }
 
   render() {
