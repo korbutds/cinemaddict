@@ -3,6 +3,8 @@ import PopupComponent from './popup';
 import CardComponent from './card';
 import {createCardsSectionTemplate} from '../templates/cards';
 
+const popupContainerElement = document.querySelector(`body`);
+
 export default class CardsSectionComponent extends BaseComponent {
   constructor(data, controls) {
     super(data);
@@ -29,7 +31,6 @@ export default class CardsSectionComponent extends BaseComponent {
   _renderCards(containerElement, filteredData) {
     this.components = filteredData.map((card) => {
       const cardComponent = new CardComponent(card, this._controls);
-      const sectionContainerElement = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
 
       const updateCardData = (newData) => {
@@ -72,18 +73,18 @@ export default class CardsSectionComponent extends BaseComponent {
 
       cardComponent.onClick = () => {
         if (document.querySelector(`.film-details`)) {
-          sectionContainerElement.removeChild(sectionContainerElement.lastChild);
+          popupContainerElement.removeChild(popupContainerElement.lastChild);
           popupComponent.unrender();
         }
         popupComponent._data = Object.assign({}, cardComponent._data);
-        sectionContainerElement.appendChild(popupComponent.render());
+        popupContainerElement.appendChild(popupComponent.render());
       };
 
       popupComponent.onCommentSubmit = submitComment;
       popupComponent.onRatingSubmit = submitRating;
 
       popupComponent.onClose = (newData) => {
-        sectionContainerElement.removeChild(sectionContainerElement.lastChild);
+        popupContainerElement.removeChild(popupContainerElement.lastChild);
         popupComponent.unrender();
         updateCardData(newData);
       };
