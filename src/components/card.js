@@ -54,6 +54,14 @@ export default class CardComponent extends BaseComponent {
     this._addToWatchlistElement.style.border = this._state.isOnWatchlist ? BUTTONS_CHECKED_BORDER : ``;
   }
 
+  render() {
+    const element = super.render();
+    if (this._withControls) {
+      this._setButtonsBorder();
+    }
+    return element;
+  }
+
   update(data) {
     super.update(data);
     this.setState({
@@ -66,14 +74,6 @@ export default class CardComponent extends BaseComponent {
     }
     this._commentsElement.textContent =
       `${data.commentsAmount} ${data.commentsAmount === 1 ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
-  }
-
-  render() {
-    const element = super.render();
-    if (this._withControls) {
-      this._setButtonsBorder();
-    }
-    return element;
   }
 
   createListeners() {

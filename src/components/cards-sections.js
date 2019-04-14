@@ -33,6 +33,24 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._onRatingSubmit = fn;
   }
 
+  updateMainBlockElement() {
+    this._showMoreButtonStatus = (this._initialCount < this._filteredData.length);
+    if (this._showMoreButtonStatus) {
+      this._showMoreElement.classList.remove(`visually-hidden`);
+    } else {
+      this._showMoreElement.classList.add(`visually-hidden`);
+    }
+    this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
+  }
+
+  onSearch(value) {
+    const initialData = this._data.slice();
+    const resultData = initialData
+      .filter((item) => item.title.toLowerCase().search(value.toLowerCase()) !== -1);
+    this._replaceMainBlockElements(resultData);
+    this._showMoreElement.classList.add(`visually-hidden`);
+  }
+
   _filterCardsBy(attribute) {
     return this
       ._data
@@ -116,24 +134,6 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._featuredByCommentsComponent.onRatingSubmit = submitRating;
 
     return element;
-  }
-
-  onSearch(value) {
-    const initialData = this._data.slice();
-    const resultData = initialData
-      .filter((item) => item.title.toLowerCase().search(value.toLowerCase()) !== -1);
-    this._replaceMainBlockElements(resultData);
-    this._showMoreElement.classList.add(`visually-hidden`);
-  }
-
-  updateMainBlockElement() {
-    this._showMoreButtonStatus = (this._initialCount < this._filteredData.length);
-    if (this._showMoreButtonStatus) {
-      this._showMoreElement.classList.remove(`visually-hidden`);
-    } else {
-      this._showMoreElement.classList.add(`visually-hidden`);
-    }
-    this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
   }
 
   update(filteredData) {

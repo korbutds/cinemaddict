@@ -66,39 +66,6 @@ export default class PopupComponent extends BaseComponent {
     this._onRatingSubmit = fn;
   }
 
-  _toggleCardProperty(propertyName) {
-    const value = !this._state[propertyName];
-    this.setState({propertyName: value});
-    this._data[propertyName] = value;
-
-  }
-
-  _setRatingElementsDisbility(value) {
-    this._ratingElements.forEach((item) => {
-      item.disabled = value;
-    });
-  }
-
-  _getEmojiValue() {
-    const emojiElement = this._element.querySelector(`.film-details__emoji-list`);
-    const inputElements = emojiElement.querySelectorAll(`input`);
-    const checkedElement = Array.from(inputElements).find((element) => element.checked);
-    return checkedElement.value;
-  }
-
-  _isYourComment() {
-    return this._data.popup.commentsList.some((comment) => comment.author === AUTHOR_FIELD_TEXT);
-  }
-
-  _addComment(comment) {
-    this._data.popup.commentsList.push({
-      comment,
-      author: AUTHOR_FIELD_TEXT,
-      date: new Date(),
-      emotion: this._getEmojiValue()
-    });
-  }
-
   showNewRating() {
     this._element.querySelector(`.film-details__user-rating`).textContent = `${RATING_FIELD_TEXT} ${this._data.popup.yourRating}`;
     this._setRatingElementsDisbility(false);
@@ -135,6 +102,39 @@ export default class PopupComponent extends BaseComponent {
     this._element.querySelector(`.film-details__add-emoji-label`).classList.add(`shake`);
     this._commentInputElement.disabled = false;
     this._commentInputElement.addEventListener(`input`, this._onCommentFormInput);
+  }
+
+  _toggleCardProperty(propertyName) {
+    const value = !this._state[propertyName];
+    this.setState({propertyName: value});
+    this._data[propertyName] = value;
+
+  }
+
+  _setRatingElementsDisbility(value) {
+    this._ratingElements.forEach((item) => {
+      item.disabled = value;
+    });
+  }
+
+  _getEmojiValue() {
+    const emojiElement = this._element.querySelector(`.film-details__emoji-list`);
+    const inputElements = emojiElement.querySelectorAll(`input`);
+    const checkedElement = Array.from(inputElements).find((element) => element.checked);
+    return checkedElement.value;
+  }
+
+  _isYourComment() {
+    return this._data.popup.commentsList.some((comment) => comment.author === AUTHOR_FIELD_TEXT);
+  }
+
+  _addComment(comment) {
+    this._data.popup.commentsList.push({
+      comment,
+      author: AUTHOR_FIELD_TEXT,
+      date: new Date(),
+      emotion: this._getEmojiValue()
+    });
   }
 
   render() {
