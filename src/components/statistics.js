@@ -57,19 +57,21 @@ export default class StatisticsComponent extends BaseComponent {
 
   createListeners() {
     if (this._element) {
-      this._element
-        .querySelectorAll(`input`).forEach((item) => {
-          item.addEventListener(`change`, this._onPeriodChange);
-        });
+      this._inputElements = this._element.querySelectorAll(`input`);
+
+      this._inputElements.forEach((item) => {
+        item.addEventListener(`change`, this._onPeriodChange);
+      });
     }
   }
 
   removeListeners() {
     if (this._element) {
-      this._element
-        .querySelectorAll(`input`).forEach((item) => {
-          item.removeEventListener(`change`, this._onPeriodChange);
-        });
+      this._inputElements.forEach((item) => {
+        item.removeEventListener(`change`, this._onPeriodChange);
+      });
+
+      this._inputElements = null;
     }
   }
 

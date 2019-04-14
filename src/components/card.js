@@ -48,10 +48,18 @@ export default class CardComponent extends BaseComponent {
     this._onAddToFavorite = fn;
   }
 
-  _setButtonsBorder(element) {
-    element.querySelector(`.film-card__controls-item--mark-as-watched`).style.border = this._state.isWatched ? BUTTONS_CHECKED_BORDER : ``;
-    element.querySelector(`.film-card__controls-item--favorite`).style.border = this._state.isFavorite ? BUTTONS_CHECKED_BORDER : ``;
-    element.querySelector(`.film-card__controls-item--add-to-watchlist`).style.border = this._state.isOnWatchlist ? BUTTONS_CHECKED_BORDER : ``;
+  _setButtonsBorder() {
+    this._addToWatchedElement.style.border = this._state.isWatched ? BUTTONS_CHECKED_BORDER : ``;
+    this._addToFavoriteElement.style.border = this._state.isFavorite ? BUTTONS_CHECKED_BORDER : ``;
+    this._addToWatchlistElement.style.border = this._state.isOnWatchlist ? BUTTONS_CHECKED_BORDER : ``;
+  }
+
+  render() {
+    const element = super.render();
+    if (this._withControls) {
+      this._setButtonsBorder();
+    }
+    return element;
   }
 
   update(data) {
@@ -62,57 +70,44 @@ export default class CardComponent extends BaseComponent {
       isFavorite: this._data.isFavorite
     });
     if (this._withControls) {
-      this._setButtonsBorder(this._element);
+      this._setButtonsBorder();
     }
-    this._element.querySelector(`.film-card__comments`).textContent =
+    this._commentsElement.textContent =
       `${data.commentsAmount} ${data.commentsAmount === 1 ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
-  }
-
-  render() {
-    const element = super.render();
-    if (this._withControls) {
-      this._setButtonsBorder(element);
-    }
-    return element;
   }
 
   createListeners() {
     if (this._element) {
-      this
-        ._element
-        .querySelector(`.film-card__comments`)
-        .addEventListener(`click`, this._onCommentsClick);
+      this._commentsElement = this._element.querySelector(`.film-card__comments`);
+
+      this._commentsElement.addEventListener(`click`, this._onCommentsClick);
+
       if (this._withControls) {
-        this
-          ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
-          .addEventListener(`click`, this._onAddToWatchListButtonClick);
-        this
-          ._element.querySelector(`.film-card__controls-item--mark-as-watched`)
-          .addEventListener(`click`, this._onMarkAsWatchedButtonClick);
-        this
-          ._element.querySelector(`.film-card__controls-item--favorite`)
-          .addEventListener(`click`, this._onAddToFavoriteButtonClick);
+        this._addToWatchlistElement = this._element.querySelector(`.film-card__controls-item--add-to-watchlist`);
+        this._addToWatchedElement = this._element.querySelector(`.film-card__controls-item--mark-as-watched`);
+        this._addToFavoriteElement = this._element.querySelector(`.film-card__controls-item--favorite`);
+
+        this._addToWatchlistElement.addEventListener(`click`, this._onAddToWatchListButtonClick);
+        this._addToWatchedElement.addEventListener(`click`, this._onMarkAsWatchedButtonClick);
+        this._addToFavoriteElement.addEventListener(`click`, this._onAddToFavoriteButtonClick);
       }
     }
   }
 
   removeListeners() {
     if (this._element) {
-      this
-        ._element
-        .querySelector(`.film-card__comments`)
-        .removeEventListener(`click`, this._onCommentsClick);
+      this._commentsElement.removeEventListener(`click`, this._onCommentsClick);
+
       if (this._withControls) {
-        this
-          ._element.querySelector(`.film-card__controls-item--add-to-watchlist`)
-          .removeEventListener(`click`, this._onAddToWatchListButtonClick);
-        this
-          ._element.querySelector(`.film-card__controls-item--mark-as-watched`)
-          .removeEventListener(`click`, this._onMarkAsWatchedButtonClick);
-        this
-          ._element.querySelector(`.film-card__controls-item--favorite`)
-          .removeEventListener(`click`, this._onAddToFavoriteButtonClick);
+        this._addToWatchlistElement.removeEventListener(`click`, this._onAddToWatchListButtonClick);
+        this._addToWatchedElement.removeEventListener(`click`, this._onMarkAsWatchedButtonClick);
+        this._addToFavoriteElement.removeEventListener(`click`, this._onAddToFavoriteButtonClick);
+
+        this._addToWatchlistElement = null;
+        this._addToWatchedElement = null;
+        this._addToFavoriteElement = null;
       }
+      this._commentsElement = null;
     }
   }
 
@@ -127,7 +122,7 @@ export default class CardComponent extends BaseComponent {
       isWatched: isWatchedState,
     });
     this._data.isWatched = isWatchedState;
-    this._setButtonsBorder(this._element);
+    this._setButtonsBorder();
     if (typeof this._onMarkAsWatched === `function`) {
       this._onMarkAsWatched(this._data);
     }
@@ -140,7 +135,7 @@ export default class CardComponent extends BaseComponent {
       isOnWatchlist: isOnWatchlistState,
     });
     this._data.isOnWatchlist = isOnWatchlistState;
-    this._setButtonsBorder(this._element);
+    this._setButtonsBorder();
     if (typeof this._onAddToWatchList === `function`) {
       this._onAddToWatchList(this._data);
     }
@@ -153,7 +148,7 @@ export default class CardComponent extends BaseComponent {
       isFavorite: isFavoriteState,
     });
     this._data.isFavorite = isFavoriteState;
-    this._setButtonsBorder(this._element);
+    this._setButtonsBorder();
     if (typeof this._onAddToFavorite === `function`) {
       this._onAddToFavorite(this._data);
     }

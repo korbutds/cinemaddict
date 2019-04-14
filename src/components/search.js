@@ -17,19 +17,15 @@ export default class SearchComponent extends BaseComponent {
 
   createListeners() {
     if (this._element) {
-      this
-        ._element
-        .querySelector(`input`)
-        .addEventListener(`input`, this._onSearchStart);
+      this._inputElement = this._element.querySelector(`input`);
+      this._inputElement.addEventListener(`input`, this._onSearchStart);
     }
   }
 
   removeListeners() {
     if (this._element) {
-      this
-        ._element
-        .querySelector(`input`)
-        .removeEventListener(`input`, this._onSearchStart);
+      this._inputElement.removeEventListener(`input`, this._onSearchStart);
+      this._inputElement = null;
     }
   }
 

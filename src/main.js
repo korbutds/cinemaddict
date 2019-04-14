@@ -10,7 +10,7 @@ import LoadErrorComponent from './components/load-error';
 import API from './services/api';
 import CardModel from './models/card-model';
 
-const AUTHORIZATION = `Basic RepetitioEstMaterStudiorum`;
+const AUTHORIZATION = `Basic AdAugustaPerAngusta`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
 
 const api = new API({
@@ -37,23 +37,22 @@ const updateCardsList = (updatedData, id) => {
   api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
     .then((cardModel) => {
       const index = cardsList.findIndex((item) => item.id === id);
-      cardsList[index] = Object.assign({}, cardModel);
-      setFiltersCounts(cardsList);
-      userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+      if (index !== -1) {
+        cardsList[index] = Object.assign({}, cardModel);
+        setFiltersCounts(cardsList);
+        userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+      }
     });
 };
 
 const onFilterSelect = (id) => {
-  if (cardsSectionsComponent._element) {
-    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-    document.querySelector(`.search__field`).value = ``;
-  } else {
+  if (statisticsComponent) {
     statisticsComponent.unrender();
     mainElement.removeChild(mainElement.lastChild);
     addCards();
-    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-    document.querySelector(`.search__field`).value = ``;
   }
+  cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+  document.querySelector(`.search__field`).value = ``;
 };
 
 const addFilters = () => {
@@ -66,8 +65,10 @@ const addFilters = () => {
 
 const updateCardData = (callback, id) => (cardModel) => {
   const index = cardsList.findIndex((item) => item.id === id);
-  cardsList[index] = Object.assign({}, cardModel);
-  callback();
+  if (index !== -1) {
+    cardsList[index] = Object.assign({}, cardModel);
+    callback();
+  }
 };
 
 const addCards = () => {

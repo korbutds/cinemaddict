@@ -3,6 +3,8 @@ import PopupComponent from './popup';
 import CardComponent from './card';
 import {createCardsSectionTemplate} from '../templates/cards';
 
+const popupContainerElement = document.querySelector(`body`);
+
 export default class CardsSectionComponent extends BaseComponent {
   constructor(data, controls) {
     super(data);
@@ -27,36 +29,42 @@ export default class CardsSectionComponent extends BaseComponent {
   }
 
   _renderCards(containerElement, filteredData) {
+    const documentFragment = document.createDocumentFragment();
     this.components = filteredData.map((card) => {
       const cardComponent = new CardComponent(card, this._controls);
-      const sectionContainerElement = document.querySelector(`body`);
       const popupComponent = new PopupComponent(card);
 
       const updateCardData = (newData) => {
+        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
         cardComponent.update(newData);
         popupComponent.update(newData);
-        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
-        if (typeof this._onCardChange === `function`) {
-          this._onCardChange(this._data[index], cardComponent._data.id);
+        if (index !== -1) {
+          this._data[index] = Object.assign({}, newData);
+          if (typeof this._onCardChange === `function`) {
+            this._onCardChange(this._data[index], cardComponent._data.id);
+          }
         }
       };
 
       const submitComment = (newData, popup) => {
-        cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
-        if (typeof this._onCommentSubmit === `function`) {
-          this._onCommentSubmit(this._data[index], cardComponent._data.id, popup);
+        cardComponent.update(newData);
+        if (index !== -1) {
+          this._data[index] = Object.assign({}, newData);
+          if (typeof this._onCommentSubmit === `function`) {
+            this._onCommentSubmit(this._data[index], cardComponent._data.id, popup);
+          }
         }
       };
 
       const submitRating = (newData, popup) => {
-        cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
-        if (typeof this._onRatingSubmit === `function`) {
-          this._onRatingSubmit(this._data[index], cardComponent._data.id, popup);
+        cardComponent.update(newData);
+        if (index !== -1) {
+          this._data[index] = Object.assign({}, newData);
+          if (typeof this._onRatingSubmit === `function`) {
+            this._onRatingSubmit(this._data[index], cardComponent._data.id, popup);
+          }
         }
       };
 
@@ -66,18 +74,18 @@ export default class CardsSectionComponent extends BaseComponent {
 
       cardComponent.onClick = () => {
         if (document.querySelector(`.film-details`)) {
-          sectionContainerElement.removeChild(sectionContainerElement.lastChild);
+          popupContainerElement.removeChild(popupContainerElement.lastChild);
           popupComponent.unrender();
         }
         popupComponent._data = Object.assign({}, cardComponent._data);
-        sectionContainerElement.appendChild(popupComponent.render());
+        popupContainerElement.appendChild(popupComponent.render());
       };
 
       popupComponent.onCommentSubmit = submitComment;
       popupComponent.onRatingSubmit = submitRating;
 
       popupComponent.onClose = (newData) => {
-        sectionContainerElement.removeChild(sectionContainerElement.lastChild);
+        popupContainerElement.removeChild(popupContainerElement.lastChild);
         popupComponent.unrender();
         updateCardData(newData);
       };
@@ -85,8 +93,10 @@ export default class CardsSectionComponent extends BaseComponent {
     });
 
     this.components.forEach((component) => {
-      containerElement.appendChild(component.render());
+      documentFragment.appendChild(component.render());
     });
+
+    containerElement.appendChild(documentFragment);
   }
 
   render(filteredData) {

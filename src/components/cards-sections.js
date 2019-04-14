@@ -33,6 +33,24 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._onRatingSubmit = fn;
   }
 
+  updateMainBlockElement() {
+    this._showMoreButtonStatus = (this._initialCount < this._filteredData.length);
+    if (this._showMoreButtonStatus) {
+      this._showMoreElement.classList.remove(`visually-hidden`);
+    } else {
+      this._showMoreElement.classList.add(`visually-hidden`);
+    }
+    this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
+  }
+
+  onSearch(value) {
+    const initialData = this._data.slice();
+    const resultData = initialData
+      .filter((item) => item.title.toLowerCase().search(value.toLowerCase()) !== -1);
+    this._replaceMainBlockElements(resultData);
+    this._showMoreElement.classList.add(`visually-hidden`);
+  }
+
   _filterCardsBy(attribute) {
     return this
       ._data
@@ -42,43 +60,51 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   _replaceMainBlockElements(data) {
-    this._element.querySelector(`#films-main-list`).removeChild(this._allCardsSectionComponent._element);
+    this._mainListElement.removeChild(this._allCardsSectionComponent._element);
     this._allCardsSectionComponent.unrender();
-    this._element.querySelector(`#films-main-list`)
-      .insertBefore(this._allCardsSectionComponent.render(data, this._getNewCardElement), this._element.querySelector(`.films-list__show-more`));
+    this._mainListElement.insertBefore(this._allCardsSectionComponent.render(data, this._getNewCardElement), this._showMoreElement);
   }
 
   render() {
     const element = super.render();
-    this._filteredData = this._data;
-
     const noControlsSetting = {value: false, controls: false};
     const controlsSetting = {value: true, controls: true};
 
+    this._filteredData = this._data;
+    this._mainListElement = element.querySelector(`#films-main-list`);
+    this._ratedListElement = element.querySelector(`#films-rated-list`);
+    this._commentedListElement = element.querySelector(`#films-commented-list`);
+
     const updateData = (updatedData, id) => {
       const index = this._data.findIndex((item) => item.id === id);
-      this._data[index] = Object.assign({}, updatedData);
-      if (typeof this._onCardsChange === `function`) {
-        this._onCardsChange(this._data[index], id);
-      }
       CardsSectionsComponent.updateComponent(this._allCardsSectionComponent, updatedData, id);
       CardsSectionsComponent.updateComponent(this._featuredByCommentsComponent, updatedData, id);
       CardsSectionsComponent.updateComponent(this._featuredByRatingComponent, updatedData, id);
+      if (index !== -1) {
+        this._data[index] = Object.assign({}, updatedData);
+        if (typeof this._onCardsChange === `function`) {
+          this._onCardsChange(this._data[index], id);
+        }
+      }
     };
 
     const submitComment = (newData, id, popup) => {
       const index = this._data.findIndex((item) => item.id === id);
-      this._data[index] = Object.assign({}, newData);
-      if (typeof this._onCommentSubmit === `function`) {
-        this._onCommentSubmit(this._data[index], id, popup);
+      if (index !== -1) {
+        this._data[index] = Object.assign({}, newData);
+        if (typeof this._onCommentSubmit === `function`) {
+          this._onCommentSubmit(this._data[index], id, popup);
+        }
       }
     };
 
     const submitRating = (newData, id, popup) => {
       const index = this._data.findIndex((item) => item.id === id);
-      this._data[index] = Object.assign({}, newData);
-      if (typeof this._onRatingSubmit === `function`) {
-        this._onRatingSubmit(this._data[index], id, popup);
+      if (index !== -1) {
+        this._data[index] = Object.assign({}, newData);
+        if (typeof this._onRatingSubmit === `function`) {
+          this._onRatingSubmit(this._data[index], id, popup);
+        }
       }
     };
 
@@ -86,12 +112,13 @@ export default class CardsSectionsComponent extends BaseComponent {
     this._featuredByCommentsComponent = new CardsSectionComponent(this._data, noControlsSetting);
     this._featuredByRatingComponent = new CardsSectionComponent(this._data, noControlsSetting);
 
-    element.querySelector(`#films-main-list`)
-      .insertBefore(this._allCardsSectionComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
-    element.querySelector(`#films-rated-list`)
+    this._mainListElement
+      .insertBefore(this._allCardsSectionComponent.render(this._data.slice(0, this._initialCount)), this._showMoreElement);
+
+    this._ratedListElement
       .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControlsSetting));
 
-    element.querySelector(`#films-commented-list`)
+    this._commentedListElement
       .insertAdjacentElement(`beforeend`, this._featuredByCommentsComponent.render(this._filterCardsBy(`commentsAmount`), noControlsSetting));
 
     this._allCardsSectionComponent.onCardChange = updateData;
@@ -109,25 +136,6 @@ export default class CardsSectionsComponent extends BaseComponent {
     return element;
   }
 
-  onSearch(value) {
-    const initialData = this._data.slice();
-    const resultData = initialData
-      .filter((item) => item.title.toLowerCase().search(value.toLowerCase()) !== -1);
-    this._replaceMainBlockElements(resultData);
-    this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
-  }
-
-  updateMainBlockElement() {
-    if (this._initialCount < this._filteredData.length) {
-      this._showMoreButtonStatus = true;
-      this._element.querySelector(`.films-list__show-more`).classList.remove(`visually-hidden`);
-    } else {
-      this._showMoreButtonStatus = false;
-      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
-    }
-    this._replaceMainBlockElements(this._filteredData.slice(0, this._initialCount));
-  }
-
   update(filteredData) {
     this._initialCount = this._showMoreStep;
     this._filteredData = filteredData;
@@ -135,13 +143,13 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   createListeners() {
-    this._element.querySelector(`.films-list__show-more`)
-      .addEventListener(`click`, this._onShowMoreClick);
+    this._showMoreElement = this._element.querySelector(`.films-list__show-more`);
+    this._showMoreElement.addEventListener(`click`, this._onShowMoreClick);
   }
 
   removeListeners() {
-    this._element.querySelector(`.films-list__show-more`)
-      .addEventListener(`click`, this._onShowMoreClick);
+    this._showMoreElement.removeEventListener(`click`, this._onShowMoreClick);
+    this._showMoreElement = null;
   }
 
   _onShowMoreClick() {
@@ -152,7 +160,7 @@ export default class CardsSectionsComponent extends BaseComponent {
     }
     if (this._initialCount === this._filteredData.length) {
       this._showMoreButtonStatus = false;
-      this._element.querySelector(`.films-list__show-more`).classList.add(`visually-hidden`);
+      this._showMoreElement.classList.add(`visually-hidden`);
     }
     this.updateMainBlockElement();
   }
