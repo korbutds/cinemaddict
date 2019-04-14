@@ -46,16 +46,13 @@ const updateCardsList = (updatedData, id) => {
 };
 
 const onFilterSelect = (id) => {
-  if (cardsSectionsComponent._element) {
-    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-    document.querySelector(`.search__field`).value = ``;
-  } else {
+  if (statisticsComponent._element) {
     statisticsComponent.unrender();
     mainElement.removeChild(mainElement.lastChild);
     addCards();
-    cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-    document.querySelector(`.search__field`).value = ``;
   }
+  cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
+  document.querySelector(`.search__field`).value = ``;
 };
 
 const addFilters = () => {
