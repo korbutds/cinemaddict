@@ -10,7 +10,7 @@ import LoadErrorComponent from './components/load-error';
 import API from './services/api';
 import CardModel from './models/card-model';
 
-const AUTHORIZATION = `Basic RepetitioEstMaterStudiorum`;
+const AUTHORIZATION = `Basic AdAugustaPerAngusta`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
 
 const api = new API({

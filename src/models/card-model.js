@@ -1,10 +1,13 @@
+const MILLISECONDS_AMOUNT = 1000;
+const SECONDS_AMOUNT = 60;
+
 export default class CardModel {
   constructor(data) {
     this.id = data[`id`];
     this.title = data[`film_info`][`title`];
     this.rating = data[`film_info`][`total_rating`];
     this.year = data[`film_info`][`release`][`date`];
-    this.duration = data[`film_info`][`runtime`] * 1000 * 60;
+    this.duration = data[`film_info`][`runtime`] * MILLISECONDS_AMOUNT * SECONDS_AMOUNT;
     this.genre = data[`film_info`][`genre`];
     this.image = data[`film_info`][`poster`];
     this.description = data[`film_info`][`description`];
@@ -18,7 +21,7 @@ export default class CardModel {
       writers: data[`film_info`][`writers`],
       actors: data[`film_info`][`actors`],
       releaseDay: data[`film_info`][`release`][`date`],
-      runtime: data[`film_info`][`runtime`] * 1000 * 60,
+      runtime: data[`film_info`][`runtime`] * MILLISECONDS_AMOUNT * SECONDS_AMOUNT,
       country: data[`film_info`][`release`][`release_country`],
       genres: data[`film_info`][`genre`],
       ageLimit: data[`film_info`][`age_rating`],
@@ -44,7 +47,7 @@ export default class CardModel {
           'date': data.popup.releaseDay,
           'release_country': data.popup.country
         },
-        'runtime': data.duretion / 1000 / 60,
+        'runtime': data.duration / MILLISECONDS_AMOUNT / SECONDS_AMOUNT,
         'title': data.title,
         'total_rating': data.rating,
         'writers': data.popup.writers
