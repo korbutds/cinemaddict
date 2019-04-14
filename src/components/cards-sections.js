@@ -94,6 +94,7 @@ export default class CardsSectionsComponent extends BaseComponent {
 
     element.querySelector(`#films-main-list`)
       .insertBefore(this._allCardsSectionComponent.render(this._data.slice(0, this._initialCount)), element.querySelector(`.films-list__show-more`));
+
     element.querySelector(`#films-rated-list`)
       .insertAdjacentElement(`beforeend`, this._featuredByRatingComponent.render(this._filterCardsBy(`rating`), noControlsSetting));
 

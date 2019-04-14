@@ -27,9 +27,16 @@ export default class FiltersComponent extends BaseComponent {
       }
       return component;
     });
-    this.components.forEach((component) => {
-      containerElement.appendChild(component.render());
-    });
+
+    const getFiltersDocumentFragment = () => {
+      const documentFragment = document.createDocumentFragment();
+      this.components.forEach((component) => {
+        documentFragment.appendChild(component.render());
+      });
+      return documentFragment;
+    };
+
+    containerElement.appendChild(getFiltersDocumentFragment());
   }
 
   render() {

@@ -90,9 +90,15 @@ export default class CardsSectionComponent extends BaseComponent {
       return cardComponent;
     });
 
-    this.components.forEach((component) => {
-      containerElement.appendChild(component.render());
-    });
+    const getCardsSectionDocumentFragment = () => {
+      const documentFragment = document.createDocumentFragment();
+      this.components.forEach((component) => {
+        documentFragment.appendChild(component.render());
+      });
+      return documentFragment;
+    };
+
+    containerElement.appendChild(getCardsSectionDocumentFragment());
   }
 
   render(filteredData) {
