@@ -127,7 +127,7 @@ export default class CardsSectionsComponent extends BaseComponent {
   }
 
   updateMainBlockElement() {
-    this._showMoreButtonStatus = (this._initialCount < this._filteredData.length) ? true : false;
+    this._showMoreButtonStatus = (this._initialCount < this._filteredData.length);
     if (this._showMoreButtonStatus) {
       this._showMoreElement.classList.remove(`visually-hidden`);
     } else {
