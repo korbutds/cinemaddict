@@ -9,14 +9,18 @@ import LoadInProcessComponent from './components/load-in-process';
 import LoadErrorComponent from './components/load-error';
 import API from './services/api';
 import CardModel from './models/card-model';
+import Provider from './services/provider';
+import Store from './services/store';
 
 const AUTHORIZATION = `Basic AdAugustaPerAngusta`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
-
+const DATA_STORE_KEY = `data-store-key`;
 const api = new API({
   endPoint: END_POINT,
   authorization: AUTHORIZATION
 });
+const store = new Store({key: DATA_STORE_KEY, storage: localStorage});
+const provider = new Provider({api, store});
 
 const mainElement = document.querySelector(`main`);
 const footerStatisticsElement = document.querySelector(`.footer__statistics`);
@@ -34,7 +38,7 @@ let statisticsComponent;
 let searchComponent;
 
 const updateCardsList = (updatedData, id) => {
-  api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
+  provider.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
     .then((cardModel) => {
       const index = cardsList.findIndex((item) => item.id === id);
       if (index !== -1) {
@@ -77,13 +81,13 @@ const addCards = () => {
   cardsSectionsComponent.onCardsChange = updateCardsList;
 
   cardsSectionsComponent.onCommentSubmit = (updatedData, id, popup) => {
-    api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
+    provider.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
       .then(updateCardData(popup.enableCommentForm, id))
       .catch(popup.showCommentSubmitError);
   };
 
   cardsSectionsComponent.onRatingSubmit = (updatedData, id, popup) => {
-    api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
+    provider.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
       .then(updateCardData(popup.showNewRating, id))
       .catch(popup.showRatingSubmitError);
   };
@@ -111,8 +115,15 @@ const onStatsClick = () => {
   document.querySelector(`.search__field`).value = ``;
 };
 
+window.addEventListener(`offline`, () => {
+  document.title = `${document.title}[OFFLINE]`;
+});
+window.addEventListener(`online`, () => {
+  document.title = document.title.split(`[OFFLINE]`)[0];
+});
+
 mainElement.appendChild(loadInProcessComponent.render());
-api.getData()
+provider.getData()
   .then((data) => {
     cardsList = data;
     mainElement.removeChild(loadInProcessComponent.element);
