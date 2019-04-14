@@ -37,9 +37,11 @@ const updateCardsList = (updatedData, id) => {
   api.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
     .then((cardModel) => {
       const index = cardsList.findIndex((item) => item.id === id);
-      cardsList[index] = Object.assign({}, cardModel);
-      setFiltersCounts(cardsList);
-      userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+      if (index !== -1) {
+        cardsList[index] = Object.assign({}, cardModel);
+        setFiltersCounts(cardsList);
+        userRankElement.innerHTML = setUserRank(cardsList.filter((card) => card.isWatched).length);
+      }
     });
 };
 
@@ -66,8 +68,10 @@ const addFilters = () => {
 
 const updateCardData = (callback, id) => (cardModel) => {
   const index = cardsList.findIndex((item) => item.id === id);
-  cardsList[index] = Object.assign({}, cardModel);
-  callback();
+  if (index !== -1) {
+    cardsList[index] = Object.assign({}, cardModel);
+    callback();
+  }
 };
 
 const addCards = () => {

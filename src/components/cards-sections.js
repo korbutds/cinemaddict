@@ -57,28 +57,34 @@ export default class CardsSectionsComponent extends BaseComponent {
 
     const updateData = (updatedData, id) => {
       const index = this._data.findIndex((item) => item.id === id);
-      this._data[index] = Object.assign({}, updatedData);
-      if (typeof this._onCardsChange === `function`) {
-        this._onCardsChange(this._data[index], id);
-      }
       CardsSectionsComponent.updateComponent(this._allCardsSectionComponent, updatedData, id);
       CardsSectionsComponent.updateComponent(this._featuredByCommentsComponent, updatedData, id);
       CardsSectionsComponent.updateComponent(this._featuredByRatingComponent, updatedData, id);
+      if (index !== -1) {
+        this._data[index] = Object.assign({}, updatedData);
+        if (typeof this._onCardsChange === `function`) {
+          this._onCardsChange(this._data[index], id);
+        }
+      }
     };
 
     const submitComment = (newData, id, popup) => {
       const index = this._data.findIndex((item) => item.id === id);
-      this._data[index] = Object.assign({}, newData);
-      if (typeof this._onCommentSubmit === `function`) {
-        this._onCommentSubmit(this._data[index], id, popup);
+      if (index !== -1) {
+        this._data[index] = Object.assign({}, newData);
+        if (typeof this._onCommentSubmit === `function`) {
+          this._onCommentSubmit(this._data[index], id, popup);
+        }
       }
     };
 
     const submitRating = (newData, id, popup) => {
       const index = this._data.findIndex((item) => item.id === id);
-      this._data[index] = Object.assign({}, newData);
-      if (typeof this._onRatingSubmit === `function`) {
-        this._onRatingSubmit(this._data[index], id, popup);
+      if (index !== -1) {
+        this._data[index] = Object.assign({}, newData);
+        if (typeof this._onRatingSubmit === `function`) {
+          this._onRatingSubmit(this._data[index], id, popup);
+        }
       }
     };
 

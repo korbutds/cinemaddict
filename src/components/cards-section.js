@@ -33,30 +33,36 @@ export default class CardsSectionComponent extends BaseComponent {
       const popupComponent = new PopupComponent(card);
 
       const updateCardData = (newData) => {
+        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
         cardComponent.update(newData);
         popupComponent.update(newData);
-        const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
-        if (typeof this._onCardChange === `function`) {
-          this._onCardChange(this._data[index], cardComponent._data.id);
+        if (index !== -1) {
+          this._data[index] = Object.assign({}, newData);
+          if (typeof this._onCardChange === `function`) {
+            this._onCardChange(this._data[index], cardComponent._data.id);
+          }
         }
       };
 
       const submitComment = (newData, popup) => {
-        cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
-        if (typeof this._onCommentSubmit === `function`) {
-          this._onCommentSubmit(this._data[index], cardComponent._data.id, popup);
+        cardComponent.update(newData);
+        if (index !== -1) {
+          this._data[index] = Object.assign({}, newData);
+          if (typeof this._onCommentSubmit === `function`) {
+            this._onCommentSubmit(this._data[index], cardComponent._data.id, popup);
+          }
         }
       };
 
       const submitRating = (newData, popup) => {
-        cardComponent.update(newData);
         const index = this._data.findIndex((item) => item.id === cardComponent._data.id);
-        this._data[index] = Object.assign({}, newData);
-        if (typeof this._onRatingSubmit === `function`) {
-          this._onRatingSubmit(this._data[index], cardComponent._data.id, popup);
+        cardComponent.update(newData);
+        if (index !== -1) {
+          this._data[index] = Object.assign({}, newData);
+          if (typeof this._onRatingSubmit === `function`) {
+            this._onRatingSubmit(this._data[index], cardComponent._data.id, popup);
+          }
         }
       };
 
