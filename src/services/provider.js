@@ -1,6 +1,6 @@
 import CardModel from '../models/card-model';
 
-const objectToArray = (object) => {
+const createArrayFromObjectData = (object) => {
   return Object.keys(object).map((id) => object[id]);
 };
 
@@ -20,7 +20,7 @@ export default class Provider {
         });
     } else {
       const rawDataMap = this._store.getAll();
-      const rawData = objectToArray(rawDataMap);
+      const rawData = createArrayFromObjectData(rawDataMap);
       const data = CardModel.parseData(rawData);
 
       return Promise.resolve(data);
@@ -40,6 +40,10 @@ export default class Provider {
       this._store.setItem({key: datum.id, item: datum});
       return Promise.resolve(CardModel.parseDatum(datum));
     }
+  }
+
+  syncData() {
+    return this._api.syncData({data: createArrayFromObjectData(this._store.getAll())});
   }
 
   _isOnline() {
