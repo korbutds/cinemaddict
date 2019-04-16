@@ -1,5 +1,11 @@
 const CACHE_NAME = `MOOWLE`;
 
+const checkUrl = (url) => {
+  const fistValue = /sockjs-node/g;
+  const secondValue = /fonts/g;
+  return !(fistValue.test(url) || secondValue.test(url));
+};
+
 self.addEventListener(`install`, (evt) => {
   const openCache = caches.open(CACHE_NAME)
     .then((cache) => {
@@ -32,14 +38,15 @@ self.addEventListener(`install`, (evt) => {
 });
 
 self.addEventListener(`fetch`, (evt) => {
-  console.log(`Handling fetch event for`, evt.request.url);
-  evt.respondWith(
-      caches.match(evt.request)
-        .then((response) => {
-          return response ? response : fetch(evt.request);
-        })
-        .catch((err) => {
-          throw err;
-        })
-  );
+  if (checkUrl(evt.request.url)) {
+    evt.respondWith(
+        caches.match(evt.request)
+          .then((response) => {
+            return response ? response : fetch(evt.request);
+          })
+          .catch((err) => {
+            throw err;
+          })
+    );
+  }
 });
