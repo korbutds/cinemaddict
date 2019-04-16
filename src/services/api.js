@@ -1,6 +1,7 @@
 import CardModel from '../models/card-model';
 
 const URL = `movies`;
+const SYNCHRONIZATION_URL = `movies/sync`;
 const CONTENT_TYPE = `application/json`;
 
 const ResponseStatus = {
@@ -16,7 +17,8 @@ export default class API {
     this._authorization = authorization;
     this._methods = {
       GET: `GET`,
-      PUT: `PUT`
+      PUT: `PUT`,
+      POST: `POST`
     };
   }
 
@@ -35,6 +37,16 @@ export default class API {
     })
       .then(convertToJson)
       .then(CardModel.parseDatum);
+  }
+
+  syncData({data}) {
+    return this._load({
+      url: SYNCHRONIZATION_URL,
+      method: this._methods.POST,
+      body: JSON.stringify(data),
+      headers: new Headers({'Content-Type': CONTENT_TYPE})
+    })
+      .then(convertToJson);
   }
 
   _load({url, method = this._methods.GET, body = null, headers = new Headers()}) {

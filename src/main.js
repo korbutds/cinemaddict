@@ -120,6 +120,7 @@ window.addEventListener(`offline`, () => {
 });
 window.addEventListener(`online`, () => {
   document.title = document.title.split(`[OFFLINE]`)[0];
+  provider.syncData();
 });
 
 mainElement.appendChild(loadInProcessComponent.render());
