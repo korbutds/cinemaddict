@@ -12,7 +12,7 @@ import CardModel from './models/card-model';
 import Provider from './services/provider';
 import Store from './services/store';
 
-const AUTHORIZATION = `Basic AdAugustaPerAngusta`;
+const AUTHORIZATION = `Basic perAsperaAdAstra`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
 const DATA_STORE_KEY = `data-store-key`;
 const api = new API({
@@ -56,7 +56,7 @@ const onFilterSelect = (id) => {
     addCards();
   }
   cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-  document.querySelector(`.search__field`).value = ``;
+  searchComponent.reset();
 };
 
 const addFilters = () => {
@@ -112,7 +112,7 @@ const onStatsClick = () => {
   mainElement.removeChild(mainElement.lastChild);
   statisticsComponent = new StatisticsComponent(cardsList);
   mainElement.appendChild(statisticsComponent.render());
-  document.querySelector(`.search__field`).value = ``;
+  searchComponent.reset();
 };
 
 window.addEventListener(`offline`, () => {

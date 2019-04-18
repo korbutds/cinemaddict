@@ -5,6 +5,16 @@ import ChartComponent from './chart';
 import moment from 'moment';
 
 const GENRE_FIELD_TEXT = `No genre`;
+const MomentPeriodSetting = {
+  DAY: `days`,
+  MONTH: `month`,
+  YEAR: `year`
+};
+const MomentPeriodDuration = {
+  DAYS_AMOUNT: 7,
+  MONTHS_AMOUNT: 1,
+  YEARS_AMOUNT: 1
+};
 
 export default class StatisticsComponent extends BaseComponent {
   constructor(data) {
@@ -23,11 +33,14 @@ export default class StatisticsComponent extends BaseComponent {
       'statistic-today': () => this._filteredData
         .filter((item) => moment(item.userDate) === moment()),
       'statistic-week': () => this._filteredData
-        .filter((item) => moment(item.userDate).isAfter(moment().subtract(7, `days`))),
+        .filter((item) => moment(item.userDate).isAfter(moment()
+          .subtract(MomentPeriodDuration.DAYS_AMOUNT, MomentPeriodSetting.DAY))),
       'statistic-month': () => this._filteredData
-        .filter((item) => moment(item.userDate).isAfter(moment().subtract(1, `month`))),
+        .filter((item) => moment(item.userDate).isAfter(moment()
+          .subtract(MomentPeriodDuration.MONTHS_AMOUNT, MomentPeriodSetting.MONTH))),
       'statistic-year': () => this._filteredData
-        .filter((item) => moment(item.userDate).isAfter(moment().subtract(1, `year`)))
+        .filter((item) => moment(item.userDate).isAfter(moment()
+          .subtract(MomentPeriodDuration.YEARS_AMOUNT, MomentPeriodSetting.YEAR)))
     };
   }
 

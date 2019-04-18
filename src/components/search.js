@@ -15,6 +15,10 @@ export default class SearchComponent extends BaseComponent {
     this._onSearch = fn;
   }
 
+  reset() {
+    this._element.querySelector(`.search__field`).value = ``;
+  }
+
   createListeners() {
     if (this._element) {
       this._inputElement = this._element.querySelector(`input`);

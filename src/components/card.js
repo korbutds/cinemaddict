@@ -1,11 +1,13 @@
 import {createCardTemplate} from '../templates/cards';
+import {COMMENTS_CONTROL_AMOUNT, CommentsAmountText} from '../constants';
 import BaseComponent from './base';
 
 const BUTTONS_CHECKED_BORDER = `1px solid white`;
 
-const CommentsAmountText = {
-  SINGULAR: `comment`,
-  PLURAL: `comments`
+const FeatureVariant = {
+  WATCHED_FILM_CARD: `isWatched`,
+  WATCHLIST_FILM_CARD: `isOnWatchlist`,
+  FAVORITE_FILM_CARD: `isFavorite`
 };
 
 export default class CardComponent extends BaseComponent {
@@ -54,6 +56,12 @@ export default class CardComponent extends BaseComponent {
     this._addToWatchlistElement.style.border = this._state.isOnWatchlist ? BUTTONS_CHECKED_BORDER : ``;
   }
 
+  _toggleCardProperty(propertyName) {
+    const value = !this._state[propertyName];
+    this.setState({propertyName: value});
+    this._data[propertyName] = value;
+  }
+
   render() {
     const element = super.render();
     if (this._withControls) {
@@ -73,7 +81,7 @@ export default class CardComponent extends BaseComponent {
       this._setButtonsBorder();
     }
     this._commentsElement.textContent =
-      `${data.commentsAmount} ${data.commentsAmount === 1 ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
+      `${data.commentsAmount} ${data.commentsAmount === COMMENTS_CONTROL_AMOUNT ? CommentsAmountText.SINGULAR : CommentsAmountText.PLURAL}`;
   }
 
   createListeners() {
@@ -117,11 +125,7 @@ export default class CardComponent extends BaseComponent {
 
   _onMarkAsWatchedButtonClick(evt) {
     evt.preventDefault();
-    const isWatchedState = !this._state.isWatched;
-    this.setState({
-      isWatched: isWatchedState,
-    });
-    this._data.isWatched = isWatchedState;
+    this._toggleCardProperty(FeatureVariant.WATCHED_FILM_CARD);
     this._setButtonsBorder();
     if (typeof this._onMarkAsWatched === `function`) {
       this._onMarkAsWatched(this._data);
@@ -130,11 +134,7 @@ export default class CardComponent extends BaseComponent {
 
   _onAddToWatchListButtonClick(evt) {
     evt.preventDefault();
-    const isOnWatchlistState = !this._state.isOnWatchlist;
-    this.setState({
-      isOnWatchlist: isOnWatchlistState,
-    });
-    this._data.isOnWatchlist = isOnWatchlistState;
+    this._toggleCardProperty(FeatureVariant.WATCHLIST_FILM_CARD);
     this._setButtonsBorder();
     if (typeof this._onAddToWatchList === `function`) {
       this._onAddToWatchList(this._data);
@@ -143,11 +143,7 @@ export default class CardComponent extends BaseComponent {
 
   _onAddToFavoriteButtonClick(evt) {
     evt.preventDefault();
-    const isFavoriteState = !this._state.isFavorite;
-    this.setState({
-      isFavorite: isFavoriteState,
-    });
-    this._data.isFavorite = isFavoriteState;
+    this._toggleCardProperty(FeatureVariant.FAVORITE_FILM_CARD);
     this._setButtonsBorder();
     if (typeof this._onAddToFavorite === `function`) {
       this._onAddToFavorite(this._data);

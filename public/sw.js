@@ -1,4 +1,4 @@
-const CACHE_NAME = `MOOWLE`;
+const CACHE_NAME = `MOOWIES_V`;
 
 const checkUrl = (url) => {
   const fistValue = /sockjs-node/g;

@@ -1,5 +1,6 @@
 const MILLISECONDS_AMOUNT = 1000;
 const SECONDS_AMOUNT = 60;
+const NUMERAL_SYSTEM_VALUE = 10;
 
 export default class CardModel {
   constructor(data) {
@@ -55,7 +56,7 @@ export default class CardModel {
       'user_details': {
         'already_watched': data.isWatched,
         'favorite': data.isFavorite,
-        'personal_rating': parseInt(data.popup.yourRating, 10),
+        'personal_rating': parseInt(data.popup.yourRating, NUMERAL_SYSTEM_VALUE),
         'watching_date': data.userDate,
         'watchlist': data.isOnWatchlist
       }
