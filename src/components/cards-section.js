@@ -74,11 +74,23 @@ export default class CardsSectionComponent extends BaseComponent {
 
       cardComponent.onClick = () => {
         if (document.querySelector(`.film-details`)) {
+          const data = this._previousPopupComponent._data;
+          const index = this._data.findIndex((item) => item.id === data.id);
+          data.commentsAmount = data.popup.commentsList.length;
+          this._previousCardComponent.update(data);
+          if (index !== -1) {
+            this._data[index] = Object.assign({}, data);
+            if (typeof this._onCardChange === `function`) {
+              this._onCardChange(this._data[index], data.id);
+            }
+          }
           popupContainerElement.removeChild(popupContainerElement.lastChild);
           popupComponent.unrender();
         }
+        this._previousCardComponent = cardComponent;
         popupComponent._data = Object.assign({}, cardComponent._data);
         popupContainerElement.appendChild(popupComponent.render());
+        this._previousPopupComponent = popupComponent;
       };
 
       popupComponent.onCommentSubmit = submitComment;

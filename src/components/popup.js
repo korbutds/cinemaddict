@@ -1,11 +1,10 @@
 import {createPopupTemplate, createCommentTemplate} from '../templates/popup';
 import {createElement} from '../lib/element';
+import {AUTHOR_FIELD_TEXT, IsWatchedButtonText} from '../lib/popup';
 import BaseComponent from './base';
 
 
 const RATING_FIELD_TEXT = `Your rate`;
-const AUTHOR_FIELD_TEXT = `Your comment`;
-
 const KeyCode = {
   ESC: 27,
   ENTER: 13
@@ -19,20 +18,10 @@ const RatingElementColor = {
   ERROR: `#8B0000`,
   CHECKED: `#ffe800`
 };
-const IsWatchedButtonText = {
-  YES: `Already watched`,
-  NO: `Will watch`
-};
 
 export default class PopupComponent extends BaseComponent {
   constructor(data) {
     super(data);
-
-    this.setState({
-      isOnWatchlist: data.isOnWatchlist,
-      isWatched: data.isWatched,
-      isFavorite: data.isFavorite
-    });
 
     this._onClose = null;
     this._onCloseButtonClick = this._onCloseButtonClick.bind(this);
@@ -104,13 +93,6 @@ export default class PopupComponent extends BaseComponent {
     this._commentInputElement.addEventListener(`input`, this._onCommentFormInput);
   }
 
-  _toggleCardProperty(propertyName) {
-    const value = !this._state[propertyName];
-    this.setState({propertyName: value});
-    this._data[propertyName] = value;
-
-  }
-
   _setRatingElementsDisbility(value) {
     this._ratingElements.forEach((item) => {
       item.disabled = value;
@@ -147,15 +129,6 @@ export default class PopupComponent extends BaseComponent {
     return element;
   }
 
-  update(data) {
-    super.update(data);
-    this.setState({
-      isOnWatchlist: this._data.isOnWatchlist,
-      isWatched: this._data.isWatched,
-      isFavorite: this._data.isFavorite
-    });
-  }
-
   createListeners() {
     if (this._element) {
       this._closeButtonElement = this._element.querySelector(`.film-details__close-btn`);
@@ -171,9 +144,9 @@ export default class PopupComponent extends BaseComponent {
         input.addEventListener(`click`, this._onRatingChange);
       });
       this._commentsElement.addEventListener(`keydown`, this._onCommentsKeydown);
-      this._addToListElement.addEventListener(`change`, this._onAddToWatchListButtonClick);
-      this._addToWatchedElement.addEventListener(`change`, this._onMarkAsWatchedButtonClick);
-      this._addToFavoriteElement.addEventListener(`change`, this._onAddToFavoriteButtonClick);
+      this._addToListElement.addEventListener(`click`, this._onAddToWatchListButtonClick);
+      this._addToWatchedElement.addEventListener(`click`, this._onMarkAsWatchedButtonClick);
+      this._addToFavoriteElement.addEventListener(`click`, this._onAddToFavoriteButtonClick);
       this._removeCommentElement.addEventListener(`click`, this._onCommentRemove);
       window.addEventListener(`keydown`, this._onEscClick);
     }
@@ -186,9 +159,9 @@ export default class PopupComponent extends BaseComponent {
         input.removeEventListener(`click`, this._onRatingChange);
       });
       this._commentsElement.removeEventListener(`keydown`, this._onCommentsKeydown);
-      this._addToListElement.removeEventListener(`change`, this._onAddToWatchListButtonClick);
-      this._addToWatchedElement.removeEventListener(`change`, this._onMarkAsWatchedButtonClick);
-      this._addToFavoriteElement.removeEventListener(`change`, this._onAddToFavoriteButtonClick);
+      this._addToListElement.removeEventListener(`click`, this._onAddToWatchListButtonClick);
+      this._addToWatchedElement.removeEventListener(`click`, this._onMarkAsWatchedButtonClick);
+      this._addToFavoriteElement.removeEventListener(`click`, this._onAddToFavoriteButtonClick);
       this._removeCommentElement.removeEventListener(`click`, this._onCommentRemove);
       window.removeEventListener(`keydown`, this._onEscClick);
 
@@ -203,17 +176,17 @@ export default class PopupComponent extends BaseComponent {
   }
 
   _onMarkAsWatchedButtonClick() {
-    this._toggleCardProperty(`isWatched`);
+    this._data.isWatched = !this._data.isWatched;
     this._watchedStatusElement
       .innerHTML = this._data.isWatched ? IsWatchedButtonText.YES : IsWatchedButtonText.NO;
   }
 
   _onAddToWatchListButtonClick() {
-    this._toggleCardProperty(`isOnWatchlist`);
+    this._data.isOnWatchlist = !this._data.isOnWatchlist;
   }
 
   _onAddToFavoriteButtonClick() {
-    this._toggleCardProperty(`isFavorite`);
+    this._data.isFavorite = !this._data.isFavorite;
   }
 
   _onCloseButtonClick(evt) {

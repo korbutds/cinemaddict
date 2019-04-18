@@ -12,7 +12,7 @@ import CardModel from './models/card-model';
 import Provider from './services/provider';
 import Store from './services/store';
 
-const AUTHORIZATION = `Basic AdAugustaPerAngusta`;
+const AUTHORIZATION = `Basic perAsperaAdAstra`;
 const END_POINT = ` https://es8-demo-srv.appspot.com/moowle`;
 const DATA_STORE_KEY = `data-store-key`;
 const api = new API({
@@ -36,6 +36,7 @@ let filtersComponent;
 let cardsSectionsComponent;
 let statisticsComponent;
 let searchComponent;
+let searchFieldElement;
 
 const updateCardsList = (updatedData, id) => {
   provider.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
@@ -56,7 +57,7 @@ const onFilterSelect = (id) => {
     addCards();
   }
   cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-  document.querySelector(`.search__field`).value = ``;
+  searchFieldElement.value = ``;
 };
 
 const addFilters = () => {
@@ -105,6 +106,7 @@ const addSearch = () => {
   searchComponent = new SearchComponent();
   headerElement.insertBefore(searchComponent.render(), searchReferenceElement);
   searchComponent.onSearch = onSearch;
+  searchFieldElement = document.querySelector(`.search__field`);
 };
 
 const onStatsClick = () => {
@@ -112,7 +114,7 @@ const onStatsClick = () => {
   mainElement.removeChild(mainElement.lastChild);
   statisticsComponent = new StatisticsComponent(cardsList);
   mainElement.appendChild(statisticsComponent.render());
-  document.querySelector(`.search__field`).value = ``;
+  searchFieldElement.value = ``;
 };
 
 window.addEventListener(`offline`, () => {

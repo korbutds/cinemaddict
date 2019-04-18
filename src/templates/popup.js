@@ -1,7 +1,11 @@
+import {AUTHOR_FIELD_TEXT, IsWatchedButtonText} from '../lib/popup';
 import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;
 const RATINGS = Array.from(new Array(RATING_LIMIT_MAX), (_, i) => i + 1);
+const MOMENT_FULL_FORMAT = `D MMMM YYYY`;
+const DURATION_FIELD_MARK = `min`;
+const DEFAULT_EMOJI_VALUE = `neutral-face`;
 
 const CONTROLS = [
   {
@@ -39,11 +43,11 @@ const generateDetailsTableData = (dataPopup) => ([
   },
   {
     term: `Release Date`,
-    cell: moment(dataPopup.releaseDay).format(`D MMMM YYYY`) + ` (${dataPopup.country})`
+    cell: moment(dataPopup.releaseDay).format(MOMENT_FULL_FORMAT) + ` (${dataPopup.country})`
   },
   {
     term: `Runtime`,
-    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes()) + ` min`
+    cell: Math.round(moment.duration(dataPopup.runtime).asMinutes()) + ` ` + DURATION_FIELD_MARK
   },
   {
     term: `Country`,
@@ -97,7 +101,7 @@ const createControlsTemplate = (data) => (
 
 const createEmojiesTemplate = () => (
   Object.keys(Emojie).map((value) => (
-    `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${value}" value="${value}" ${value === `neutral-face` ? `checked` : ``}>
+    `<input class="film-details__emoji-item visually-hidden" name="comment-emoji" type="radio" id="emoji-${value}" value="${value}" ${value === DEFAULT_EMOJI_VALUE ? `checked` : ``}>
     <label class="film-details__emoji-label" for="emoji-${value}">${Emojie[value]}</label>`
   ))
   .join(``)
@@ -182,8 +186,8 @@ export const createPopupTemplate = (data) => (
 
       <section class="film-details__user-rating-wrap">
         <div class="film-details__user-rating-controls
-        ${data.popup.commentsList.some((item) => item.author === `Your comment`) ? `` : `visually-hidden`}">
-          <span class="film-details__watched-status film-details__watched-status--active">${data.isWatched ? `Already watched` : `Will watch`}</span>
+        ${data.popup.commentsList.some((item) => item.author === AUTHOR_FIELD_TEXT) ? `` : `visually-hidden`}">
+          <span class="film-details__watched-status film-details__watched-status--active">${data.isWatched ? IsWatchedButtonText.YES : IsWatchedButtonText.NO}</span>
           <button class="film-details__watched-reset" type="button">undo</button>
         </div>
         <div class="film-details__user-score">

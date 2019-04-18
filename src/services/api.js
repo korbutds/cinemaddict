@@ -9,17 +9,18 @@ const ResponseStatus = {
   MAX: 300
 };
 
+const Method = {
+  GET: `GET`,
+  PUT: `PUT`,
+  POST: `POST`
+};
+
 const convertToJson = (response) => response.json();
 
 export default class API {
   constructor({endPoint, authorization}) {
     this._endPoint = endPoint;
     this._authorization = authorization;
-    this._methods = {
-      GET: `GET`,
-      PUT: `PUT`,
-      POST: `POST`
-    };
   }
 
   getData() {
@@ -31,7 +32,7 @@ export default class API {
   updateData({id, newData}) {
     return this._load({
       url: `${URL}/${id}`,
-      method: this._methods.PUT,
+      method: Method.PUT,
       body: JSON.stringify(newData),
       headers: new Headers({'Content-Type': CONTENT_TYPE})
     })
@@ -42,14 +43,14 @@ export default class API {
   syncData({data}) {
     return this._load({
       url: SYNCHRONIZATION_URL,
-      method: this._methods.POST,
+      method: Method.POST,
       body: JSON.stringify(data),
       headers: new Headers({'Content-Type': CONTENT_TYPE})
     })
       .then(convertToJson);
   }
 
-  _load({url, method = this._methods.GET, body = null, headers = new Headers()}) {
+  _load({url, method = Method.GET, body = null, headers = new Headers()}) {
     headers.append(`Authorization`, this._authorization);
 
     return fetch(`${this._endPoint}/${url}`, {method, body, headers})
