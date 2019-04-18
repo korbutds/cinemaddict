@@ -36,7 +36,6 @@ let filtersComponent;
 let cardsSectionsComponent;
 let statisticsComponent;
 let searchComponent;
-let searchFieldElement;
 
 const updateCardsList = (updatedData, id) => {
   provider.updateData({id: updatedData.id, newData: CardModel.toRAW(updatedData)})
@@ -57,7 +56,7 @@ const onFilterSelect = (id) => {
     addCards();
   }
   cardsSectionsComponent.update(getFilteredCards(cardsList)[id]());
-  searchFieldElement.value = ``;
+  searchComponent.reset();
 };
 
 const addFilters = () => {
@@ -106,7 +105,6 @@ const addSearch = () => {
   searchComponent = new SearchComponent();
   headerElement.insertBefore(searchComponent.render(), searchReferenceElement);
   searchComponent.onSearch = onSearch;
-  searchFieldElement = document.querySelector(`.search__field`);
 };
 
 const onStatsClick = () => {
@@ -114,7 +112,7 @@ const onStatsClick = () => {
   mainElement.removeChild(mainElement.lastChild);
   statisticsComponent = new StatisticsComponent(cardsList);
   mainElement.appendChild(statisticsComponent.render());
-  searchFieldElement.value = ``;
+  searchComponent.reset();
 };
 
 window.addEventListener(`offline`, () => {

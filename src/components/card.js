@@ -1,5 +1,5 @@
 import {createCardTemplate} from '../templates/cards';
-import {COMMENTS_CONTROL_AMOUNT, CommentsAmountText} from '../lib/card';
+import {COMMENTS_CONTROL_AMOUNT, CommentsAmountText} from '../constants';
 import BaseComponent from './base';
 
 const BUTTONS_CHECKED_BORDER = `1px solid white`;

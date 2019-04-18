@@ -1,4 +1,4 @@
-import {AUTHOR_FIELD_TEXT, IsWatchedButtonText} from '../lib/popup';
+import {AUTHOR_FIELD_TEXT, IsWatchedButtonText} from '../constants';
 import moment from 'moment';
 
 const RATING_LIMIT_MAX = 9;

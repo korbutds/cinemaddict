@@ -1,6 +1,6 @@
 import {createPopupTemplate, createCommentTemplate} from '../templates/popup';
 import {createElement} from '../lib/element';
-import {AUTHOR_FIELD_TEXT, IsWatchedButtonText} from '../lib/popup';
+import {AUTHOR_FIELD_TEXT, IsWatchedButtonText} from '../constants';
 import BaseComponent from './base';
 
 

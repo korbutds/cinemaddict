@@ -1,5 +1,5 @@
 import moment from 'moment';
-import {COMMENTS_CONTROL_AMOUNT, CommentsAmountText} from '../lib/card';
+import {COMMENTS_CONTROL_AMOUNT, CommentsAmountText} from '../constants';
 
 const DESCRIPTION_LENGTH = 136;
 const DESCRIPTION_REDUCTION_INDICATOR = `...`;
